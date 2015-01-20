@@ -23,7 +23,7 @@ public class MainScreen extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Toast.makeText(getApplicationContext(), "welcome to MobiDoc", 2);
+		Toast.makeText(getApplicationContext(), "welcome to MobiDoc",  Toast.LENGTH_LONG);
 		//final EditText username=(EditText)findViewById(R.id.usernametxt);
 		//final EditText pass=(EditText)findViewById(R.id.passtext);
 		//final Button loginbtn=(Button)findViewById(R.id.loginButton);
@@ -33,7 +33,7 @@ public class MainScreen extends Activity {
 		 Class<?>[] params= new Class[]{BlockingQueue.class};
 		
 		 
-		 Toast.makeText(this.getApplicationContext(),"projection is set every 30 sec", 2).show();
+		 Toast.makeText(this.getApplicationContext(),"projection is set every 30 sec", Toast.LENGTH_LONG).show();
 		 
 		 // inst.init(q1);
 		 // Thread qu=new Thread(inst);
@@ -80,7 +80,7 @@ public class MainScreen extends Activity {
 	           //doSomething.invoke(myInstance);
 	           
 	        } catch (Exception e) {
-	       	 Toast.makeText(this.getApplicationContext(),"error consumer main : "+e.getLocalizedMessage(), 3).show();
+	       	 Toast.makeText(this.getApplicationContext(),"error consumer main : "+e.getLocalizedMessage(),  Toast.LENGTH_LONG).show();
 	        	
 	        
 	        }
@@ -105,14 +105,14 @@ public class MainScreen extends Activity {
 							@Override
 							public void run() {
 							//t.setText("recieve from proj: "+s);
-							Toast.makeText(MainScreen.this.getApplicationContext(), "please remember to take your pill", 2).show();
+							Toast.makeText(MainScreen.this.getApplicationContext(), "please remember to take your pill",  Toast.LENGTH_LONG).show();
 							}
 							
 							
 						});
 						
 					} catch (InterruptedException e) {
-						Toast.makeText(MainScreen.this.getApplicationContext(), "error taking element", 2).show();
+						Toast.makeText(MainScreen.this.getApplicationContext(), "error taking element",  Toast.LENGTH_LONG).show();
 						//t.setText("error taking element");
 					}
 					 
