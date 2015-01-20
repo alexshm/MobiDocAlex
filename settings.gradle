@@ -1,4 +1,3 @@
 include ':app', ':'
-include ':Projection2'
-include ':Projection'
-include ':Projection'
+
+include ':Projecction'
