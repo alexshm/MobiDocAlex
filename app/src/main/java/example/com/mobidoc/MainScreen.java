@@ -35,10 +35,14 @@ public class MainScreen extends Activity {
 
         final Button startbtn=(Button)findViewById(R.id.button1);
         final Button sendbrd=(Button)findViewById(R.id.button2);
+        final Button sendEvery=(Button)findViewById(R.id.button3);
+
         t = (TextView) findViewById(R.id.textView2);
         Class<?>[] params = new Class[]{BlockingQueue.class};
 
-        final Action a=new Action(Action.ActionType.Measurement,"test action","44",this);
+        final Action a=new Action(Action.ActionType.Measurement,"test mesurment","44",this);
+        final Action a2=new Action(Action.ActionType.Notification,"test notification","45",this);
+
         final projection p=new projection(projection.ProjectionType.Cyclic,"test proj",this) {
             @Override
             public void doAction() {
@@ -65,7 +69,9 @@ public class MainScreen extends Activity {
 
                 if (p.Isbound())
                 {
-                   p.InvokeAction(a);
+
+                    p.InvokeAction(a);
+
                 }
                 else
                 {
@@ -81,11 +87,36 @@ public class MainScreen extends Activity {
             @Override
             public void onClick(View v) {
                 a.SubscribeConcept("5021");
-                sendBroadcast(new Intent("5021"),android.Manifest.permission.VIBRATE);
+                Intent i=new Intent("5021");
+                i.putExtra("concept","5021");
+                String val=String.valueOf(((Math.random()*60)+15));
+                i.putExtra("value",val);
+                sendBroadcast(i,android.Manifest.permission.VIBRATE);
             }
 
         });
 
+        sendEvery.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+
+                if (p.Isbound())
+                {
+
+
+                    p.SetDoActionEvery(projection.ProjectionTimeUnit.Minute,1);
+                    p.StartProjecction_alarm();
+                    sendEvery.setEnabled(false);
+                }
+                else
+                {
+
+                    p.startProjection();
+
+                }
+            }});
         /*
         Toast.makeText(this.getApplicationContext(), "projections.projection is set every 30 sec", Toast.LENGTH_LONG).show();
 

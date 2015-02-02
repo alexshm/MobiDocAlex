@@ -1,11 +1,14 @@
 package projections;
 
 import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -21,7 +24,7 @@ import java.util.Vector;
 import example.com.mobidoc.*;
 
 
-public abstract class projection extends Service {
+public abstract class projection extends BroadcastReceiver {
 
     final static long SECOND=1000L;
     final static long MINUTE=60*SECOND;
@@ -34,16 +37,30 @@ public abstract class projection extends Service {
     protected ProjectionType Type;
     protected Vector<Calendar> calanders;
     protected  String ProjectionName;
-
+  protected long reapetTime;
       public AlarmManager alramMng;
-
+    protected PendingIntent alarmInt;
     // Intent used for binding to LoggingService
 
     public   Intent serviceIntent =null;
     public   Context context;
     public Messenger MessengerToMsgService=null;
+   // protected  Messenger mActionTriggeredMessenger = new Messenger(new IncomingMsgHandler());
+
     protected boolean mIsBound=false;
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+       Log.i("projections.","trigger happend!!");
+
+        //trigget the action
+       // doAction();
+
+        ///test////
+        Action ac=new Action(Action.ActionType.Question,"is this your first time?","8978",context);
+        InvokeAction(ac);
+    }
     protected ServiceConnection mconnection= new ServiceConnection() {
 
         @Override
@@ -81,6 +98,11 @@ public abstract class projection extends Service {
         context =new ContextWrapper(_context);
 
         serviceIntent  = new Intent(_context, example.com.mobidoc.MsgRecieverService.class);
+        IntentFilter intentFilter = new IntentFilter("trigger");
+
+
+        context.registerReceiver(this, intentFilter);
+        alramMng= (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
     }
 
@@ -101,7 +123,7 @@ public abstract class projection extends Service {
         if (mIsBound) {
             mconnection = null;
             mIsBound = false;
-            stopService(serviceIntent);
+            context.stopService(serviceIntent);
             Toast.makeText(context, "service succefully stopped", Toast.LENGTH_LONG).show();
         } else
         {
@@ -155,14 +177,14 @@ public abstract class projection extends Service {
     public void StartProjecction_alarm()
     {
 
-        alramMng= (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        alramMng.setRepeating(AlarmManager.RTC_WAKEUP,getTimer().getTimeInMillis(),reapetTime,alarmInt);
 
 
 
     }
     public  void SetDoActionEvery(ProjectionTimeUnit timeunit,int amount) {
 
-        long reapetTime=0;
+         reapetTime=0;
 
         switch (timeunit) {
 
@@ -189,23 +211,23 @@ public abstract class projection extends Service {
                 reapetTime = 30 * SECOND;
         }
 
+        Intent i=new Intent("trigger");
+        //context.sendBroadcast(i,android.Manifest.permission.VIBRATE);
 
 
-            //set the repating time
-            alramMng.setRepeating(AlarmManager.RTC_WAKEUP,getTimer().getTimeInMillis(),reapetTime,null);
-
+        alarmInt=PendingIntent.getBroadcast(context,0,i,0);
 
     }
 	
 	
 	public abstract void setTimer();
-	
 
 
+/*
     @Override
     public IBinder onBind(Intent intent) {
         return  null;
 
     }
-	
+	*/
 }
