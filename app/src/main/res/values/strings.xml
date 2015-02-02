@@ -5,6 +5,6 @@
     <string name="app_name">MobiDoc</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="main_screen"></string>
+    <string name="main_screen">LoginScreen</string>
 
 </resources>
