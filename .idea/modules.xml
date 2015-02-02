@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MobiDoc.iml" filepath="$PROJECT_DIR$/MobiDoc.iml" />
       <module fileurl="file://$PROJECT_DIR$/MobiDocAlex.iml" filepath="$PROJECT_DIR$/MobiDocAlex.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Projecction/Projecction.iml" filepath="$PROJECT_DIR$/Projecction/Projecction.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Projection/Projection.iml" filepath="$PROJECT_DIR$/Projection/Projection.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
