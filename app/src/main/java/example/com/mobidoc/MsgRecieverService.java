@@ -2,6 +2,7 @@ package example.com.mobidoc;
 
 import android.app.DialogFragment;
 
+import android.app.FragmentManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,29 +18,32 @@ public class MsgRecieverService extends Service {
 
 
     private static final String TAG = "LoggingService";
-
+    public int count=0;
     // Messenger Object that receives Messages from connected clients
      Messenger mMessenger = new Messenger(new IncomingMsgHandler());
 
 
 
+
+
+
      class IncomingMsgHandler extends Handler {
 
-        private static final int MEASURE_MSG = 1;
-        private static final int QUESTION_MSG = 2;
-        private static final int RECOMMENDATION_MSG = 3;
-        private static final int NOTIFICATION_MSG = 4;
+        private static final int MEASURE_MSG = 4;
+        private static final int QUESTION_MSG = 1;
+        private static final int RECOMMENDATION_MSG = 2;
+        private static final int NOTIFICATION_MSG = 3;
 
 
         @Override
         public void handleMessage(Message msg) {
             String ans="";
 
-
+            count++;
             switch (msg.what) {
-                case (MEASURE_MSG):
+                case (NOTIFICATION_MSG):
 
-                    ans = "measureMSG "+msg.getData().getString("value");
+                    ans = "notificatin msg "+msg.getData().getString("value");
 
                     break;
                 case (QUESTION_MSG):
@@ -50,9 +54,9 @@ public class MsgRecieverService extends Service {
 
                     ans = "reccomendation msg "+msg.getData().getString("value");
                     break;
-                case (NOTIFICATION_MSG):
+                case (MEASURE_MSG):
+                    ans = "measure MSG "+msg.getData().getString("value");
 
-                    ans = "notificatin msg "+msg.getData().getString("value");
                     break;
 
                 default:
@@ -60,10 +64,11 @@ public class MsgRecieverService extends Service {
             }
 
 
-            Toast.makeText(getBaseContext(), "msg recived in service : " + ans, Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "msg recived in service : " + ans+" with count: "+count, Toast.LENGTH_LONG).show();
             DialogFragment dialog=MainScreen.BuildDialog.newInstacce(ans);
 
-
+            //*** NEED TO FIX SHOWING DIALOG *****
+        //    dialog.show(FragmentManager.class.cast(FragmentManager.class), "question");
 
         }
 

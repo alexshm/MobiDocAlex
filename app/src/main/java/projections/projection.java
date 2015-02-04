@@ -40,6 +40,7 @@ public abstract class projection extends BroadcastReceiver {
   protected long reapetTime;
       public AlarmManager alramMng;
     protected PendingIntent alarmInt;
+        protected  Action action;
     // Intent used for binding to LoggingService
 
     public   Intent serviceIntent =null;
@@ -52,14 +53,21 @@ public abstract class projection extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-       Log.i("projections.","trigger happend!!");
+
 
         //trigget the action
-       // doAction();
+        //this.doAction();
 
         ///test////
-        Action ac=new Action(Action.ActionType.Question,"is this your first time?","8978",context);
-        InvokeAction(ac);
+
+
+
+       if(this.action!=null)
+         this.InvokeAction(this.action);
+       else {
+           Log.i("projections.", "action is  nulll because....!!!");
+           Log.i("projections.", "trigger happend!! from " + this.Type.toString() + " and the name is  : " + this.ProjectionName);
+       }
     }
     protected ServiceConnection mconnection= new ServiceConnection() {
 
@@ -87,24 +95,30 @@ public abstract class projection extends BroadcastReceiver {
         Second, Minute, Hour, Day, Week,Month
     }
 
+    protected void setAction(Action a)
+    {
 
-    public projection(ProjectionType type,String ProjectionName,Context _context)
+        Log.i("projection absctract","set action  "+a.actionName);
+       // setAction(m);
+        this.action=a;
+        Log.i("projection absctract","this set action  is "+this.action.actionName);
+    }
+    public projection(ProjectionType type,String _ProjectionName,Context _context)
     {
         Type=type;
         calanders=new Vector<Calendar>();
         Calendar c=Calendar.getInstance();
         calanders.add(c);
-
+        ProjectionName=_ProjectionName;
         context =new ContextWrapper(_context);
 
         serviceIntent  = new Intent(_context, example.com.mobidoc.MsgRecieverService.class);
-        IntentFilter intentFilter = new IntentFilter("trigger");
 
-
-        context.registerReceiver(this, intentFilter);
         alramMng= (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
     }
+
+    public abstract  void registerToTriggring();
 
 
     public boolean Isbound()
@@ -137,13 +151,13 @@ public abstract class projection extends BroadcastReceiver {
     public   void startProjection() {
 
         if (mIsBound) {
-            Toast.makeText(context, "service allready started", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.context, "service allready started", Toast.LENGTH_LONG).show();
         } else {
            // Intent serviceIntent = new Intent(this, MsgRecieverService.class);
 
-            context.bindService(serviceIntent, mconnection, Context.BIND_AUTO_CREATE);
-            mIsBound = true;
-            Toast.makeText(context, "service succefully started", Toast.LENGTH_LONG).show();
+            this.context.bindService(this.serviceIntent, this.mconnection, Context.BIND_AUTO_CREATE);
+            this.mIsBound = true;
+            Toast.makeText(this.context, "service succefully started", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -153,7 +167,10 @@ public abstract class projection extends BroadcastReceiver {
         Message msg = a.getActionToSend();
 
         try {
-            MessengerToMsgService.send(msg);
+            if(msg!=null)
+                this.MessengerToMsgService.send(msg);
+            else
+                Log.e("projection.InvokeAction","MSG is null");
         } catch (RemoteException e) {
             Log.e("projection.InvokeAction","error sending msg: "+msg.getData().getString("value"));
         }
@@ -163,7 +180,7 @@ public abstract class projection extends BroadcastReceiver {
 
 	public  Calendar getTimer()
 	{
-		return calanders.get(0);
+		return this.calanders.get(0);
 		
 	}
 	
@@ -182,6 +199,7 @@ public abstract class projection extends BroadcastReceiver {
 
 
     }
+
     public  void SetDoActionEvery(ProjectionTimeUnit timeunit,int amount) {
 
          reapetTime=0;
@@ -211,19 +229,23 @@ public abstract class projection extends BroadcastReceiver {
                 reapetTime = 30 * SECOND;
         }
 
-        Intent i=new Intent("trigger");
+        Log.i("projection","set reapet time for : "+reapetTime);
+       // Intent i=new Intent("trigger");
         //context.sendBroadcast(i,android.Manifest.permission.VIBRATE);
 
 
-        alarmInt=PendingIntent.getBroadcast(context,0,i,0);
+       // alarmInt=PendingIntent.getBroadcast(context,0,i,0);
 
     }
+
+    protected abstract void  setAlarmTrigger();
+
 	
-	
-	public abstract void setTimer();
+
 
 
 /*
+public abstract void setTimer();
     @Override
     public IBinder onBind(Intent intent) {
         return  null;

@@ -1,17 +1,22 @@
 package projections;
 
+
 import android.content.Context;
 
-public abstract class CyclicProjection extends projection {
-
+public  class CyclicProjection extends CyclicProjectionAbstract {
 
     public CyclicProjection(String projectionName, Context c) {
-        super(ProjectionType.Cyclic, projectionName, c);
-    }
-
-
-    public void StartCyclic() {
+        super(projectionName, c);
 
     }
 
+    public void makeTestCyclic()
+    {
+        MeasurementAction m1=new MeasurementAction("mesure BP","78",this.context);
+        super.setAction(m1);
+    }
+    @Override
+    public void doAction() {
+        MeasurementAction m1=new MeasurementAction("mesure BP","78",this.context);
+    }
 }

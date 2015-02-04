@@ -40,22 +40,18 @@ public class MainScreen extends Activity {
         t = (TextView) findViewById(R.id.textView2);
         Class<?>[] params = new Class[]{BlockingQueue.class};
 
-        final Action a=new Action(Action.ActionType.Measurement,"test mesurment","44",this);
-        final Action a2=new Action(Action.ActionType.Notification,"test notification","45",this);
-
-        final projection p=new projection(projection.ProjectionType.Cyclic,"test proj",this) {
-            @Override
-            public void doAction() {
-                    int i=0;
-            }
-
-            @Override
-            public void setTimer() {
-                int y=98;
-            }
-
+        final CyclicProjection cyc1= new CyclicProjection("test Cyclic", this) {
 
         };
+
+        final CyclicProjection cyc2= new CyclicProjection("test notification", this) {
+            @Override
+            public void doAction() {
+                MeasurementAction m2=new MeasurementAction("other BP","687",this.context);
+            }
+        };
+
+        final projection p=null;
        //p.SetIntent(MainScreen.this.getApplicationContext());
        // String ac=a.getActionToSend().getData().getString("value");
       //  System.out.println("the string is : "+ac);
@@ -70,7 +66,7 @@ public class MainScreen extends Activity {
                 if (p.Isbound())
                 {
 
-                    p.InvokeAction(a);
+                    //p.InvokeAction(a);
 
                 }
                 else
@@ -86,7 +82,7 @@ public class MainScreen extends Activity {
 
             @Override
             public void onClick(View v) {
-                a.SubscribeConcept("5021");
+               // a.SubscribeConcept("5021");
                 Intent i=new Intent("5021");
                 i.putExtra("concept","5021");
                 String val=String.valueOf(((Math.random()*60)+15));
@@ -102,18 +98,23 @@ public class MainScreen extends Activity {
             @Override
             public void onClick(View v) {
 
-                if (p.Isbound())
+                if (cyc1.Isbound())
                 {
+                    //cyc1.startCyclic(projection.ProjectionTimeUnit.Second,40);
 
-
-                    p.SetDoActionEvery(projection.ProjectionTimeUnit.Minute,1);
-                    p.StartProjecction_alarm();
+                    //p.SetDoActionEvery(projection.ProjectionTimeUnit.Minute,1);
+                    //p.StartProjecction_alarm();
                     sendEvery.setEnabled(false);
                 }
                 else
                 {
+                    cyc1.makeTestCyclic();
+                    cyc1.startCyclic(projection.ProjectionTimeUnit.Second,40);
 
-                    p.startProjection();
+                    //p.SetDoActionEvery(projection.ProjectionTimeUnit.Minute,1);
+                    //p.StartProjecction_alarm();
+                    sendEvery.setEnabled(false);
+                   // p.startProjection();
 
                 }
             }});
@@ -223,7 +224,7 @@ public class MainScreen extends Activity {
                 }).start();
             }
 
-            private void showDialogFromService(final String message) {
+            public void showDialogFromService(final String message) {
                 new Thread(new Runnable() {
 
                     @Override

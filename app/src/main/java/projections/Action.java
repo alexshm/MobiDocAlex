@@ -17,19 +17,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Vector;
 
-public  class Action extends BroadcastReceiver {
+public  abstract class Action extends BroadcastReceiver {
 
     protected  String actionName;
     protected  String actionConcept;
     protected String ansVal;
-    private final static int  MEASURE_SEND=1;
-    private final static int  MEASURE_RECEIVE=2;
+    protected final static int  MEASURE_SEND=1;
+    protected final static int  MEASURE_RECEIVE=2;
     protected ActionType type;
     protected String msgToSend;
     protected Context context;
     protected  int count;
-    protected Dictionary<String,DataItem> data;
+    protected Hashtable<String,DataItem> data;
+
+    protected Vector<var> vars;
    // protected final ProjectionBroadCastReciever receiver1 = new ProjectionBroadCastReciever();
 
     @Override
@@ -42,7 +46,8 @@ public  class Action extends BroadcastReceiver {
         Date dateNow;
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
         String now = sdf.format(new Date());
-        Intent i=new Intent("trigger");
+        Intent i=new Intent("trigger2");
+        Log.i("trigger from Action","trigger from action "+actionName);
         context.sendBroadcast(i,android.Manifest.permission.VIBRATE);
         try {
              dateNow=sdf.parse(now);
@@ -52,7 +57,7 @@ public  class Action extends BroadcastReceiver {
 
 
         } catch (ParseException e) {
-            Log.e("Action","error parsing date in onReceive");
+            Log.i("Action","error parsing date in onReceive");
         }
 
         Toast.makeText(context, "INTENT coount: "+now, Toast.LENGTH_LONG).show();
@@ -61,9 +66,14 @@ public  class Action extends BroadcastReceiver {
     }
 
     public enum ActionType {
-         Question, Recommendation, Notification ,Measurement
+         Question, Recommendation, Notification ,Measurement,General
 
     }
+
+    public Action(String test) {
+
+    }
+
 
     public Action(ActionType _type, String s)
     {
@@ -73,6 +83,7 @@ public  class Action extends BroadcastReceiver {
         ansVal="";
         context=new ContextWrapper(null);
         data=new Hashtable<String,DataItem>() ;
+        vars=new Vector<var>();
 
 
     }
@@ -85,6 +96,7 @@ public  class Action extends BroadcastReceiver {
         ansVal="";
         context=new ContextWrapper(_context);
         data=new Hashtable<String,DataItem>() ;
+        vars=new Vector<var>();
     }
 
     public void SubscribeConcept(String concept)
@@ -98,6 +110,7 @@ public  class Action extends BroadcastReceiver {
 
 
     }
+    public abstract  void doAction();
     public void UnSubscribeConcept(String concept)
     {
         context.unregisterReceiver(this);
@@ -118,9 +131,56 @@ public  class Action extends BroadcastReceiver {
 
     }
 
+    public void measure(String Concept,String name)
+    {
+
+    }
+    public  void createVar(String name, var.VarType type, Object val)
+    {
+        var v=null;
+        switch (type)
+        {
+            case Int:
+                v=new var<Integer>(name,"int",(int)val);
+                break;
+            case String:
+                v=new var<String>(name,"int",(String)val);
+                break;
+
+            case Char:
+                break;
+            case Double:
+                v=new var<Double>(name,"int",(Double)val);
+                break;
+            case Null:
+                break;
 
 
+        }
+        vars.add(v);
 
+    }
+
+    public var getVar(String name)
+    {
+        for(int i=0;i<vars.size();i++)
+        {
+            var v=vars.get(i);
+            if(v.getName().equals(name))
+                return v;
+        }
+        return  null;
+
+    }
+    //count how many times the concept apperas in  the DB
+    public int count (String concept)
+    {
+        return  0;
+
+    }
+
+    /// NOT USED
+    //=================
     static class ActionHandler extends Handler{
 
         @Override
