@@ -20,8 +20,8 @@ public class test   extends Activity{
 	private final ScheduledExecutorService scheduler =
 		     Executors.newScheduledThreadPool(1);
 	
-	public test() {
-		
+	public void test() {
+		System.out.println("this is text from test");
 
 		
 	}

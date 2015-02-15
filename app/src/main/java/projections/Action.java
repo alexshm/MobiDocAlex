@@ -70,9 +70,6 @@ public  abstract class Action extends BroadcastReceiver {
 
     }
 
-    public Action(String test) {
-
-    }
 
 
     public Action(ActionType _type, String s)

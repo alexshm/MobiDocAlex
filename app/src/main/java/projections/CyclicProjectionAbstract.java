@@ -11,6 +11,7 @@ import projections.projection.ProjectionTimeUnit;
 
 public abstract class CyclicProjectionAbstract extends projection {
 
+    private Object b;
 
     public CyclicProjectionAbstract(String projectionName, Context c) {
         super(ProjectionType.Cyclic, projectionName, c);
@@ -18,14 +19,16 @@ public abstract class CyclicProjectionAbstract extends projection {
     }
 
 
-    public void setFrequency(ProjectionTimeUnit unit,int amout)
+
+    public  void setFrequency(ProjectionTimeUnit unit, int amout)
     {
-        SetDoActionEvery(unit,amout);
+        super.SetDoActionEvery(unit,amout);
     }
+    public abstract void makeTestCyclic();
 
-    public void startCyclic(ProjectionTimeUnit unit,int amout) {
+     public void startCyclic(ProjectionTimeUnit unit,int amout) {
 
-        setFrequency(unit,amout);
+         makeTestCyclic();
         this.setAlarmTrigger();
 
         this.registerToTriggring();

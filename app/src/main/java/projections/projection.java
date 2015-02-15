@@ -62,8 +62,10 @@ public abstract class projection extends BroadcastReceiver {
 
 
 
-       if(this.action!=null)
-         this.InvokeAction(this.action);
+       if(this.action!=null) {
+           Log.i("projections.","trigger action successfully");
+           this.InvokeAction(this.action);
+       }
        else {
            Log.i("projections.", "action is  nulll because....!!!");
            Log.i("projections.", "trigger happend!! from " + this.Type.toString() + " and the name is  : " + this.ProjectionName);
@@ -95,6 +97,10 @@ public abstract class projection extends BroadcastReceiver {
         Second, Minute, Hour, Day, Week,Month
     }
 
+    public  String getProjectionName()
+    {
+        return ProjectionName;
+    }
     protected void setAction(Action a)
     {
 
@@ -145,10 +151,12 @@ public abstract class projection extends BroadcastReceiver {
         }
     }
 
-
+     //  public abstract void simulateBuild();
 
 
     public   void startProjection() {
+
+       // simulateBuild();
 
         if (mIsBound) {
             Toast.makeText(this.context, "service allready started", Toast.LENGTH_LONG).show();
