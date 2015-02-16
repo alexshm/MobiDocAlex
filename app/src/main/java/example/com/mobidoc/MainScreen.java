@@ -11,12 +11,15 @@ import android.annotation.SuppressLint;
 import android.app.*;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Messenger;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,13 +28,17 @@ import javassist.ClassPool;
 import projections.*;
 import projections.mobiDocProjections.projectionsManager;
 
+import static projections.projection.ProjectionTimeUnit.*;
+
 @SuppressLint("ShowToast")
 public class MainScreen extends Activity {
      static final int GENERATE_WITH_DEXMAKER = 1;
     static final int GENERATE_JAVA_ASSIST = 2;
     final BlockingQueue<String> q1 = new ArrayBlockingQueue<String>(1000);
-    private TextView t;
-   Messenger mMsg=null;
+    private EditText t;
+    private  RadioButton katProj;
+    private  RadioButton bgProj;
+    Messenger mMsg=null;
 
 
     @Override
@@ -42,22 +49,34 @@ public class MainScreen extends Activity {
 
         //   Toast.makeText(getApplicationContext(), "welcome to MobiDoc", Toast.LENGTH_LONG);
 
-        final Button startbtn = (Button) findViewById(R.id.button1);
-        final Button sendbrd = (Button) findViewById(R.id.button2);
-        final Button sendEvery = (Button) findViewById(R.id.button3);
+        final Button startbtn = (Button) findViewById(R.id.startProj);
 
-        t = (TextView) findViewById(R.id.textView2);
+        katProj = (RadioButton) findViewById(R.id.radioButton);
+        bgProj = (RadioButton) findViewById(R.id.radioButton2);
+        t = (EditText) findViewById(R.id.editText);
+        //===================
+        Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.elements, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+        //===============
 
-        sendEvery.setOnClickListener(new View.OnClickListener() {
+        startbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                    if(t.getText().toString()!="" &&  Integer.parseInt(t.getText().toString())>0)
                         SimulateProjections(v);
-            }
+                    else
+                        Toast.makeText(v.getContext(), "You enter in valid number. please enter again", Toast.LENGTH_LONG).show();
+
+                }
         });
 
-
-        Toast.makeText(this.getApplicationContext(), "projections.projection is set every 30 sec", Toast.LENGTH_LONG).show();
 
 
     }
@@ -66,6 +85,27 @@ public class MainScreen extends Activity {
     {
         projectionsManager mg = new projectionsManager(this.getApplicationContext());
         //CyclicProjectionAbstract proj=(CyclicProjectionAbstract)mg.getprojection();
+        CyclicProjectionAbstract proj;
+        if( katProj.isChecked()) {
+             proj = (CyclicProjectionAbstract) mg.getprojection(0);
+        }
+        else
+            proj = (CyclicProjectionAbstract) mg.getprojection(1);
+
+
+      //  int amount=Integer.parseInt(t.getText().toString());
+
+        if (proj.Isbound()) {
+
+            v.setEnabled(false);
+        } else {
+            proj.startCyclic(Second, 40,Second,5);
+
+            v.setEnabled(false);
+
+
+        }
+        /*
         Enumeration it=mg.getAllProjections();
             while (it.hasMoreElements())
 
@@ -75,13 +115,14 @@ public class MainScreen extends Activity {
 
                     v.setEnabled(false);
                 } else {
-                    proj.startCyclic(projection.ProjectionTimeUnit.Second, 40);
+                    proj.startCyclic(Second, 40,);
 
                     v.setEnabled(false);
 
 
                 }
             }
+            */
 
     }
 

@@ -49,23 +49,60 @@ public class ProjectionBuilder {
                 cyc=new CyclicProjectionAbstract(keyID,cont) {
                     @Override
                     public void doAction() {
-                        System.out.println("this is a cyclic proj Routine Daily BG");
+                        System.out.println("this is a cyclic proj Routine Daily BG - launch");
                     }
                     @Override
                     public void makeTestCyclic()
                     {
-                        MeasurementAction m1=new MeasurementAction("Routine Daily BG lunch measurement","4987",cont);
+                        MeasurementAction m1=new MeasurementAction("Routine Daily BG lunch measurement- launch","4987",cont);
                         this.setAction(m1);
 
                         setFrequency(Second,50);
+                        setReaminder(Second,5);
+                    }
+
+
+                };
+                break;
+            case "20092":
+                cyc=new CyclicProjectionAbstract(keyID,cont) {
+                    @Override
+                    public void doAction() {
+                        System.out.println("this is a cyclic proj Routine Daily BG-Breakfast");
+                    }
+                    @Override
+                    public void makeTestCyclic()
+                    {
+                        MeasurementAction m1=new MeasurementAction("Routine Daily BG lunch measurement-Breakfast","4986",cont);
+                        this.setAction(m1);
+
+                        setFrequency(Second,50);
+                        setReaminder(Second,5);
                     }
 
 
                 };
                 break;
 
+            case "20091":
+                cyc=new CyclicProjectionAbstract(keyID,cont) {
+                    @Override
+                    public void doAction() {
+                        System.out.println("this is a call back test");
+                    }
+                    @Override
+                    public void makeTestCyclic()
+                    {
+                        MeasurementAction m1=new MeasurementAction("Routine Daily BG lunch measurement-Fasting","4985",cont);
+                        this.setAction(m1);
+
+                        setFrequency(Second,50);
+                        //setReaminder(Second,5);
+                    }
 
 
+                };
+                break;
 
         }
 

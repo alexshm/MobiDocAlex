@@ -19,7 +19,9 @@ import android.content.ServiceConnection;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.Vector;
 import example.com.mobidoc.*;
 
@@ -38,8 +40,10 @@ public abstract class projection extends BroadcastReceiver {
     protected Vector<Calendar> calanders;
     protected  String ProjectionName;
   protected long reapetTime;
+    protected long remainderTime;
       public AlarmManager alramMng;
     protected PendingIntent alarmInt;
+    protected PendingIntent reaminderInt;
         protected  Action action;
     // Intent used for binding to LoggingService
 
@@ -93,14 +97,23 @@ public abstract class projection extends BroadcastReceiver {
     }
 
 
+
     public enum ProjectionTimeUnit {
-        Second, Minute, Hour, Day, Week,Month
+        Second, Minute, Hour, Day, Week,Month ,None
     }
 
     public  String getProjectionName()
     {
         return ProjectionName;
     }
+
+    public void SetStartTime(int startHour,int startMinute)
+    {
+        calanders.get(0).set(Calendar.HOUR_OF_DAY,startHour);
+
+        calanders.get(0).set(Calendar.MINUTE,startMinute);
+    }
+
     protected void setAction(Action a)
     {
 
@@ -133,7 +146,34 @@ public abstract class projection extends BroadcastReceiver {
     }
 
 
+    public  void setReaminder(ProjectionTimeUnit unit, int amount)
+    {
 
+        remainderTime=0;
+        switch (unit) {
+
+            case Second:
+                remainderTime = amount * SECOND;
+                break;
+            case Minute:
+                remainderTime = amount * MINUTE;
+                break;
+            case Hour:
+                remainderTime = amount * HOUR;
+            case Day:
+                remainderTime = DAY * amount;
+                break;
+            case None:
+                remainderTime = 0;
+                break;
+
+            default:
+                remainderTime = 30 * SECOND;
+        }
+
+
+
+    }
 	
 	public abstract void doAction();
 
@@ -192,19 +232,39 @@ public abstract class projection extends BroadcastReceiver {
 		
 	}
 	
-	
-	public  void SetTime(int year,int month,int day,int hour,int minute,int sec)
-	{
-		calanders.get(0).set(year, month, day, hour, minute, sec);
-
-	}
-
-    public void StartProjecction_alarm()
+	public boolean hasReaminder()
     {
+        return (remainderTime>0 || calanders.size()>1);
+    }
+
+
+    //set the start time to start the Projection
+    // and start the alarm from this time
+    // in case the remaider Unit != NONE
+    // set and  start the timer for reminder
+    public void StartProjecction_alarm(String StartTime,ProjectionTimeUnit reminder_unit ,int reminder_amount)
+    {
+        int hour=Integer.parseInt(StartTime.split(":")[0]);
+        int minute=Integer.parseInt(StartTime.split(":")[1]);
+
+        SetStartTime(hour,minute);
+        //TODO: UN COMMENT setReaminder ,  when finish implementing
+        //setReaminder(reminder_unit,reminder_amount);
+
+        if (remainderTime>0) {
+
+
+            Intent i=new Intent(this.ProjectionName+"_reamider");
+            reaminderInt= PendingIntent.getBroadcast(this.context, 0, i, 0);
+            Calendar c=Calendar.getInstance();
+            calanders.add(c);
+            calanders.get(1).setTimeInMillis(calanders.get(0).getTimeInMillis()-remainderTime);
+            Log.i("projection", "the remainder is set to : "+ calanders.get(1).get(Calendar.HOUR_OF_DAY)+":"+calanders.get(1).get(Calendar.MINUTE));
+
+            alramMng.setRepeating(AlarmManager.RTC_WAKEUP, calanders.get(1).getTimeInMillis(), reapetTime , reaminderInt);
+        }
 
         alramMng.setRepeating(AlarmManager.RTC_WAKEUP,getTimer().getTimeInMillis(),reapetTime,alarmInt);
-
-
 
     }
 

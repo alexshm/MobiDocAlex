@@ -46,9 +46,9 @@ public class projectionsManager {
         return  projectionCollection.elements();
     }
 
-    public projection getprojection()
+    public projection getprojection(int index)
     {
-        return  projectionCollection.get(0);
+        return  projectionCollection.get(index);
     }
 
     private void SimulateInsertionProjecctions( final Context c)

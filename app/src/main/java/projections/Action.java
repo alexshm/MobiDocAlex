@@ -8,16 +8,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Vector;
 
 public  abstract class Action extends BroadcastReceiver {
@@ -33,6 +30,7 @@ public  abstract class Action extends BroadcastReceiver {
     protected  int count;
     protected Hashtable<String,DataItem> data;
 
+
     protected Vector<var> vars;
    // protected final ProjectionBroadCastReciever receiver1 = new ProjectionBroadCastReciever();
 
@@ -46,6 +44,7 @@ public  abstract class Action extends BroadcastReceiver {
         Date dateNow;
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
         String now = sdf.format(new Date());
+
         Intent i=new Intent("trigger2");
         Log.i("trigger from Action","trigger from action "+actionName);
         context.sendBroadcast(i,android.Manifest.permission.VIBRATE);

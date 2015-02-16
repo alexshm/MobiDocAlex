@@ -26,15 +26,25 @@ public abstract class CyclicProjectionAbstract extends projection {
     }
     public abstract void makeTestCyclic();
 
-     public void startCyclic(ProjectionTimeUnit unit,int amout) {
+     public void startCyclic(ProjectionTimeUnit unit,int amout,ProjectionTimeUnit reamiderUnit,int reamiderAmount) {
 
+         // TODO:  un ccomment this when projecction is ready
+       //  super.SetDoActionEvery(unit,amout);
+         //this.setReaminder(reamiderUnit,reamiderAmount);
          makeTestCyclic();
         this.setAlarmTrigger();
 
         this.registerToTriggring();
         startProjection();
+        String startTime="16:11";
+        StartProjecction_alarm(startTime,reamiderUnit,reamiderAmount);
+         if (this.hasReaminder())
+         {
 
-        StartProjecction_alarm();
+
+
+         }
+
 
     }
 
@@ -43,8 +53,14 @@ public abstract class CyclicProjectionAbstract extends projection {
     {
         IntentFilter intentFilter = new IntentFilter(this.ProjectionName);
 
-        Log.i("registerto trigger","reggister  tot "+this.ProjectionName);
+        Log.i("register to trigger","register  to "+this.ProjectionName);
         context.registerReceiver(this, intentFilter);
+
+        IntentFilter RemainderintentFilter = new IntentFilter(this.ProjectionName+"_remainder");
+        context.registerReceiver(this, RemainderintentFilter);
+       // context.registerReceiver(this, remaiderFilter);
+
+
     }
 
 
@@ -58,5 +74,7 @@ public abstract class CyclicProjectionAbstract extends projection {
 
 
         alarmInt= PendingIntent.getBroadcast(this.context, 0, i, 0);
+
+
     }
 }

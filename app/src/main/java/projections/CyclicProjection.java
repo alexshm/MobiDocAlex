@@ -13,12 +13,12 @@ public  class CyclicProjection extends CyclicProjectionAbstract {
 
     public void makeTestCyclic()
     {
-        System.out.println("value of a : "+a);
+        System.out.println("value of a------------ : "+a);
     }
 
 
     @Override
     public void doAction() {
-        System.out.println("this is a cyclic proj");
+        System.out.println("this is a cyclic proj99999");
     }
 }
