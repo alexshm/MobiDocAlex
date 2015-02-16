@@ -33,7 +33,7 @@ public class MsgRecieverService extends Service {
         private static final int QUESTION_MSG = 1;
         private static final int RECOMMENDATION_MSG = 2;
         private static final int NOTIFICATION_MSG = 3;
-
+        private static final int REMINDER_MSG = 6;
 
         @Override
         public void handleMessage(Message msg) {
@@ -58,16 +58,21 @@ public class MsgRecieverService extends Service {
                     ans = "measure MSG "+msg.getData().getString("value");
 
                     break;
+                case (REMINDER_MSG):
+                    ans = "this is a reminder msg for : "+msg.getData().getString("value");
+
+                    break;
+
 
                 default:
                     super.handleMessage(msg);
             }
 
 
-            Toast.makeText(getBaseContext(), "msg recived in service : " + ans+" with count: "+count, Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), ans+" total msg count: "+count, Toast.LENGTH_LONG).show();
             DialogFragment dialog=MainScreen.BuildDialog.newInstacce(ans);
 
-            //*** NEED TO FIX SHOWING DIALOG *****
+            //TODO: NEED TO FIX SHOWING DIALOG *****
         //    dialog.show(FragmentManager.class.cast(FragmentManager.class), "question");
 
         }

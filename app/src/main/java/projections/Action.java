@@ -46,6 +46,7 @@ public  abstract class Action extends BroadcastReceiver {
         String now = sdf.format(new Date());
 
         Intent i=new Intent("trigger2");
+        i.setAction("_action3");
         Log.i("trigger from Action","trigger from action "+actionName);
         context.sendBroadcast(i,android.Manifest.permission.VIBRATE);
         try {
@@ -66,7 +67,7 @@ public  abstract class Action extends BroadcastReceiver {
 
     public enum ActionType {
          Question, Recommendation, Notification ,Measurement,General
-
+        ,Remainder
     }
 
 
@@ -113,12 +114,20 @@ public  abstract class Action extends BroadcastReceiver {
 
     }
     //send the action to the Mobile Gui
-    public Message getActionToSend()
+    public Message getActionToSend(boolean isReminder)
     {
 
         msgToSend=actionName;
-        Message msg = Message.obtain(null,(type.ordinal()+1),0,0,0);
+        int msgType=type.ordinal()+1;
+
+        // in case of raminder msg
+        if (isReminder)
+            msgType=ActionType.Remainder.ordinal()+1;
+
+        Message msg = Message.obtain(null,msgType,0,0,0);
         Bundle bundle = new Bundle();
+
+
         bundle.putString("value", msgToSend);
         msg.setData(bundle);
         System.out.println("the data when build is : "+msg.getData().getString("value")+" "+(type.ordinal()+1));

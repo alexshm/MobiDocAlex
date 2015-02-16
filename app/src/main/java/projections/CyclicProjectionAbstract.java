@@ -36,14 +36,8 @@ public abstract class CyclicProjectionAbstract extends projection {
 
         this.registerToTriggring();
         startProjection();
-        String startTime="16:11";
+        String startTime="18:24";
         StartProjecction_alarm(startTime,reamiderUnit,reamiderAmount);
-         if (this.hasReaminder())
-         {
-
-
-
-         }
 
 
     }
@@ -53,25 +47,21 @@ public abstract class CyclicProjectionAbstract extends projection {
     {
         IntentFilter intentFilter = new IntentFilter(this.ProjectionName);
 
+        //register to triggring timer events
         Log.i("register to trigger","register  to "+this.ProjectionName);
         context.registerReceiver(this, intentFilter);
 
+        //register to remainder event
         IntentFilter RemainderintentFilter = new IntentFilter(this.ProjectionName+"_remainder");
+
         context.registerReceiver(this, RemainderintentFilter);
-       // context.registerReceiver(this, remaiderFilter);
-
-
     }
-
-
-
 
     @Override
     protected void setAlarmTrigger() {
         Intent i=new Intent(this.ProjectionName);
 
         //context.sendBroadcast(i,android.Manifest.permission.VIBRATE);
-
 
         alarmInt= PendingIntent.getBroadcast(this.context, 0, i, 0);
 

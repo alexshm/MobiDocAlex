@@ -62,13 +62,15 @@ public abstract class projection extends BroadcastReceiver {
         //trigget the action
         //this.doAction();
 
-        ///test////
 
-
+        //get the name of the Intent
+        boolean isReminder=intent.getAction().equals(this.ProjectionName+"_remainder");
 
        if(this.action!=null) {
            Log.i("projections.","trigger action successfully");
-           this.InvokeAction(this.action);
+
+            this.InvokeAction(this.action,isReminder);
+
        }
        else {
            Log.i("projections.", "action is  nulll because....!!!");
@@ -210,9 +212,10 @@ public abstract class projection extends BroadcastReceiver {
     }
 
 
-    public void InvokeAction(Action a) {
+    public void InvokeAction(Action a,boolean isReminder) {
 
-        Message msg = a.getActionToSend();
+        Message msg = a.getActionToSend(isReminder);
+
 
         try {
             if(msg!=null)
@@ -254,12 +257,15 @@ public abstract class projection extends BroadcastReceiver {
         if (remainderTime>0) {
 
 
-            Intent i=new Intent(this.ProjectionName+"_reamider");
+            Intent i=new Intent(this.ProjectionName+"_remainder");
+
             reaminderInt= PendingIntent.getBroadcast(this.context, 0, i, 0);
+
             Calendar c=Calendar.getInstance();
             calanders.add(c);
             calanders.get(1).setTimeInMillis(calanders.get(0).getTimeInMillis()-remainderTime);
-            Log.i("projection", "the remainder is set to : "+ calanders.get(1).get(Calendar.HOUR_OF_DAY)+":"+calanders.get(1).get(Calendar.MINUTE));
+            Log.i("projection", "the normal trigger is set to : "+ calanders.get(0).get(Calendar.HOUR_OF_DAY)+":"+calanders.get(0).get(Calendar.MINUTE)+":"+calanders.get(0).get(Calendar.SECOND));
+            Log.i("projection", "the remainder is set to : "+ calanders.get(1).get(Calendar.HOUR_OF_DAY)+":"+calanders.get(1).get(Calendar.MINUTE)+":"+calanders.get(1).get(Calendar.SECOND));
 
             alramMng.setRepeating(AlarmManager.RTC_WAKEUP, calanders.get(1).getTimeInMillis(), reapetTime , reaminderInt);
         }
