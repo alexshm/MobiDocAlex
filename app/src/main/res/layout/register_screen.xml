@@ -11,7 +11,6 @@
     tools:context="com.example.mobidoc.LoginScreen">
     <!--android:id="@+id/">-->
 
-
 <ImageView
        android:id="@+id/imageView1"
        android:layout_width="wrap_content"
@@ -26,11 +25,11 @@
        android:id="@+id/usernametxt"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:layout_alignLeft="@+id/imageView1"
-       android:layout_alignTop="@+id/imageView1"
-       android:layout_marginLeft="77dp"
-       android:layout_marginTop="198dp"
-       android:ems="10" >
+       android:layout_marginTop="39dp"
+       android:ems="10"
+       android:layout_below="@+id/LoginTitle"
+       android:layout_toRightOf="@+id/usernamelabel"
+       android:layout_toEndOf="@+id/usernamelabel">
 
        <requestFocus />
    </EditText>
@@ -39,11 +38,11 @@
        android:id="@+id/passtext"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:layout_alignLeft="@+id/usernametxt"
-       android:layout_below="@+id/usernametxt"
-       android:layout_marginTop="37dp"
        android:ems="10"
-       android:inputType="textPassword" />
+       android:inputType="textPassword"
+       android:layout_alignBottom="@+id/passlabel"
+       android:layout_toRightOf="@+id/usernamelabel"
+       android:layout_toEndOf="@+id/usernamelabel" />
 
    <TextView
        android:id="@+id/usernamelabel"
@@ -59,22 +58,13 @@
        android:id="@+id/passlabel"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:layout_alignBaseline="@+id/passtext"
-       android:layout_alignBottom="@+id/passtext"
-       android:layout_alignLeft="@+id/usernamelabel"
        android:text="Password : "
-       android:textAppearance="?android:attr/textAppearanceSmall" />
+       android:textAppearance="?android:attr/textAppearanceSmall"
+       android:layout_centerVertical="true"
+       android:layout_alignParentLeft="true"
+       android:layout_alignParentStart="true" />
 
-   <Button
-       android:id="@+id/loginButton"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:onClick="checkLogin"
-       android:text="Login"
-       android:layout_alignTop="@+id/register"
-       android:layout_centerHorizontal="true" />
-
-   <TextView
+    <TextView
        android:id="@+id/errorlable"
        android:layout_width="140dp"
        android:layout_height="90dp"
@@ -92,19 +82,42 @@
         android:onClick="registerClick"
         android:text="Register"
         android:layout_above="@+id/errorlable"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignLeft="@+id/LoginTitle"
+        android:layout_alignStart="@+id/LoginTitle" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Login"
+        android:text="Register"
         android:textSize="@dimen/abc_text_size_headline_material"
         android:id="@+id/LoginTitle"
         style="@style/Base.TextAppearance.AppCompat.Title"
         android:textColor="#ff9cffd4"
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/passtext2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:layout_marginTop="23dp"
+        android:layout_below="@+id/passtext"
+        android:layout_toRightOf="@+id/usernamelabel"
+        android:layout_toEndOf="@+id/usernamelabel" />
+
+    <TextView
+        android:id="@+id/passlabelRe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retype Password : "
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_alignBottom="@+id/passtext2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/passlabel"
+        android:layout_alignEnd="@+id/passlabel" />
 
 </RelativeLayout>

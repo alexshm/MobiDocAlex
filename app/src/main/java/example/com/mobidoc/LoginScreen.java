@@ -46,6 +46,12 @@ public class LoginScreen extends Activity {
 
 	}
 
+    //add to register a user
+    public void registerClick(View view){
+        Intent registerScreen = new Intent(LoginScreen.this,RegisterScreen.class);
+        startActivity(registerScreen);
+    }
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

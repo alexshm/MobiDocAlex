@@ -32,7 +32,7 @@ import static projections.projection.ProjectionTimeUnit.*;
 
 @SuppressLint("ShowToast")
 public class MainScreen extends Activity {
-     static final int GENERATE_WITH_DEXMAKER = 1;
+    static final int GENERATE_WITH_DEXMAKER = 1;
     static final int GENERATE_JAVA_ASSIST = 2;
     final BlockingQueue<String> q1 = new ArrayBlockingQueue<String>(1000);
     private EditText t;
