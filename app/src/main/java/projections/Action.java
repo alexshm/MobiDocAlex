@@ -32,7 +32,9 @@ public  abstract class Action extends BroadcastReceiver {
 
 
     protected Vector<var> vars;
-   // protected final ProjectionBroadCastReciever receiver1 = new ProjectionBroadCastReciever();
+
+
+    // protected final ProjectionBroadCastReciever receiver1 = new ProjectionBroadCastReciever();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -46,7 +48,7 @@ public  abstract class Action extends BroadcastReceiver {
         String now = sdf.format(new Date());
 
         Intent i=new Intent("trigger2");
-        i.setAction("_action3");
+
         Log.i("trigger from Action","trigger from action "+actionName);
         context.sendBroadcast(i,android.Manifest.permission.VIBRATE);
         try {

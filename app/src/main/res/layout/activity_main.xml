@@ -22,154 +22,32 @@
         android:src="@drawable/mobidoc"
         android:textAlignment="center" />
 
-    <Button
-        android:id="@+id/startProj"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="start projection"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/textView4"
-        android:layout_toEndOf="@+id/textView4" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/imageView1">
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/imageView1"
-        android:layout_below="@+id/startProj"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="53dp"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        <Button
+            android:id="@+id/startSimulation"
+            android:layout_width="111dp"
+            android:layout_height="wrap_content"
+            android:text="Testing Mode"
+            android:gravity="top|left"
+            android:enabled="true"
+            android:layout_below="@+id/imageView1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Simulate Projections"
-        android:id="@+id/textView"
-        android:layout_below="@+id/imageView1"
-        android:layout_centerHorizontal="true" />
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/radioGroup"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_alignStart="@+id/textView1">
-
-        <RadioButton
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Simulate BG daily projection"
-            android:id="@+id/radioButton2"
-            android:textStyle="normal"
-            android:layout_below="@+id/textView"
-            android:layout_alignLeft="@+id/textView1"
-            android:layout_alignStart="@+id/textView1" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="This is the main Screen"
+            android:id="@+id/textView5"
+            android:layout_gravity="center_horizontal" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Simulate ketanuria projection"
-            android:id="@+id/radioButton"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/radioGroup"
-            android:layout_toEndOf="@+id/radioGroup" />
-    </RadioGroup>
+    </LinearLayout>
 
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner"
-        android:spinnerMode="dropdown"
-        android:dropDownWidth="wrap_content"
-        android:layout_alignTop="@+id/editText"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Set every: "
-        android:id="@+id/textView2"
-        android:layout_below="@+id/radioGroup"
-        android:layout_alignLeft="@+id/textView3"
-        android:layout_alignStart="@+id/textView3"
-        android:layout_marginTop="37dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editText"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_alignRight="@+id/startProj"
-        android:layout_alignEnd="@+id/startProj"
-        android:layout_alignLeft="@+id/textView"
-        android:layout_alignStart="@+id/textView" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="start time: "
-        android:id="@+id/textView3"
-        android:layout_above="@+id/startProj"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="reminder:"
-        android:id="@+id/textView4"
-        android:layout_below="@+id/spinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="27dp" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/editText2"
-        android:layout_alignTop="@+id/textView4"
-        android:layout_alignLeft="@+id/editText"
-        android:layout_alignStart="@+id/editText"
-        android:layout_alignRight="@+id/editText"
-        android:layout_alignEnd="@+id/editText" />
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner2"
-        android:spinnerMode="dialog"
-        android:dropDownWidth="wrap_content"
-        android:layoutMode="clipBounds"
-        android:touchscreenBlocksFocus="false"
-        android:transitionGroup="false"
-        android:clickable="true"
-        android:layout_alignTop="@+id/editText2"
-        android:layout_toRightOf="@+id/textView"
-        android:layout_toEndOf="@+id/textView" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="datetime|time"
-        android:ems="10"
-        android:id="@+id/editText3"
-        android:numeric="integer"
-        android:layout_above="@+id/startProj"
-        android:layout_alignLeft="@+id/editText2"
-        android:layout_alignStart="@+id/editText2" />
 
 </RelativeLayout>

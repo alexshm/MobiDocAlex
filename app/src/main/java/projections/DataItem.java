@@ -18,7 +18,26 @@ public class DataItem {
         date=time;
     }
 
+    public String getConcept()
+    {
+        return concept;
+    }
+    public String getVal()
+    {
+        return value;
+    }
 
+    public Date getItemDate()
+    {
+        return date;
+    }
+
+    public  DataItem(DataItem other)
+    {
+        this.concept=other.getConcept();
+        this.date=other.getItemDate();
+        this.value=other.getVal();
+    }
 
 
 }

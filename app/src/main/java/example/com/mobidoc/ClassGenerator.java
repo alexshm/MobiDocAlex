@@ -28,6 +28,7 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
 import javassist.Modifier;
+import projections.Action;
 import projections.MeasurementAction;
 
 public class ClassGenerator {
@@ -96,6 +97,7 @@ public class ClassGenerator {
            // final CtNewClass generated = new CtNewClass(generatedName, cp, false, superclass);
            // generated.toClass();
             CtClass[] NO_ARGS = {};
+             cp.get(Action.class.getCanonicalName());
              CtClass cls = cp.makeClass("TestClass1");
             CtConstructor cons = new CtConstructor(null, cls);
            // cons.setBody(";");

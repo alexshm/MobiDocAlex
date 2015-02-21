@@ -21,6 +21,8 @@ public class ProjectionBuilder {
         cont=new ContextWrapper(c);
     }
 
+
+
     public projection SimulateBuild_Projection(String keyID)
 
     {
@@ -37,9 +39,10 @@ public class ProjectionBuilder {
                     public void makeTestCyclic()
                     {
                         MeasurementAction m1=new MeasurementAction("mesure Ketonuria","5021",cont);
-                        this.setAction(m1);
+                        super.setAction(m1);
 
-                        setFrequency(Second,30);
+                        //setFrequency(Minute,2);
+                        //setReaminder(Second,30);
                     }
 
 
@@ -57,8 +60,8 @@ public class ProjectionBuilder {
                         MeasurementAction m1=new MeasurementAction("Routine Daily BG lunch measurement- launch","4987",cont);
                         this.setAction(m1);
 
-                        setFrequency(Second,50);
-                        setReaminder(Second,5);
+                        setFrequency(Minute,1);
+                        setReaminder(Second,40);
                     }
 
 
@@ -76,8 +79,8 @@ public class ProjectionBuilder {
                         MeasurementAction m1=new MeasurementAction("Routine Daily BG lunch measurement-Breakfast","4986",cont);
                         this.setAction(m1);
 
-                        setFrequency(Second,50);
-                        setReaminder(Second,5);
+                        setFrequency(Second,30);
+                        //setReaminder(Second,40);
                     }
 
 

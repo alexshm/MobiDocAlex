@@ -3,11 +3,20 @@ package example.com.mobidoc;
 import android.app.Activity;
 import android.widget.TextView;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 
+import javassist.CannotCompileException;
+import javassist.ClassClassPath;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.NotFoundException;
+import projections.Action;
+import projections.var;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class test   extends Activity{
@@ -21,12 +30,34 @@ public class test   extends Activity{
 		     Executors.newScheduledThreadPool(1);
 	
 	public void test() {
-		System.out.println("this is text from test");
+         ClassPool cp = ClassPool.getDefault();
+     try
+     {
+            cp.insertClassPath(".");
 
-		
-	}
+         //to add to the pool
+
+            cp.insertClassPath(new ClassClassPath(ClassGenerator.class));
+
+            CtClass cls=cp.get("ClassGenerator");
+            CtMethod mtd=cls.getDeclaredMethod("test");
+            mtd.insertBefore("count=9;");
+           Method c= cls.getClass().getMethod("test",null);
+
+
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        } catch (CannotCompileException e) {
+            e.printStackTrace();
+
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+
+    }
 	
-	
+
 	
 	public String init(BlockingQueue<String> q)
 	{

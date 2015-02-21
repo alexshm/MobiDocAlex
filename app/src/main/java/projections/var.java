@@ -11,8 +11,12 @@ public class var<T> {
     private Class   varClass;
     private String objtype;
     private   Dictionary<String,VarType> types;
+    private int count;
 
-
+    public var()
+    {
+        count=0;
+    }
     public var(String _name,String _type)
 
     {
@@ -43,7 +47,11 @@ public class var<T> {
         return  val;
     }
 
-
+    public void test()
+    {
+        count+=1;
+        System.out.println("the count is :"+count);
+    }
     public void setVal(T newVal)
     {
         val=newVal;
