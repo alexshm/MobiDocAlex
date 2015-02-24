@@ -37,18 +37,22 @@ public class DataCollection {
    {
        return constraint!=null;
    }
+
     public void setValueConstraint(valueConstraint cons)
     {
         constraint=cons;
     }
+
     public void setTimeConstraint(int days)
     {
         _daysToRemember=days;
     }
+
     public Vector<DataItem> getDataItems()
     {
         return data;
     }
+
     public Iterable getDataValues()
     {
         List<Integer> list = new ArrayList<Integer>();
@@ -66,13 +70,16 @@ public class DataCollection {
         boolean isSatisfy=false;
 
         if(constraint!=null)
-         isSatisfy=constraint.isSatisfyConstraint(item.getVal());
+         isSatisfy=constraint.isSatisfyConstraint(val);
 
         if(isSatisfy|| constraint==null)
         {
-            //removeOldItems(item.getItemDate());
 
             data.add(item);
+
+            removeOldItems(new Date());
+
+
         }
 
     }
@@ -96,11 +103,12 @@ public class DataCollection {
             try {
 
                 TimeDaysago = sdf.parse(sdf.format(TimeAgo));
-                now = sdf.parse(sdf.format(nowTime));
-                boolean dateMatch=checkDate(item.getItemDate(),TimeDaysago,now);
+               // now = sdf.parse(sdf.format(nowTime));
+                boolean dateMatch=checkDate(item.getItemDate(),TimeDaysago,nowTime);
+
                 if(!dateMatch)
                     data.remove(i);
-                i--;
+
             } catch (ParseException e) {
                 Log.e("DataCollection-","error parsing date");
             }
@@ -112,7 +120,7 @@ public class DataCollection {
 
     private  boolean  checkDate(Date itemDate,Date daysAgoDate,Date nowTime)
     {
-        if ((itemDate.after(daysAgoDate)) &&(itemDate.before(nowTime)))
+        if ((itemDate.after(daysAgoDate)))
             return true;
 
         return  false;

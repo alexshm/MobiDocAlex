@@ -22,8 +22,6 @@ public class valueConstraint {
 
     }
 
-
-
     public boolean isSatisfyConstraint(String val)
     {
         boolean isConstraintInt=android.text.TextUtils.isDigitsOnly(constraintVal);

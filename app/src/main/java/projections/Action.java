@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -46,7 +47,7 @@ public  abstract class Action extends BroadcastReceiver {
     protected Vector<var> vars;
     protected DataCollection data;
     public   Intent serviceIntent =null;
-    Lambda l;
+
     private static final int NO_VAR = 1;
     private static final int CYCLIC = 2;
     private static final int MONITOR = 3;
@@ -63,7 +64,7 @@ public  abstract class Action extends BroadcastReceiver {
         actionConcept=concept;
         ansVal="";
         context=new ContextWrapper(_context);
-        data= new DataCollection(concept,1);
+        data= new DataCollection(concept,2);
         vars=new Vector<var>();
         serviceIntent  = new Intent(_context, projections.monitoringObjects.MonitoringDBservice.class);
     }
@@ -72,13 +73,12 @@ public  abstract class Action extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
-        String now = sdf.format(new Date());
-
         String concept=intent.getStringExtra("concept");
         String val=String.valueOf(intent.getStringExtra("value"));
 
         Date dateNow=new Date();
 
+        String now = sdf.format(dateNow);
         try {
             dateNow=sdf.parse(now);
 
@@ -92,9 +92,9 @@ public  abstract class Action extends BroadcastReceiver {
         // the last data
         if(isNeedToTrigger())
         {
-            Intent i = new Intent(actionName+"_condition");
+            Intent i = new Intent(actionName+"_conditionTrigger");
             context.sendBroadcast(i,android.Manifest.permission.VIBRATE);
-            Log.i("Action On recive","trigger the conditin trigger : "+actionName+"_condition");
+            Log.i("Action On recive","trigger the conditin trigger : "+actionName+"_conditionTrigger");
         }
 
         //TODO:  save the dataitem to DB or in file in SDCARD using service :  MonitoingDB service

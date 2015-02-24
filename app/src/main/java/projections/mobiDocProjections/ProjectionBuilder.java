@@ -4,9 +4,10 @@ package projections.mobiDocProjections;
 import android.content.Context;
 import android.content.ContextWrapper;
 
-import projections.CyclicProjection;
+
 import projections.CyclicProjectionAbstract;
 import projections.MeasurementAction;
+import projections.MonitorProjection;
 import projections.projection;
 
 import static projections.projection.ProjectionTimeUnit.*;
@@ -106,7 +107,12 @@ public class ProjectionBuilder {
 
                 };
                 break;
+            case "1111":
+                cyc=new MonitorProjection("ketanuriaTestProj",cont);
 
+
+
+                break;
         }
 
         return  cyc;

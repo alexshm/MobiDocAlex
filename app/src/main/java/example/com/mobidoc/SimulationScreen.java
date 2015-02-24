@@ -132,20 +132,34 @@ public class SimulationScreen extends Activity {
     {
         projectionsManager mg = new projectionsManager(this.getApplicationContext());
         //CyclicProjectionAbstract proj=(CyclicProjectionAbstract)mg.getprojection();
-        CyclicProjectionAbstract proj;
-        if( katProj.isChecked()) {
-            proj = (CyclicProjectionAbstract) mg.getprojection(0);
+      //  CyclicProjectionAbstract proj;
+        MonitorProjection monitor_Proj =new MonitorProjection("ketanuriaTestProj",this.getApplicationContext());
+
+       // if( katProj.isChecked()) {
+           // proj = (CyclicProjectionAbstract) mg.getprojection(0);
+           // monitor_Proj=(MonitorProjection)mg.getprojection(2);
+        //}
+      //  else
+        //    proj = (CyclicProjectionAbstract) mg.getprojection(1);
+
+
+       // int amount=Integer.parseInt(everyXtxt.getText().toString());
+       // int remider=Integer.parseInt(remaindertxt.getText().toString());
+       // String startTime=startTimetxt.getText().toString();
+
+        //for monitor projection
+        //////////////////////
+        if (monitor_Proj.Isbound()) {
+
+            v.setEnabled(false);
+        } else {
+            monitor_Proj.startMonitor();
+
+            v.setEnabled(false);
         }
-        else
-            proj = (CyclicProjectionAbstract) mg.getprojection(1);
-
-
-        int amount=Integer.parseInt(everyXtxt.getText().toString());
-        int remider=Integer.parseInt(remaindertxt.getText().toString());
-        String startTime=startTimetxt.getText().toString();
-
-
-
+        /*
+        //for Cyclic projection
+         //////////////////////
         if (proj.Isbound()) {
 
             v.setEnabled(false);
@@ -156,6 +170,7 @@ public class SimulationScreen extends Activity {
 
 
         }
+        */
         /*
         Enumeration it=mg.getAllProjections();
             while (it.hasMoreElements())
@@ -232,7 +247,7 @@ public class SimulationScreen extends Activity {
         final DexClassLoader classloader = new DexClassLoader(libPath, tmpDir.getAbsolutePath(), null, this.getClass().getClassLoader());
         System.out.println("before loading class");
 
-        Class<CyclicProjection> classToLoad = null;
+        //Class<CyclicProjection> classToLoad = null;
         try {
             final Class<?> classToLoadw =  classloader.loadClass("TestClass1");
             final Object myInstance = classToLoadw.newInstance();

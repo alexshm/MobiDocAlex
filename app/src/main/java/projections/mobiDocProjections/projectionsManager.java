@@ -6,7 +6,7 @@ import android.widget.Toast;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import projections.CyclicProjection;
+
 import projections.projection;
 
 /**
@@ -61,6 +61,11 @@ public class projectionsManager {
         //projection # 20093
         //=========================
         projection proj1=pb.SimulateBuild_Projection("20093");
+        projectionCollection.add(proj1);
+
+        //Monitor projection # 1111
+        //=========================
+        projection proj2=pb.SimulateBuild_Projection("1111");
         projectionCollection.add(proj1);
 
     }

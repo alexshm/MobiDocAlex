@@ -13,26 +13,27 @@ import static projections.monitoringObjects.valueConstraint.*;
 public class MonitorProjection extends  projection{
 
     protected var v;
-    public MonitorProjection(ProjectionType type, String projectionName, Context c) {
+    protected  MonitorAction triggerAction;
+
+    public MonitorProjection(String projectionName, Context c) {
         super(ProjectionType.Monitor, projectionName, c);
-        //v = new var("Ketanuria anbormal", "int", var.Operators.GreaterThen, 85);
+        triggerAction=new MonitorAction(projectionName,"5021",c);
+
 
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-
         //get the name of the Intent
-        boolean isReminder=intent.getAction().equals(this.ProjectionName+"_monitor");
+        boolean isMonitorTriggerHappened=intent.getAction().equals(this.ProjectionName+"_conditionTrigger");
 
 
      //  boolean ok= isSutisfiedVar(5);
-        if(this.action!=null) {
-            Log.i("projections.","trigger action successfully");
+        if(isMonitorTriggerHappened && this.action!=null) {
+            Log.i("monitoring projections.","trigger action successfully");
 
             this.InvokeAction(this.action,false);
-
         }
         else {
             Log.i("projections.", "action is  nulll because....!!!");
@@ -40,16 +41,39 @@ public class MonitorProjection extends  projection{
         }
     }
 
+    public void defVar(String varName,var.VarType type)
+    {
+        if(this.triggerAction!=null)
+            this.triggerAction.defineVar(varName, type);
+    }
+    public void addValueConstraint(String varName,String concept, var.Operators op, String val)
+    {
+        if(this.triggerAction!=null)
+            this.triggerAction.addValueConstraint(varName,concept,op,val);
+    }
 
+    public void setTimeConstraint( int daysAgo)
+    {
+        if(this.triggerAction!=null)
+            this.triggerAction.setTimeConstraint(daysAgo);
 
+    }
+    public void setAggregationConstraint(String varName, var.AggregationAction action, var.Operators op,int targetVal)
+    {
+        if(this.triggerAction!=null)
+            this.triggerAction.setAggregationConstraint(varName,action,op,targetVal);
+
+    }
     @Override
     public void registerToTriggring() {
 
         //register to remainder event
-        IntentFilter MonitoringFilter = new IntentFilter(this.ProjectionName+"_monitor");
+        IntentFilter MonitoringFilter = new IntentFilter(this.ProjectionName+"_conditionTrigger");
 
         context.registerReceiver(this, MonitoringFilter);
     }
+
+
 
     public void setMonitoringVar()
     {
@@ -60,14 +84,18 @@ public class MonitorProjection extends  projection{
 
 
     }
-    public void startMonitor(ProjectionTimeUnit unit,int amout,ProjectionTimeUnit reamiderUnit,int reamiderAmount) {
-
-
-
+    public void startMonitor()
+    {
+        this.action=new MeasurementAction("mesure after testing","1111",context);
+        defVar("Ketanuria anbormal", var.VarType.Int);
+        addValueConstraint("Ketanuria anbormal", "5021", var.Operators.GreaterThen, "85");
+        setAggregationConstraint("Ketanuria anbormal", var.AggregationAction.Count, var.Operators.GreaterThen,2);
         this.registerToTriggring();
         startProjection();
+    }
 
 
+    public void startMonitor(ProjectionTimeUnit unit,int amout,ProjectionTimeUnit reamiderUnit,int reamiderAmount) {
 
     }
     @Override
