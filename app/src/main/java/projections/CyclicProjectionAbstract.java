@@ -155,6 +155,16 @@ public abstract class CyclicProjectionAbstract extends projection {
         IntentFilter RemainderintentFilter = new IntentFilter(ProjectionName+"_remainder");
 
         context.registerReceiver(this, RemainderintentFilter);
+
+        //register to satisfy condition events like : 2 abnormal in past week
+        String triggerName="condition";
+        if( action!=null)
+            triggerName=action.actionName+"_condition";
+
+        IntentFilter TriggerConditionIntentFilter = new IntentFilter(triggerName);
+
+        context.registerReceiver(this, TriggerConditionIntentFilter);
+        Log.i("register to  Trigger for Condition","register  to "+triggerName);
     }
 
     //set the start time to start the Projection
@@ -234,5 +244,6 @@ public abstract class CyclicProjectionAbstract extends projection {
     protected void setRemainderTrigger() {
         Intent i = new Intent(ProjectionName + "_remainder");
         reaminderInt = PendingIntent.getBroadcast(context, 0, i, 0);
+
     }
 }

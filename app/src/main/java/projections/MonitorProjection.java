@@ -5,33 +5,33 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
-import projections.monitoringObjects.TriggerCond;
-import projections.monitoringObjects.monitorTriggerCondElement;
 
-
-import static projections.monitoringObjects.monitorTriggerCondElement.*;
+import static projections.monitoringObjects.valueConstraint.*;
 
 
 
 public class MonitorProjection extends  projection{
+
+    protected var v;
     public MonitorProjection(ProjectionType type, String projectionName, Context c) {
         super(ProjectionType.Monitor, projectionName, c);
+        //v = new var("Ketanuria anbormal", "int", var.Operators.GreaterThen, 85);
+
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //trigget the action
-        //this.doAction();
-
 
         //get the name of the Intent
-        boolean isReminder=intent.getAction().equals(this.ProjectionName+"_remainder");
+        boolean isReminder=intent.getAction().equals(this.ProjectionName+"_monitor");
 
+
+     //  boolean ok= isSutisfiedVar(5);
         if(this.action!=null) {
             Log.i("projections.","trigger action successfully");
 
-            this.InvokeAction(this.action,isReminder);
+            this.InvokeAction(this.action,false);
 
         }
         else {
@@ -40,24 +40,28 @@ public class MonitorProjection extends  projection{
         }
     }
 
+
+
     @Override
     public void registerToTriggring() {
-        IntentFilter intentFilter = new IntentFilter(this.ProjectionName);
-
-        //register to triggring timer events
-        Log.i("register to trigger", "register  to " + this.ProjectionName);
-        context.registerReceiver(this, intentFilter);
 
         //register to remainder event
-        IntentFilter RemainderintentFilter = new IntentFilter(this.ProjectionName+"_monitoring");
+        IntentFilter MonitoringFilter = new IntentFilter(this.ProjectionName+"_monitor");
 
-        context.registerReceiver(this, RemainderintentFilter);
+        context.registerReceiver(this, MonitoringFilter);
+    }
+
+    public void setMonitoringVar()
+    {
+        ///the condition is :
+        //  concept 5021 > 85
+        // twice in 4 minutes
+
+
+
     }
     public void startMonitor(ProjectionTimeUnit unit,int amout,ProjectionTimeUnit reamiderUnit,int reamiderAmount) {
 
-        // TODO:  un ccomment this when projecction is ready
-        //  super.SetDoActionEvery(unit,amout);
-        //this.setReaminder(reamiderUnit,reamiderAmount);
 
 
         this.registerToTriggring();
@@ -69,6 +73,7 @@ public class MonitorProjection extends  projection{
     @Override
     public void doAction() {
 
+        /*
         Action a=new Action(Action.ActionType.General,"MonitoringTest") {
             @Override
             public void doAction() {
@@ -79,7 +84,7 @@ public class MonitorProjection extends  projection{
 
         TriggerCond cond=new TriggerCond();
         cond.addCondition("one abnormal BP", ConditionActions.Count, MonitorOperators.GreatEqual,1);
-
+        */
     }
 
 

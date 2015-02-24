@@ -10,6 +10,8 @@ import android.annotation.SuppressLint;
 import android.app.*;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Messenger;
@@ -42,6 +44,7 @@ public class SimulationScreen extends Activity {
     private EditText startTimetxt;
     private Spinner spinner;
     private Spinner reminder_spinner;
+    private    int count=1;
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,9 @@ public class SimulationScreen extends Activity {
         everyXtxt = (EditText) findViewById(R.id.editText);
         remaindertxt = (EditText) findViewById(R.id.editText2);
         startTimetxt = (EditText) findViewById(R.id.editText3);
+
+        final Button con = (Button) findViewById(R.id.button);
+
         //===================
         spinner = (Spinner) findViewById(R.id.spinner);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -88,6 +94,22 @@ public class SimulationScreen extends Activity {
                     SimulateProjections(v);
                 else
                     Toast.makeText(v.getContext(), "You enter in valid number. please enter again", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        con.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //register to remainder event
+                count++;
+                IntentFilter RemainderintentFilter = new IntentFilter("ketanuria");
+                Intent i=new Intent("5021");
+                i.putExtra("concept","5021");
+                i.putExtra("value",String.valueOf((98-count)));
+                sendBroadcast(i,android.Manifest.permission.VIBRATE);
+
+
 
             }
         });
