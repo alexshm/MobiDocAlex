@@ -21,12 +21,12 @@ public class var<T> {
     private VarType type;
     private T  val;
     private Operators operator;
-    private Operators aggregationOperator;
+
     private int count;
     private Vector<valueConstraint> valConstraints;
     private String concept;
-    private int aggregationTargetVal;
-    private AggregationAction aggregationAction;
+
+    private OperationBetweenConstraint betweenConstraint;
     public enum VarType {
         Int,String,Char,Double,Null
     }
@@ -36,66 +36,36 @@ public class var<T> {
         Equal,GreaterThen,LessThen,GreatEqual,LessEqual
     }
 
-    public enum AggregationAction
-    {
-        Sum,Avg,Count
-    }
 
+    public enum OperationBetweenConstraint
+    {
+        Or,And
+    }
     public var(String _name,String varConcept,VarType _type)
 
     {
         name = _name;
         type = _type;
         concept=varConcept;
-        aggregationTargetVal=0;
-        aggregationOperator=null;
-        aggregationAction=null;
         valConstraints=new Vector<valueConstraint>();
+        betweenConstraint=OperationBetweenConstraint.Or;
     }
 
-    public void setAggregationAction(AggregationAction action,Operators op,int targetVal)
-    {
-        aggregationAction=action;
-        aggregationOperator=op;
-        aggregationTargetVal=targetVal;
-    }
+
     public void addValueConstraint(String concept, Operators op, String val)
     {
         valueConstraint valc=new valueConstraint(concept,op,val);
         valConstraints.add(valc);
 
     }
-    public valueConstraint getValueConstraint()
-    {
-        return valConstraints.get(0);
 
+
+    //By default the Operation between Constraint is OR
+    public void setOpBetweenValueConstraints(OperationBetweenConstraint op)
+    {
+        betweenConstraint=op;
     }
 
-    public boolean isSatisfyAggregationonstraint(Iterable data)
-    {
-
-        int ans=AggregationFunc(data);
-        System.out.println("the func  is : "+  ans);
-      return (ans>=aggregationTargetVal);
-
-    }
-    public int AggregationFunc(Iterable data)
-    {
-        switch (aggregationAction)
-        {
-            case Sum:
-                return  sum(data).intValue();
-
-            case Avg:
-                return avg(data).intValue();
-
-            case Count:
-
-              return count(data).size();
-
-        }
-        return -1;
-    }
 
 
     public Operators getOperator()
@@ -108,25 +78,25 @@ public class var<T> {
         return name;
     }
 
-    public boolean isSatisfyConstraint(String val)
-    {
-       return valConstraints.get(0).isSatisfyConstraint(val);
-    }
 
-
-    public T getVal()
+    public boolean isSatisfyVar(String val)
     {
 
-        return  val;
+        if(betweenConstraint.equals(OperationBetweenConstraint.And))
+        {
+            boolean ans=true;
+            for(valueConstraint constraint:valConstraints) {
+                ans = ans && constraint.isSatisfyConstraint(val);
+            }
+            return  ans;
+        }
+        else {
+            boolean ans = false;
+            for (valueConstraint constraint : valConstraints) {
+                ans = ans || constraint.isSatisfyConstraint(val);
+            }
+            return ans;
+        }
+
     }
-
-
-    public void setVal(T newVal)
-    {
-        val=newVal;
-    }
-
-
-
-
 }

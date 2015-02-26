@@ -28,8 +28,8 @@
         android:layout_height="wrap_content"
         android:text="start projection"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/textView4"
-        android:layout_toEndOf="@+id/textView4" />
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignStart="@+id/textView1" />
 
     <TextView
         android:id="@+id/textView1"
@@ -170,17 +170,32 @@
         android:numeric="integer"
         android:layout_above="@+id/startSimulation"
         android:layout_alignLeft="@+id/editText2"
-        android:layout_alignStart="@+id/editText2" />
+        android:layout_alignStart="@+id/editText2"
+        android:layout_alignRight="@+id/startSimulation"
+        android:layout_alignEnd="@+id/startSimulation" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="concept"
         android:id="@+id/button"
-        android:layout_below="@+id/editText3"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignLeft="@+id/spinner2"
-        android:layout_alignStart="@+id/spinner2" />
+        android:text="send ketanuria mesure"
+        android:layout_toEndOf="@+id/startSimulation"
+        android:textAlignment="textStart"
+        android:singleLine="false"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_toRightOf="@+id/startSimulation" />
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Monitoring projection-2 abnormal ketanuria"
+        android:id="@+id/radioButton3"
+        android:layout_below="@+id/radioGroup"
+        android:layout_toEndOf="@+id/textView1"
+        android:layout_alignLeft="@+id/radioGroup"
+        android:layout_alignStart="@+id/radioGroup" />
 
 </RelativeLayout>

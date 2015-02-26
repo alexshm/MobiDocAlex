@@ -41,10 +41,10 @@ public class MonitorProjection extends  projection{
         }
     }
 
-    public void defVar(String varName,var.VarType type)
+    public void defVar(String varName,String concept,var.VarType type)
     {
         if(this.triggerAction!=null)
-            this.triggerAction.defineVar(varName, type);
+            this.triggerAction.defineVar(varName,concept, type);
     }
     public void addValueConstraint(String varName,String concept, var.Operators op, String val)
     {
@@ -58,7 +58,13 @@ public class MonitorProjection extends  projection{
             this.triggerAction.setTimeConstraint(daysAgo);
 
     }
-    public void setAggregationConstraint(String varName, var.AggregationAction action, var.Operators op,int targetVal)
+    public void setOpBetweenValueConstraints(String varName,var.OperationBetweenConstraint op)
+    {
+        if(this.triggerAction!=null)
+            this.triggerAction.setOpBetweenValueConstraints(varName,op);
+
+    }
+    public void setAggregationConstraint(String varName, Action.AggregationAction action, Action.AggregationOperators op,int targetVal)
     {
         if(this.triggerAction!=null)
             this.triggerAction.setAggregationConstraint(varName,action,op,targetVal);
@@ -87,9 +93,11 @@ public class MonitorProjection extends  projection{
     public void startMonitor()
     {
         this.action=new MeasurementAction("mesure after testing","1111",context);
-        defVar("Ketanuria anbormal", var.VarType.Int);
-        addValueConstraint("Ketanuria anbormal", "5021", var.Operators.GreaterThen, "85");
-        setAggregationConstraint("Ketanuria anbormal", var.AggregationAction.Count, var.Operators.GreaterThen,2);
+        defVar("Ketanuria anbormal","5021", var.VarType.Int);
+        addValueConstraint("Ketanuria anbormal", "5021", var.Operators.GreaterThen, "100");
+        addValueConstraint("Ketanuria anbormal", "5021", var.Operators.LessThen, "85");
+        setOpBetweenValueConstraints("Ketanuria anbormal", var.OperationBetweenConstraint.Or);
+        setAggregationConstraint("Ketanuria anbormal", Action.AggregationAction.Count, Action.AggregationOperators.GreaterThen, 2);
         this.registerToTriggring();
         startProjection();
     }

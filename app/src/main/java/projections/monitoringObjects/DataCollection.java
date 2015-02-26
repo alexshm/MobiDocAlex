@@ -67,21 +67,9 @@ public class DataCollection {
     {
        DataItem item=new DataItem(concept,val,dateNow);
 
-        boolean isSatisfy=false;
+        data.add(item);
 
-        if(constraint!=null)
-         isSatisfy=constraint.isSatisfyConstraint(val);
-
-        if(isSatisfy|| constraint==null)
-        {
-
-            data.add(item);
-
-            removeOldItems(new Date());
-
-
-        }
-
+        removeOldItems(new Date());
     }
 
     private void removeOldItems(Date nowTime)

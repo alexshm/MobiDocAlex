@@ -3,6 +3,8 @@ package example.com.mobidoc;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -15,6 +17,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Messenger;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,6 +41,7 @@ public class SimulationScreen extends Activity {
     private EditText t;
     private  RadioButton katProj;
     private  RadioButton bgProj;
+    private  RadioButton monitorProj;
     Messenger mMsg=null;
     private EditText everyXtxt;
     private EditText remaindertxt;
@@ -57,6 +61,7 @@ public class SimulationScreen extends Activity {
 
         katProj = (RadioButton) findViewById(R.id.radioButton);
         bgProj = (RadioButton) findViewById(R.id.radioButton2);
+        monitorProj = (RadioButton) findViewById(R.id.radioButton3);
         t = (EditText) findViewById(R.id.editText);
         everyXtxt = (EditText) findViewById(R.id.editText);
         remaindertxt = (EditText) findViewById(R.id.editText2);
@@ -106,8 +111,16 @@ public class SimulationScreen extends Activity {
                 IntentFilter RemainderintentFilter = new IntentFilter("ketanuria");
                 Intent i=new Intent("5021");
                 i.putExtra("concept","5021");
-                i.putExtra("value",String.valueOf((98-count)));
-                sendBroadcast(i,android.Manifest.permission.VIBRATE);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
+                Date dateNow=new Date();
+                String now = sdf.format(dateNow);
+                i.putExtra("time",now);
+                if(count>6|| count<3)
+                i.putExtra("value",String.valueOf((84+count)));
+                else
+                i.putExtra("value", String.valueOf((100 + count)));
+
+                sendBroadcast(i, android.Manifest.permission.VIBRATE);
 
 
 
@@ -128,49 +141,50 @@ public class SimulationScreen extends Activity {
 
     }
 
-    private void SimulateProjections(View v)
-    {
+    private void SimulateProjections(View v) {
         projectionsManager mg = new projectionsManager(this.getApplicationContext());
-        //CyclicProjectionAbstract proj=(CyclicProjectionAbstract)mg.getprojection();
-      //  CyclicProjectionAbstract proj;
-        MonitorProjection monitor_Proj =new MonitorProjection("ketanuriaTestProj",this.getApplicationContext());
 
-       // if( katProj.isChecked()) {
-           // proj = (CyclicProjectionAbstract) mg.getprojection(0);
-           // monitor_Proj=(MonitorProjection)mg.getprojection(2);
-        //}
-      //  else
-        //    proj = (CyclicProjectionAbstract) mg.getprojection(1);
+        CyclicProjectionAbstract proj;
+        MonitorProjection monitor_Proj = new MonitorProjection("ketanuriaTestProj", this.getApplicationContext());
+
+        if (katProj.isChecked()) {
+            proj = (CyclicProjectionAbstract) mg.getprojection(0);
+
+        } else
+            proj = (CyclicProjectionAbstract) mg.getprojection(1);
 
 
-       // int amount=Integer.parseInt(everyXtxt.getText().toString());
-       // int remider=Integer.parseInt(remaindertxt.getText().toString());
-       // String startTime=startTimetxt.getText().toString();
+        int amount = Integer.parseInt(everyXtxt.getText().toString());
+        int remider = Integer.parseInt(remaindertxt.getText().toString());
+        String startTime = startTimetxt.getText().toString();
 
         //for monitor projection
         //////////////////////
-        if (monitor_Proj.Isbound()) {
+        if (monitorProj.isChecked()) {
+            if (monitor_Proj.Isbound()) {
 
-            v.setEnabled(false);
-        } else {
-            monitor_Proj.startMonitor();
+                v.setEnabled(false);
+            } else {
+                monitor_Proj.startMonitor();
 
-            v.setEnabled(false);
+                v.setEnabled(false);
+            }
         }
-        /*
         //for Cyclic projection
-         //////////////////////
-        if (proj.Isbound()) {
+        //////////////////////
+        else {
 
-            v.setEnabled(false);
-        } else {
-            proj.startCyclic(Minute, 1,None,35);
+            if (proj.Isbound()) {
 
-            v.setEnabled(false);
+                v.setEnabled(false);
+            } else {
+                proj.startCyclic(Minute, 1, None, 35);
+
+                v.setEnabled(false);
 
 
+            }
         }
-        */
         /*
         Enumeration it=mg.getAllProjections();
             while (it.hasMoreElements())

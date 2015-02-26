@@ -10,9 +10,6 @@ public class MonitorAction extends  Action {
         super(ActionType.Trigger, name, concept, _context);
 
         SubscribeConcept(concept);
-
-
-
     }
 
 

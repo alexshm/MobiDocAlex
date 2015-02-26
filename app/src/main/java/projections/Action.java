@@ -27,8 +27,14 @@ import java.util.ListIterator;
 import java.util.Vector;
 
 import ch.lambdaj.Lambda;
+import ch.lambdaj.function.aggregate.Avg;
+import ch.lambdaj.function.aggregate.Sum;
 import projections.monitoringObjects.DataCollection;
 import projections.monitoringObjects.valueConstraint;
+
+import static ch.lambdaj.Lambda.avg;
+import static ch.lambdaj.Lambda.count;
+import static ch.lambdaj.Lambda.sum;
 
 public  abstract class Action extends BroadcastReceiver {
 
@@ -41,17 +47,27 @@ public  abstract class Action extends BroadcastReceiver {
     protected String msgToSend;
     protected Context context;
     protected  int count;
-
+    protected  var.OperationBetweenConstraint betweenVars;
+    protected AggregationOperators aggregationOperator;
     public Messenger MessengerToMonitoringService=null;
+    public int aggregationTargetVal;
     protected boolean mIsBound=false;
     protected Vector<var> vars;
     protected DataCollection data;
     public   Intent serviceIntent =null;
-
+    protected AggregationAction aggregationAction;
     private static final int NO_VAR = 1;
     private static final int CYCLIC = 2;
     private static final int MONITOR = 3;
 
+    public enum AggregationAction
+    {
+        Sum,Avg,Count
+    }
+    public enum  AggregationOperators
+    {
+        Equal,GreaterThen,LessThen,GreatEqual,LessEqual
+    }
     public enum ActionType {
         Question, Recommendation, Notification ,Measurement,General
         ,Remainder,Trigger
@@ -66,6 +82,10 @@ public  abstract class Action extends BroadcastReceiver {
         context=new ContextWrapper(_context);
         data= new DataCollection(concept,2);
         vars=new Vector<var>();
+        aggregationAction=null;
+        aggregationTargetVal=0;
+        aggregationOperator=null;
+        betweenVars= var.OperationBetweenConstraint.Or;
         serviceIntent  = new Intent(_context, projections.monitoringObjects.MonitoringDBservice.class);
     }
 
@@ -75,14 +95,16 @@ public  abstract class Action extends BroadcastReceiver {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
         String concept=intent.getStringExtra("concept");
         String val=String.valueOf(intent.getStringExtra("value"));
+        Log.i("geting value ","get value of : "+val);
+        String time=String.valueOf(intent.getStringExtra("time"));
 
-        Date dateNow=new Date();
-
-        String now = sdf.format(dateNow);
         try {
-            dateNow=sdf.parse(now);
+            Date dateNow=sdf.parse(time);
 
-            data.insertItem(concept,val,dateNow);
+
+            boolean okToInsert=isSatisfyVarsConditions(val);
+            if(okToInsert)
+                data.insertItem(concept,val,dateNow);
 
         } catch (ParseException e) {
             Log.e("Action","error parsing date in onReceive");
@@ -127,22 +149,24 @@ public  abstract class Action extends BroadcastReceiver {
         }
         */
     }
-    public void defineVar(String name,var.VarType type)
+
+
+    public void defineVar(String name,String concept,var.VarType type)
     {
         var v=null;
         switch (type)
         {
             case Int:
-                v=new var<Integer>(name,"5021",type);
+                v=new var<Integer>(name,concept,type);
                 break;
             case String:
-                 v=new var<String>(name,"5021",type);
+                 v=new var<String>(name,concept,type);
                 break;
 
             case Char:
                 break;
             case Double:
-                 v=new var<Double>(name,"5021",type);
+                 v=new var<Double>(name,concept,type);
                 break;
             case Null:
                 break;
@@ -150,6 +174,18 @@ public  abstract class Action extends BroadcastReceiver {
         vars.add(v);
     }
 
+
+    public void setOpBetweenValueConstraints(String varName, var.OperationBetweenConstraint op)
+    {
+        var v =getVar(varName);
+        v.setOpBetweenValueConstraints(op);
+    }
+    public void setAggregationAction(AggregationAction action,AggregationOperators op,int targetVal)
+    {
+        aggregationAction=action;
+        aggregationOperator=op;
+        aggregationTargetVal=targetVal;
+    }
     public var getVar(String name)
     {
         for(int i=0;i<vars.size();i++)
@@ -166,18 +202,61 @@ public  abstract class Action extends BroadcastReceiver {
         System.out.println("printong data");
         System.out.println("--------------------------------------");
         for(int i=0;i<data.getDataItems().size();i++)
-            System.out.println("data in "+i+" is "+data.getDataItems().get(0).getVal());
+            System.out.println("data in "+i+" is "+data.getDataItems().get(i).getVal());
+    }
+
+    private boolean isSatisfyVarsConditions(String val)
+    {
+        if(betweenVars.equals(var.OperationBetweenConstraint.And))
+        {
+            boolean ans=true;
+            for(var v:vars) {
+                ans = ans && v.isSatisfyVar(val);
+            }
+            return  ans;
+        }
+        else {
+            boolean ans = false;
+            for(var v:vars) {
+                ans = ans ||v.isSatisfyVar(val);
+            }
+            return ans;
+        }
+
+    }
+    public boolean isSatisfyAggregationConstraint(Iterable data)
+    {
+
+        int ans=AggregationFunc(data);
+        System.out.println("the func  is : "+  ans);
+        return (ans>=aggregationTargetVal);
+
+    }
+    public int AggregationFunc(Iterable data)
+    {
+        switch (aggregationAction)
+        {
+            case Sum:
+                return  sum(data).intValue();
+
+            case Avg:
+                return avg(data).intValue();
+
+            case Count:
+
+                return count(data).size();
+
+        }
+        return -1;
     }
     public boolean isNeedToTrigger()
     {
         boolean ans=false;
         if(vars.size()>0 || data.hasValueConstraint())
         {
-            //TODO:  for more then 1 var
+           Iterable it=data.getDataValues();
 
-            var v=vars.get(0);
-            Iterable it=data.getDataValues();
-            boolean needToTrigger=v.isSatisfyAggregationonstraint(it);
+            boolean needToTrigger=isSatisfyAggregationConstraint(it);
             if(needToTrigger) {
                     ans=true;
                 Log.i("Action","the Conditions  is happend -> apply the triggering");
@@ -191,7 +270,8 @@ public  abstract class Action extends BroadcastReceiver {
     {
         valueConstraint valc=new valueConstraint(concept,op,val);
         data.setValueConstraint(valc);
-        vars.get(0).addValueConstraint(concept,op,val);
+        var v=getVar(varName);
+        v.addValueConstraint(concept, op, val);
 
     }
 
@@ -226,15 +306,17 @@ public  abstract class Action extends BroadcastReceiver {
         }
     }
 
-
-
-    public void setAggregationConstraint(String varName, var.AggregationAction action, var.Operators op,int targetVal)
+    protected void setAggregationConstraint(String varName, AggregationAction action, AggregationOperators op,int targetVal)
     {
         if(vars.size()>0)
-            vars.get(0).setAggregationAction(action,op,targetVal);
+            setAggregationAction(action,op,targetVal);
     }
 
-
+    //By default the Operation between Vars is OR
+    public void setOpBetweenValueConstraints(var.OperationBetweenConstraint op)
+    {
+        betweenVars=op;
+    }
     public void SubscribeConcept(String concept)
     {
 
