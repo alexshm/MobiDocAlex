@@ -1,4 +1,4 @@
-package projections;
+package projections.Actions;
 
 
 import android.content.Context;
@@ -6,10 +6,8 @@ import android.content.Context;
 public class MonitorAction extends  Action {
 
 
-    public MonitorAction( String name, String concept, Context _context) {
-        super(ActionType.Trigger, name, concept, _context);
-
-        SubscribeConcept(concept);
+    public MonitorAction( String name, Context _context) {
+        super(ActionType.Trigger, name, "", _context);
     }
 
 

@@ -1,5 +1,7 @@
 package projections;
 
+import projections.Actions.Action;
+
 /**
  * Created by Moshe on 2/2/2015.
  */
@@ -13,7 +15,7 @@ public class ActionParser {
         public void parse()
         {
         try {
-            String name = "projections.Action";
+            String name = "projections.Actions.Action";
             String methodName = "doAction";
 
             // get String Class

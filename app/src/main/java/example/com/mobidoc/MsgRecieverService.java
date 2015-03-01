@@ -22,11 +22,6 @@ public class MsgRecieverService extends Service {
     // Messenger Object that receives Messages from connected clients
      Messenger mMessenger = new Messenger(new IncomingMsgHandler());
 
-
-
-
-
-
      class IncomingMsgHandler extends Handler {
 
         private static final int MEASURE_MSG = 4;
@@ -79,13 +74,6 @@ public class MsgRecieverService extends Service {
 
 
     }
-
-
-
-
-
-
-
     @Override
     public IBinder onBind(Intent intent) {
 

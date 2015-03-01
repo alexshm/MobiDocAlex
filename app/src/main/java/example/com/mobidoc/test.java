@@ -15,8 +15,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
 import javassist.NotFoundException;
-import projections.Action;
-import projections.var;
+
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class test   extends Activity{

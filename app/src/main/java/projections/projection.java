@@ -1,14 +1,10 @@
 package projections;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 
-import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -19,11 +15,7 @@ import android.content.ServiceConnection;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.Vector;
-import example.com.mobidoc.*;
+import projections.Actions.Action;
 
 
 public abstract class projection extends BroadcastReceiver {
@@ -40,6 +32,7 @@ public abstract class projection extends BroadcastReceiver {
     public   Context context;
     public Messenger MessengerToMsgService=null;
 
+    protected  boolean hasAlarm;
 
     protected boolean mIsBound=false;
 
@@ -76,10 +69,9 @@ public abstract class projection extends BroadcastReceiver {
     protected void setAction(Action a)
     {
 
-        Log.i("projection absctract","set action  "+a.actionName);
        // setAction(m);
         action=a;
-        Log.i("projection absctract","this set action  is "+action.actionName);
+        Log.i("projection "," set action  is "+action.getActionName());
     }
     public projection(ProjectionType type,String _ProjectionName,Context _context)
     {
@@ -113,11 +105,20 @@ public abstract class projection extends BroadcastReceiver {
         {
             Toast.makeText(context, "service allready stopped", Toast.LENGTH_LONG).show();
         }
+
+
+
+    }
+    public void startAlarm()
+    {
+        return;
     }
 
-    public   void startProjection() {
 
-     if (mIsBound) {
+
+    public   void startProjection() {
+        initProjection();
+        if (mIsBound) {
             Toast.makeText(this.context, "service allready started", Toast.LENGTH_LONG).show();
         } else {
            // Intent serviceIntent = new Intent(this, MsgRecieverService.class);
@@ -126,12 +127,18 @@ public abstract class projection extends BroadcastReceiver {
             this.mIsBound = true;
             Toast.makeText(this.context, "service succefully started", Toast.LENGTH_LONG).show();
         }
+
+        if(hasAlarm)
+            this.startAlarm();
+
+
     }
 
+    public  abstract void initProjection();
 
     public void InvokeAction(Action a,boolean isReminder) {
 
-            System.out.println(" invoke action : "+a.actionConcept+ "is remider: "+isReminder);
+            System.out.println(" invoke action : "+a.getConcept()+ "is remider: "+isReminder);
         Message msg = a.getActionToSend(isReminder);
 
         try {

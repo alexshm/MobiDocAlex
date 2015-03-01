@@ -19,6 +19,7 @@ import android.os.Environment;
 import android.os.Messenger;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,7 +48,11 @@ public class SimulationScreen extends Activity {
     private EditText remaindertxt;
     private EditText startTimetxt;
     private Spinner spinner;
+    private Spinner projections_spinner;
     private Spinner reminder_spinner;
+    private String selectedProjection;
+    private ArrayAdapter<CharSequence> projectionVals;
+    private String projectionId;
     private    int count=1;
     @Override
 
@@ -59,9 +64,7 @@ public class SimulationScreen extends Activity {
 
         final Button startbtn = (Button) findViewById(R.id.startSimulation);
 
-        katProj = (RadioButton) findViewById(R.id.radioButton);
-        bgProj = (RadioButton) findViewById(R.id.radioButton2);
-        monitorProj = (RadioButton) findViewById(R.id.radioButton3);
+
         t = (EditText) findViewById(R.id.editText);
         everyXtxt = (EditText) findViewById(R.id.editText);
         remaindertxt = (EditText) findViewById(R.id.editText2);
@@ -91,17 +94,70 @@ public class SimulationScreen extends Activity {
         reminder_spinner.setAdapter(adapterReminder);
         //===============
 
-        startbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+       // projections spinner
+        ////===========
+        projections_spinner = (Spinner) findViewById(R.id.spinner3);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapterprojections = ArrayAdapter.createFromResource(this,
+                R.array.projections, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapterprojections.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        projections_spinner.setAdapter(adapterprojections);
+        //=================================================
 
-                if(everyXtxt.getText().toString()!="" &&  Integer.parseInt(everyXtxt.getText().toString())>0)
-                    SimulateProjections(v);
-                else
-                    Toast.makeText(v.getContext(), "You enter in valid number. please enter again", Toast.LENGTH_LONG).show();
+        projectionVals=ArrayAdapter.createFromResource(this,
+                R.array.projectionsVals, android.R.layout.simple_spinner_item);
+
+
+        projections_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+          @Override
+          public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+              selectedProjection= parentView.getItemAtPosition(position).toString();
+              projectionId=projectionVals.getItem(position).toString();
+
+              if(selectedProjection.contains("Monitor"))
+              {
+                  //visible all the start time+frequncy settings for cyclic
+                 everyXtxt.setVisibility(View.INVISIBLE);
+                  findViewById(R.id.textView2).setVisibility(View.INVISIBLE);
+                  findViewById(R.id.textView3).setVisibility(View.INVISIBLE);
+                  findViewById(R.id.textView4).setVisibility(View.INVISIBLE);
+                  remaindertxt.setVisibility(View.INVISIBLE);
+                  reminder_spinner.setVisibility(View.INVISIBLE);
+                  startTimetxt.setVisibility(View.INVISIBLE);
+                  spinner.setVisibility(View.INVISIBLE);
+              }
+              else
+              {
+                  everyXtxt.setVisibility(View.VISIBLE);
+                  findViewById(R.id.textView2).setVisibility(View.VISIBLE);
+                  findViewById(R.id.textView3).setVisibility(View.VISIBLE);
+                  findViewById(R.id.textView4).setVisibility(View.VISIBLE);
+                  remaindertxt.setVisibility(View.VISIBLE);
+                  reminder_spinner.setVisibility(View.VISIBLE);
+                  startTimetxt.setVisibility(View.VISIBLE);
+                  spinner.setVisibility(View.VISIBLE);
+              }
+          }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
+
         });
+                startbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if (selectedProjection.contains("Monitor")||(!selectedProjection.contains("Monitor")&&everyXtxt.getText().toString() != "" && Integer.parseInt(everyXtxt.getText().toString()) > 0))
+                            SimulateProjections(v);
+                        else
+                            Toast.makeText(v.getContext(), "You enter in valid number. please enter again", Toast.LENGTH_LONG).show();
+
+                    }
+                });
 
         con.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,9 +177,14 @@ public class SimulationScreen extends Activity {
                 i.putExtra("value", String.valueOf((100 + count)));
 
                 sendBroadcast(i, android.Manifest.permission.VIBRATE);
+                IntentFilter RemainderintentFilter1 = new IntentFilter("ketanuria");
+                Intent i1=new Intent("5022");
+                i1.putExtra("concept","5022");
+                i1.putExtra("time",now);
 
+                i1.putExtra("value",String.valueOf((84)))  ;
 
-
+                sendBroadcast(i1, android.Manifest.permission.VIBRATE);
             }
         });
 
@@ -142,67 +203,35 @@ public class SimulationScreen extends Activity {
     }
 
     private void SimulateProjections(View v) {
-        projectionsManager mg = new projectionsManager(this.getApplicationContext());
+       projectionsManager mg = new projectionsManager(this.getApplicationContext());
+        projection p;
 
-        CyclicProjectionAbstract proj;
-        MonitorProjection monitor_Proj = new MonitorProjection("ketanuriaTestProj", this.getApplicationContext());
+        if(selectedProjection.contains("Monitor")) {
+           // p=mg.getprojection(projectionId);
 
-        if (katProj.isChecked()) {
-            proj = (CyclicProjectionAbstract) mg.getprojection(0);
-
-        } else
-            proj = (CyclicProjectionAbstract) mg.getprojection(1);
-
-
-        int amount = Integer.parseInt(everyXtxt.getText().toString());
-        int remider = Integer.parseInt(remaindertxt.getText().toString());
-        String startTime = startTimetxt.getText().toString();
-
-        //for monitor projection
-        //////////////////////
-        if (monitorProj.isChecked()) {
-            if (monitor_Proj.Isbound()) {
-
-                v.setEnabled(false);
-            } else {
-                monitor_Proj.startMonitor();
-
-                v.setEnabled(false);
-            }
+           p = new MonitorProjection("ketanuriaTestProj", this.getApplicationContext());
         }
-        //for Cyclic projection
-        //////////////////////
         else {
+            p=mg.getprojection(projectionId);
+            int amount = Integer.parseInt(everyXtxt.getText().toString());
+            int remider = Integer.parseInt(remaindertxt.getText().toString());
+            String startTime = startTimetxt.getText().toString();
 
-            if (proj.Isbound()) {
+           // CyclicProjectionAbstract proj = new CyclicProjectionAbstract("test", this.getApplicationContext(), "08:00");
+            ((CyclicProjectionAbstract)p).setFrequency(projection.ProjectionTimeUnit.Minute,1);
+            ((CyclicProjectionAbstract)p).setReaminder(projection.ProjectionTimeUnit.Second,30);
 
-                v.setEnabled(false);
-            } else {
-                proj.startCyclic(Minute, 1, None, 35);
-
-                v.setEnabled(false);
-
-
-            }
+            //TODO: uncomment startTime below
+            // ((CyclicProjectionAbstract)p).setStartTime(startTime);
         }
-        /*
-        Enumeration it=mg.getAllProjections();
-            while (it.hasMoreElements())
 
-            {
-                CyclicProjectionAbstract proj=(CyclicProjectionAbstract)it.nextElement();
-                if (proj.Isbound()) {
+        //start the projection
+        //////////////////////
 
-                    v.setEnabled(false);
-                } else {
-                    proj.startCyclic(Second, 40,);
+        if (!p.Isbound()) {
+            p.startProjection();
+        }
 
-                    v.setEnabled(false);
-
-
-                }
-            }
-            */
 
     }
 

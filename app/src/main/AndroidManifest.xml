@@ -48,7 +48,6 @@
         <service android:name=".MsgRecieverService" />
         <service android:name="projections.projection" />
         <service android:name="projections.monitoringObjects.MonitoringDBservice" />
-        <receiver android:name="projections.ProjectionBroadCastReciever" />
 
     </application>
 

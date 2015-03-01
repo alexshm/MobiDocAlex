@@ -3,10 +3,8 @@ package example.com.mobidoc;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.google.dexmaker.BinaryOp;
 import com.google.dexmaker.Code;
 import com.google.dexmaker.DexMaker;
 import com.google.dexmaker.FieldId;
@@ -14,12 +12,10 @@ import com.google.dexmaker.Local;
 import com.google.dexmaker.MethodId;
 import com.google.dexmaker.TypeId;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 
 import javassist.ClassPool;
@@ -28,8 +24,8 @@ import javassist.CtConstructor;
 import javassist.CtMethod;
 import javassist.CtNewMethod;
 import javassist.Modifier;
-import projections.Action;
-import projections.MeasurementAction;
+import projections.Actions.Action;
+import projections.Actions.MeasurementAction;
 
 public class ClassGenerator {
 

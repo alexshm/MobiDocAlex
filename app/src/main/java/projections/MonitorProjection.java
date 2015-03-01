@@ -6,20 +6,19 @@ import android.content.IntentFilter;
 import android.util.Log;
 
 
-import static projections.monitoringObjects.valueConstraint.*;
-
+import projections.Actions.Action;
+import projections.Actions.MonitorAction;
 
 
 public class MonitorProjection extends  projection{
 
-    protected var v;
-    protected  MonitorAction triggerAction;
+
+    protected MonitorAction triggerAction;
 
     public MonitorProjection(String projectionName, Context c) {
         super(ProjectionType.Monitor, projectionName, c);
-        triggerAction=new MonitorAction(projectionName,"5021",c);
-
-
+        triggerAction=new MonitorAction(projectionName,c);
+        hasAlarm=false;
     }
 
     @Override
@@ -28,8 +27,6 @@ public class MonitorProjection extends  projection{
         //get the name of the Intent
         boolean isMonitorTriggerHappened=intent.getAction().equals(this.ProjectionName+"_conditionTrigger");
 
-
-     //  boolean ok= isSutisfiedVar(5);
         if(isMonitorTriggerHappened && this.action!=null) {
             Log.i("monitoring projections.","trigger action successfully");
 
@@ -64,12 +61,19 @@ public class MonitorProjection extends  projection{
             this.triggerAction.setOpBetweenValueConstraints(varName,op);
 
     }
-    public void setAggregationConstraint(String varName, Action.AggregationAction action, Action.AggregationOperators op,int targetVal)
+    public void setAggregationConstraint(Action.AggregationAction action, Action.AggregationOperators op,int targetVal)
     {
         if(this.triggerAction!=null)
-            this.triggerAction.setAggregationConstraint(varName,action,op,targetVal);
+            this.triggerAction.setAggregationConstraint(action,op,targetVal);
 
     }
+    public void setOpBetweenVars(var.OperationBetweenConstraint op)
+    {
+        if(this.triggerAction!=null)
+            this.triggerAction.setOpBetweenVars(op);
+
+    }
+
     @Override
     public void registerToTriggring() {
 
@@ -87,40 +91,20 @@ public class MonitorProjection extends  projection{
         //  concept 5021 > 85
         // twice in 4 minutes
 
-
-
-    }
-    public void startMonitor()
-    {
-        this.action=new MeasurementAction("mesure after testing","1111",context);
-        defVar("Ketanuria anbormal","5021", var.VarType.Int);
-        addValueConstraint("Ketanuria anbormal", "5021", var.Operators.GreaterThen, "100");
-        addValueConstraint("Ketanuria anbormal", "5021", var.Operators.LessThen, "85");
-        setOpBetweenValueConstraints("Ketanuria anbormal", var.OperationBetweenConstraint.Or);
-        setAggregationConstraint("Ketanuria anbormal", Action.AggregationAction.Count, Action.AggregationOperators.GreaterThen, 2);
-        this.registerToTriggring();
-        startProjection();
     }
 
 
-    public void startMonitor(ProjectionTimeUnit unit,int amout,ProjectionTimeUnit reamiderUnit,int reamiderAmount) {
-
-    }
     @Override
     public void doAction() {
 
-        /*
-        Action a=new Action(Action.ActionType.General,"MonitoringTest") {
-            @Override
-            public void doAction() {
-                System.out.println("monitoring action!!!!!!!!!");
-            }
-        };
-        a.createVar("abnormal", var.VarType.Int, 0);
+    }
 
-        TriggerCond cond=new TriggerCond();
-        cond.addCondition("one abnormal BP", ConditionActions.Count, MonitorOperators.GreatEqual,1);
-        */
+
+    @Override
+    public void initProjection() {
+
+        this.registerToTriggring();
+
     }
 
 

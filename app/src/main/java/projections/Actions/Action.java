@@ -1,4 +1,4 @@
-package projections;
+package projections.Actions;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -31,6 +31,7 @@ import ch.lambdaj.function.aggregate.Avg;
 import ch.lambdaj.function.aggregate.Sum;
 import projections.monitoringObjects.DataCollection;
 import projections.monitoringObjects.valueConstraint;
+import projections.var;
 
 import static ch.lambdaj.Lambda.avg;
 import static ch.lambdaj.Lambda.count;
@@ -47,7 +48,7 @@ public  abstract class Action extends BroadcastReceiver {
     protected String msgToSend;
     protected Context context;
     protected  int count;
-    protected  var.OperationBetweenConstraint betweenVars;
+    protected var.OperationBetweenConstraint betweenVars;
     protected AggregationOperators aggregationOperator;
     public Messenger MessengerToMonitoringService=null;
     public int aggregationTargetVal;
@@ -72,6 +73,10 @@ public  abstract class Action extends BroadcastReceiver {
         Question, Recommendation, Notification ,Measurement,General
         ,Remainder,Trigger
     }
+    public enum Actor
+    {
+        Patient,physician
+    }
    public Action(ActionType  _type,String name, String concept,Context _context)
     {
         count=0;
@@ -80,7 +85,7 @@ public  abstract class Action extends BroadcastReceiver {
         actionConcept=concept;
         ansVal="";
         context=new ContextWrapper(_context);
-        data= new DataCollection(concept,2);
+        data= new DataCollection(concept,1);
         vars=new Vector<var>();
         aggregationAction=null;
         aggregationTargetVal=0;
@@ -172,9 +177,17 @@ public  abstract class Action extends BroadcastReceiver {
                 break;
         }
         vars.add(v);
+        //SubscribeConcept(concept);
     }
 
-
+    public String getActionName()
+    {
+        return actionName;
+    }
+    public String getConcept()
+    {
+        return actionConcept;
+    }
     public void setOpBetweenValueConstraints(String varName, var.OperationBetweenConstraint op)
     {
         var v =getVar(varName);
@@ -306,14 +319,14 @@ public  abstract class Action extends BroadcastReceiver {
         }
     }
 
-    protected void setAggregationConstraint(String varName, AggregationAction action, AggregationOperators op,int targetVal)
+    public void setAggregationConstraint(AggregationAction action, AggregationOperators op, int targetVal)
     {
         if(vars.size()>0)
             setAggregationAction(action,op,targetVal);
     }
 
     //By default the Operation between Vars is OR
-    public void setOpBetweenValueConstraints(var.OperationBetweenConstraint op)
+    public void setOpBetweenVars(var.OperationBetweenConstraint op)
     {
         betweenVars=op;
     }
