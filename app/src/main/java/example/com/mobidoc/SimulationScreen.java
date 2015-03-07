@@ -30,6 +30,9 @@ import android.widget.Toast;
 import dalvik.system.DexClassLoader;
 import javassist.ClassPool;
 import projections.*;
+import projections.Actions.MeasurementAction;
+import projections.Actions.NotificationAction;
+import projections.Actions.compositeAction;
 import projections.mobiDocProjections.projectionsManager;
 
 import static projections.projection.ProjectionTimeUnit.*;
@@ -212,15 +215,30 @@ public class SimulationScreen extends Activity {
            p = new MonitorProjection("ketanuriaTestProj", this.getApplicationContext());
         }
         else {
-            p=mg.getprojection(projectionId);
+         //  p=mg.getprojection(projectionId);
+
             int amount = Integer.parseInt(everyXtxt.getText().toString());
             int remider = Integer.parseInt(remaindertxt.getText().toString());
             String startTime = startTimetxt.getText().toString();
 
-           // CyclicProjectionAbstract proj = new CyclicProjectionAbstract("test", this.getApplicationContext(), "08:00");
-            ((CyclicProjectionAbstract)p).setFrequency(projection.ProjectionTimeUnit.Minute,1);
-            ((CyclicProjectionAbstract)p).setReaminder(projection.ProjectionTimeUnit.Second,30);
+            CyclicProjectionAbstract proj = new CyclicProjectionAbstract("test", this.getApplicationContext(), "08:00");
+            //((CyclicProjectionAbstract)p).setFrequency(projection.ProjectionTimeUnit.Minute,1);
+           // ((CyclicProjectionAbstract)p).setReaminder(projection.ProjectionTimeUnit.Second,30);
+            ((CyclicProjectionAbstract)proj).setFrequency(Second,40);
 
+
+            MeasurementAction m1 = new MeasurementAction("mesure Ketonuria", "5021", this.getApplicationContext());
+
+            MeasurementAction m2 = new MeasurementAction("mesure 2 test", "1234", this.getApplicationContext());
+
+            MeasurementAction m3 = new MeasurementAction("mesure 3 test", "12345", this.getApplicationContext());
+            proj.addAction(m1);
+           proj.addAction(m2);
+
+            proj.addAction(m3);
+            proj.setExectuionMode(Utils.ExecuteMode.Parallel);
+
+        p=proj;
             //TODO: uncomment startTime below
             // ((CyclicProjectionAbstract)p).setStartTime(startTime);
         }

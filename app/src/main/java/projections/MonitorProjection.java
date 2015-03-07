@@ -30,7 +30,7 @@ public class MonitorProjection extends  projection{
         if(isMonitorTriggerHappened && this.action!=null) {
             Log.i("monitoring projections.","trigger action successfully");
 
-            this.InvokeAction(this.action,false);
+            this.InvokeAction(false);
         }
         else {
             Log.i("projections.", "action is  nulll because....!!!");

@@ -15,7 +15,10 @@ import android.content.ServiceConnection;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.Vector;
+
 import projections.Actions.Action;
+import projections.Actions.compositeAction;
 
 
 public abstract class projection extends BroadcastReceiver {
@@ -24,18 +27,14 @@ public abstract class projection extends BroadcastReceiver {
     protected ProjectionType Type;
 
     protected  String ProjectionName;
-   // protected PendingIntent alarmInt;
-    protected  Action action;
 
-    // Intent used for binding to LoggingService
-    public   Intent serviceIntent =null;
     public   Context context;
-    public Messenger MessengerToMsgService=null;
+
 
     protected  boolean hasAlarm;
-
+    protected compositeAction action;
     protected boolean mIsBound=false;
-
+    protected Utils.ExecuteMode mode;
     public enum ProjectionType {
         Cyclic, Monitor, Question, Recommendation, Notification, Measurement
     }
@@ -45,40 +44,36 @@ public abstract class projection extends BroadcastReceiver {
     }
 
 
-    protected ServiceConnection mconnection= new ServiceConnection() {
 
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MessengerToMsgService=new Messenger(service);
-            mIsBound=true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            MessengerToMsgService=null;
-
-            mIsBound=false;
-        }
-    };
 
     public  String getProjectionName()
     {
         return ProjectionName;
     }
 
-    protected void setAction(Action a)
-    {
 
-       // setAction(m);
-        action=a;
-        Log.i("projection "," set action  is "+action.getActionName());
+    public void  setExectuionMode(Utils.ExecuteMode executeMode)
+    {
+        mode=executeMode;
+        action.setExecuteMode(mode);
     }
+    public void addAction(Action a)
+    {
+        //TODO:
+        action.addAction(a);
+        // setAction(m);
+
+        Log.i("projection "," add action ");
+    }
+
+
     public projection(ProjectionType type,String _ProjectionName,Context _context)
     {
         Type=type;
         ProjectionName=_ProjectionName;
         context =new ContextWrapper(_context);
-        serviceIntent  = new Intent(_context, example.com.mobidoc.MsgRecieverService.class);
+        action=new compositeAction(context, Utils.ExecuteMode.Sequential);
+        mode= Utils.ExecuteMode.Sequential;
 
     }
 
@@ -96,16 +91,6 @@ public abstract class projection extends BroadcastReceiver {
 
     public   void StopProjection() {
 
-        if (mIsBound) {
-            mconnection = null;
-            mIsBound = false;
-            context.stopService(serviceIntent);
-            Toast.makeText(context, "service succefully stopped", Toast.LENGTH_LONG).show();
-        } else
-        {
-            Toast.makeText(context, "service allready stopped", Toast.LENGTH_LONG).show();
-        }
-
 
 
     }
@@ -118,15 +103,7 @@ public abstract class projection extends BroadcastReceiver {
 
     public   void startProjection() {
         initProjection();
-        if (mIsBound) {
-            Toast.makeText(this.context, "service allready started", Toast.LENGTH_LONG).show();
-        } else {
-           // Intent serviceIntent = new Intent(this, MsgRecieverService.class);
-
-            this.context.bindService(this.serviceIntent, this.mconnection, Context.BIND_AUTO_CREATE);
-            this.mIsBound = true;
-            Toast.makeText(this.context, "service succefully started", Toast.LENGTH_LONG).show();
-        }
+        //TODO : start the compositeActin serivice
 
         if(hasAlarm)
             this.startAlarm();
@@ -136,23 +113,8 @@ public abstract class projection extends BroadcastReceiver {
 
     public  abstract void initProjection();
 
-    public void InvokeAction(Action a,boolean isReminder) {
+    public void InvokeAction(boolean isReminder) {
 
-            System.out.println(" invoke action : "+a.getConcept()+ "is remider: "+isReminder);
-        Message msg = a.getActionToSend(isReminder);
-
-        try {
-            if(msg!=null)
-                this.MessengerToMsgService.send(msg);
-            else
-                Log.e("projection.InvokeAction","MSG is null");
-        } catch (RemoteException e) {
-            Log.e("projection.InvokeAction","error sending msg: "+msg.getData().getString("value"));
         }
-
-    }
-
-
-
 
 }

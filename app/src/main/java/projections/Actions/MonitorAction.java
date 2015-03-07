@@ -10,6 +10,14 @@ public class MonitorAction extends  Action {
         super(ActionType.Trigger, name, "", _context);
     }
 
+    public void setOnSuccess(compositeAction a)
+    {
+        //TODO:  implement
+    }
+    public void setOnFail(compositeAction a)
+    {
+        //TODO: implement
+    }
 
     public void setConcept( String conceptId)
     {
