@@ -1,0 +1,24 @@
+{
+  "projection": {
+    "type": "cyc",
+    "name": "Ketonuria Daily measurement",
+    "id": "19964",
+
+    "freq":{
+        "repeat":{"amount":"50","unit":"sec"},
+        "start":"15:16",
+        "reminder":{"amount":"0","unit":"minute"}
+    },
+
+    "action": {
+      "mode": "seq",
+      "actions": [
+        {
+          "type":"mesure",
+          "name":"Ketonuria",
+          "concept":"5021"
+        } ]
+      },
+    "condition": {}
+      }
+}

@@ -72,8 +72,9 @@ public class CyclicProjectionAbstract extends projection {
         //this.doAction();
         //get the name of the Intent
         boolean isReminder = intent.getAction().contains("_remainder");
+        boolean isMonitorTriggerHappened=intent.getAction().contains("_conditionTrigger");
 
-        // we dont use alarm by days -> but we use alarm every X day/hours..
+        // if we dont use alarm by days -> but we use alarm every X day/hours..
         // if days!=null -> we trigger the alaram with "repeatDays_TriggerNextDay"
         Log.i("cyclic projection -  onReceive.", "trigger action successfully");
         if(days!=null&& !isReminder) {

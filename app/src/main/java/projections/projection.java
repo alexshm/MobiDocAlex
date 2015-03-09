@@ -18,6 +18,7 @@ import android.widget.Toast;
 import java.util.Vector;
 
 import projections.Actions.Action;
+import projections.Actions.MonitorAction;
 import projections.Actions.compositeAction;
 
 
@@ -30,13 +31,13 @@ public abstract class projection extends BroadcastReceiver {
 
     public   Context context;
 
-
+    protected MonitorAction condAction;
     protected  boolean hasAlarm;
     protected compositeAction action;
     protected boolean mIsBound=false;
     protected Utils.ExecuteMode mode;
     public enum ProjectionType {
-        Cyclic, Monitor, Question, Recommendation, Notification, Measurement
+        Cyclic, Monitor
     }
 
     public enum ProjectionTimeUnit {
@@ -74,6 +75,7 @@ public abstract class projection extends BroadcastReceiver {
         context =new ContextWrapper(_context);
         action=new compositeAction(context, Utils.ExecuteMode.Sequential);
         mode= Utils.ExecuteMode.Sequential;
+        condAction=null;
 
     }
 
@@ -99,7 +101,41 @@ public abstract class projection extends BroadcastReceiver {
         return;
     }
 
+    public void defVar(String varName,String concept,var.VarType type)
+    {
+        if(this.condAction!=null)
+            this.condAction.defineVar(varName,concept, type);
+    }
+    public void addValueConstraint(String varName,String concept, var.Operators op, String val)
+    {
+        if(this.condAction!=null)
+            this.condAction.addValueConstraint(varName,concept,op,val);
+    }
 
+    public void setTimeConstraint( int daysAgo)
+    {
+        if(this.condAction!=null)
+            this.condAction.setTimeConstraint(daysAgo);
+
+    }
+    public void setOpBetweenValueConstraints(String varName,var.OperationBetweenConstraint op)
+    {
+        if(this.condAction!=null)
+            this.condAction.setOpBetweenValueConstraints(varName,op);
+
+    }
+    public void setAggregationConstraint(Action.AggregationAction action, Action.AggregationOperators op,int targetVal)
+    {
+        if(this.condAction!=null)
+            this.condAction.setAggregationConstraint(action,op,targetVal);
+
+    }
+    public void setOpBetweenVars(var.OperationBetweenConstraint op)
+    {
+        if(this.condAction!=null)
+            this.condAction.setOpBetweenVars(op);
+
+    }
 
     public   void startProjection() {
         initProjection();
@@ -116,5 +152,8 @@ public abstract class projection extends BroadcastReceiver {
     public void InvokeAction(boolean isReminder) {
 
         }
+    public void onTrigger() {
+
+    }
 
 }

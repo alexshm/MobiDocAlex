@@ -5,9 +5,13 @@ import android.content.Context;
 
 public class MonitorAction extends  Action {
 
+    compositeAction successAction;
+    compositeAction failAction;
 
     public MonitorAction( String name, Context _context) {
         super(ActionType.Trigger, name, "", _context);
+        successAction=null;
+        failAction=null;
     }
 
     public void setOnSuccess(compositeAction a)

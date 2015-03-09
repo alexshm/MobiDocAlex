@@ -1,0 +1,21 @@
+{
+  "projection": {
+    "type": "monitor",
+    "name": "Monitor 2 positive ketonuria in one week",
+    "id": "19965",
+
+    "freq":{},
+  
+
+    "action": {
+      "mode": "seq",
+      "actions": [
+        {
+          "type":"mesure",
+          "name":"Ketonuria",
+          "concept":"5021"
+        } ]
+      },
+    "condition": {}
+      }
+}

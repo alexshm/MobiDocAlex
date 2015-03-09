@@ -13,11 +13,11 @@ import projections.Actions.MonitorAction;
 public class MonitorProjection extends  projection{
 
 
-    protected MonitorAction triggerAction;
+
 
     public MonitorProjection(String projectionName, Context c) {
         super(ProjectionType.Monitor, projectionName, c);
-        triggerAction=new MonitorAction(projectionName,c);
+        condAction=new MonitorAction(projectionName,c);
         hasAlarm=false;
     }
 
@@ -38,41 +38,7 @@ public class MonitorProjection extends  projection{
         }
     }
 
-    public void defVar(String varName,String concept,var.VarType type)
-    {
-        if(this.triggerAction!=null)
-            this.triggerAction.defineVar(varName,concept, type);
-    }
-    public void addValueConstraint(String varName,String concept, var.Operators op, String val)
-    {
-        if(this.triggerAction!=null)
-            this.triggerAction.addValueConstraint(varName,concept,op,val);
-    }
 
-    public void setTimeConstraint( int daysAgo)
-    {
-        if(this.triggerAction!=null)
-            this.triggerAction.setTimeConstraint(daysAgo);
-
-    }
-    public void setOpBetweenValueConstraints(String varName,var.OperationBetweenConstraint op)
-    {
-        if(this.triggerAction!=null)
-            this.triggerAction.setOpBetweenValueConstraints(varName,op);
-
-    }
-    public void setAggregationConstraint(Action.AggregationAction action, Action.AggregationOperators op,int targetVal)
-    {
-        if(this.triggerAction!=null)
-            this.triggerAction.setAggregationConstraint(action,op,targetVal);
-
-    }
-    public void setOpBetweenVars(var.OperationBetweenConstraint op)
-    {
-        if(this.triggerAction!=null)
-            this.triggerAction.setOpBetweenVars(op);
-
-    }
 
     @Override
     public void registerToTriggring() {

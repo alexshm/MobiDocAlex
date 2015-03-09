@@ -1,0 +1,24 @@
+{
+  "projection": {
+    "type": "cyc",
+    "name": "Routine Daily BG Fasting measurement",
+    "id": "20091",
+
+    "freq":{
+        "repeat":{"amount":"40","unit":"sec"},
+        "start":"15:24",
+        "reminder":{"amount":"0","unit":"minute"}
+    },
+
+    "action": {
+      "mode": "seq",
+      "actions": [
+        {
+          "type":"mesure",
+          "name":"BG Fasting",
+          "concept":"4985"
+        } ]
+      },
+    "condition": {}
+      }
+}

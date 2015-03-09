@@ -1,0 +1,24 @@
+{
+  "projection": {
+    "type": "cyc",
+    "name": "Routine Daily BG Breakfast measurement",
+    "id": "20092",
+
+    "freq":{
+        "repeat":{"amount":"1","unit":"day"},
+        "start":"9:00",
+        "reminder":{"amount":"5","unit":"minute"}
+    },
+
+    "action": {
+      "mode": "seq",
+      "actions": [
+        {
+          "type":"mesure",
+          "name":"BG Breakfast",
+          "concept":"4986"
+        } ]
+      },
+    "condition": {}
+      }
+}

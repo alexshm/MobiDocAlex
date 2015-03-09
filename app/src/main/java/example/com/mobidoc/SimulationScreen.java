@@ -1,10 +1,16 @@
 package example.com.mobidoc;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -33,6 +39,7 @@ import projections.*;
 import projections.Actions.MeasurementAction;
 import projections.Actions.NotificationAction;
 import projections.Actions.compositeAction;
+import projections.mobiDocProjections.ProjectionBuilder;
 import projections.mobiDocProjections.projectionsManager;
 
 import static projections.projection.ProjectionTimeUnit.*;
@@ -207,16 +214,22 @@ public class SimulationScreen extends Activity {
 
     private void SimulateProjections(View v) {
        projectionsManager mg = new projectionsManager(this.getApplicationContext());
-        projection p;
+        ProjectionBuilder pb =new ProjectionBuilder(this.getApplicationContext());
 
-        if(selectedProjection.contains("Monitor")) {
-           // p=mg.getprojection(projectionId);
+        String jsonString=readProjectionTxt(projectionId);
+        projection p=pb.FromJson(jsonString);
+        if(p!=null)
+        {
+            Log.i("start projection","starting projection : "+projectionId);
+            p.startProjection();
 
-           p = new MonitorProjection("ketanuriaTestProj", this.getApplicationContext());
         }
-        else {
-         //  p=mg.getprojection(projectionId);
 
+
+
+       /*
+            PROJECTION EXAMPLE
+            ======================
             int amount = Integer.parseInt(everyXtxt.getText().toString());
             int remider = Integer.parseInt(remaindertxt.getText().toString());
             String startTime = startTimetxt.getText().toString();
@@ -239,6 +252,7 @@ public class SimulationScreen extends Activity {
             proj.setExectuionMode(Utils.ExecuteMode.Parallel);
 
         p=proj;
+
             //TODO: uncomment startTime below
             // ((CyclicProjectionAbstract)p).setStartTime(startTime);
         }
@@ -250,9 +264,40 @@ public class SimulationScreen extends Activity {
             p.startProjection();
         }
 
-
+        */
     }
+    private String readProjectionTxt(String projId)
+    {
+        try {
+            //=================================
+            // read file   data from raw resources
+            // TODO: read data from input streamer that was recived from the web(server) and not from the raw resorces
+            //==========================
 
+            InputStream iS;
+            int rID = getResources().getIdentifier("example.com.mobidoc:raw/p"+projId, null, null);
+            iS = getResources().openRawResource(rID);
+
+            //create a buffer that has the same size as the InputStream
+            byte[] buffer = new byte[iS.available()];
+            //read the text file as a stream, into the buffer
+            iS.read(buffer);
+            //create a output stream to write the buffer into
+            ByteArrayOutputStream oS = new ByteArrayOutputStream();
+            //write this buffer to the output stream
+            oS.write(buffer);
+            //Close the Input and Output streams
+            oS.close();
+            iS.close();
+
+            //return the output stream as a String
+            return oS.toString();
+
+        } catch (IOException e) {
+            Log.e("read Projecction file in","error reading file : "+projId);
+           return null;
+        }
+    }
     private void loadAndInvokeJar(){
 
         Class<?>[] params = new Class[]{BlockingQueue.class};
