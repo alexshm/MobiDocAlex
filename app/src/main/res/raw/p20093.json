@@ -16,7 +16,10 @@
         {
           "type":"mesure",
           "name":"BG Lunch",
-          "concept":"4987"
+          "concept":"4987",
+           "actor":"patient",
+           "success": {},
+           "fail": {}
         } ]
       },
     "condition": {}

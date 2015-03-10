@@ -9,14 +9,14 @@ import java.util.concurrent.Callable;
 
 import projections.Utils;
 
-public class MeasurementAction extends Action implements Callable<Message> {
+public class MeasurementAction extends Action {
 
     public MeasurementAction(String measureName,  String conceptId,Context c)
     {
         super(ActionType.Measurement,measureName, conceptId, c);
         setType(ActionType.Measurement);
-        SubscribeConcept(conceptId);
-
+        //TODO:SubscribeConcept(conceptId);
+        _actor=Actor.Patient;
 
     }
 

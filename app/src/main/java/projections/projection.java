@@ -15,6 +15,9 @@ import android.content.ServiceConnection;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import projections.Actions.Action;
@@ -34,6 +37,7 @@ public abstract class projection extends BroadcastReceiver {
     protected MonitorAction condAction;
     protected  boolean hasAlarm;
     protected compositeAction action;
+    protected compositeAction actionToTrigger;
     protected boolean mIsBound=false;
     protected Utils.ExecuteMode mode;
     public enum ProjectionType {
@@ -46,6 +50,63 @@ public abstract class projection extends BroadcastReceiver {
 
 
 
+    protected void receiveData(Intent intent)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
+        String concept = intent.getStringExtra("concept");
+        String val = String.valueOf(intent.getStringExtra("value"));
+        Log.i("geting value ", "get value of : " + val);
+        String time = String.valueOf(intent.getStringExtra("time"));
+
+        try {
+            Date dateNow = sdf.parse(time);
+
+
+            boolean okToInsert =condAction.isSatisfyVarsConditions(val);
+            if (okToInsert)
+                condAction.insertData(concept, val, dateNow);
+
+        } catch (ParseException e) {
+            Log.e("Action", "error parsing date in onReceive");
+        }
+
+        //check if the value constraints+ time constraints is happening after Receiving
+        // the last data
+        if (condAction.isNeedToTrigger()) {
+           Log.i("Action On recive", "trigger the conditin trigger ");
+            triggerEvent();
+        }
+
+        //TODO:  save the dataitem to DB or in file in SDCARD using service :  MonitoingDB service
+        /*
+         //saving the data to DB using service
+        ///========================================
+        Message msg=null;
+        Bundle bundle = new Bundle();
+        if (vars.size()>0 ) {
+            // the value is abnormal
+            msg = Message.obtain(null, MONITOR, 0, 0, 0);
+            bundle.putString("value", val);
+            bundle.putString("concept", concept);
+            bundle.putString("var",vars.get(0).getOperator().toString()+"#"+vars.get(0).getVal().toString());
+        }
+       else {
+            // reciving regular mesurment with no if or monitoring
+            msg = Message.obtain(null, NO_VAR, 0, 0, 0);
+            bundle.putString("value", val);
+            bundle.putString("concept", concept);
+        }
+            msg.setData(bundle);
+            try {
+                if(msg!=null)
+                    MessengerToMonitoringService.send(msg);
+                else
+                    Log.e("projection.InvokeAction","MSG is null");
+            } catch (RemoteException e) {
+                Log.e("projection.InvokeAction","error sending msg: "+msg.getData().getString("value"));
+        }
+        */
+    }
 
     public  String getProjectionName()
     {
@@ -152,8 +213,11 @@ public abstract class projection extends BroadcastReceiver {
     public void InvokeAction(boolean isReminder) {
 
         }
-    public void onTrigger() {
-
+    protected void triggerEvent() {
+        if(actionToTrigger!=null)
+        actionToTrigger.invoke();
+        else
+            Log.i("projection ", "the action to trigger is null");
     }
 
 }

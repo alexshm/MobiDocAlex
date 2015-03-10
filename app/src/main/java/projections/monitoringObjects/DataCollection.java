@@ -12,35 +12,47 @@ import java.util.List;
 import java.util.Vector;
 
 import projections.DataItem;
+import projections.projection;
 
 public class DataCollection {
 
-    private String concept;
+
     private  int _daysToRemember;
     private Vector<DataItem> data;
-    private  valueConstraint constraint;
-    public DataCollection(String Concept,int daysToRemember)
-    {
-        concept=Concept;
-        _daysToRemember=daysToRemember;
-        data=new Vector<DataItem>();
-        constraint=null;
-    }
-    public DataCollection(String Concept,int daysToRemember,valueConstraint valconst)
-    {
-        concept=Concept;
-        _daysToRemember=daysToRemember;
-        data=new Vector<DataItem>();
-        constraint=valconst;
-    }
-   public boolean hasValueConstraint()
+    private Vector<String> conceptsToMonitor;
+
+    private Hashtable<String, Vector<valueConstraint>>constraints;
+
+   public DataCollection()
    {
-       return constraint!=null;
+       conceptsToMonitor=new Vector<>();
+       //TODO: check what the number for _daysToRemember
+       _daysToRemember=1;
+       data=new Vector<DataItem>();
+      constraints=new Hashtable<>();
+   }
+    public DataCollection(int daysToRemember)
+    {
+        conceptsToMonitor=new Vector<>();
+
+        _daysToRemember=daysToRemember;
+        data=new Vector<DataItem>();
+      constraints=new Hashtable<>();
+    }
+
+   public boolean hasValueConstraints()
+   {
+       return constraints.isEmpty();
    }
 
-    public void setValueConstraint(valueConstraint cons)
+    public void addValueConstraint(String concept,valueConstraint cons)
     {
-        constraint=cons;
+          if(!conceptsToMonitor.contains(concept))
+
+              constraints.put(concept,new Vector<valueConstraint>()) ;
+
+        constraints.get(concept).add(cons);
+
     }
 
     public void setTimeConstraint(int days)
@@ -65,11 +77,15 @@ public class DataCollection {
     }
     public void insertItem(String concept,String val,Date dateNow)
     {
-       DataItem item=new DataItem(concept,val,dateNow);
+        //add to the collecction only if the concept need to be monitored
 
-        data.add(item);
+        if(conceptsToMonitor.contains(concept)) {
+            DataItem item = new DataItem(concept, val, dateNow);
 
-        removeOldItems(new Date());
+            data.add(item);
+
+            removeOldItems(new Date());
+        }
     }
 
     private void removeOldItems(Date nowTime)

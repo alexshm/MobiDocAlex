@@ -16,7 +16,10 @@
         {
           "type":"mesure",
           "name":"BG Breakfast",
-          "concept":"4986"
+          "concept":"4986",
+           "actor":"patient",
+           "success": {},
+           "fail": {}
         } ]
       },
     "condition": {}

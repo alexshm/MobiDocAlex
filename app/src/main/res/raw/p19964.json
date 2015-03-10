@@ -16,7 +16,10 @@
         {
           "type":"mesure",
           "name":"Ketonuria",
-          "concept":"5021"
+          "concept":"5021",
+           "actor":"patient",
+           "success": {},
+           "fail": {}
         } ]
       },
     "condition": {}

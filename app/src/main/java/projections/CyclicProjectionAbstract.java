@@ -68,29 +68,35 @@ public class CyclicProjectionAbstract extends projection {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        //trigget the action
-        //this.doAction();
+
         //get the name of the Intent
         boolean isReminder = intent.getAction().contains("_remainder");
-        boolean isMonitorTriggerHappened=intent.getAction().contains("_conditionTrigger");
+        boolean isCyc = intent.getAction().contains("_cyc");
 
-        // if we dont use alarm by days -> but we use alarm every X day/hours..
-        // if days!=null -> we trigger the alaram with "repeatDays_TriggerNextDay"
-        Log.i("cyclic projection -  onReceive.", "trigger action successfully");
-        if(days!=null&& !isReminder) {
-            alramMng.cancel(alarmInt);
-            repeatDays_TriggerNextDay();
+        if(isCyc||isReminder) {
+            // if we dont use alarm by days -> but we use alarm every X day/hours..
+            // if days!=null -> we trigger the alaram with "repeatDays_TriggerNextDay"
+            Log.i("cyclic projection -  onReceive.", "trigger action successfully");
+            if (days != null && !isReminder) {
+                alramMng.cancel(alarmInt);
+                repeatDays_TriggerNextDay();
 
+            }
+
+            if (action != null) {
+                Log.i("cyclic projection -  onReceive.", "action not null");
+                action.invoke();
+                // this.InvokeAction(isReminder);
+
+            } else {
+                Log.e("projections.", "action is  nulll!!!");
+            }
         }
-
-        if (action!= null) {
-            Log.i("cyclic projection -  onReceive.", "action not null");
-           // actions.get()
-            action.invoke();
-           // this.InvokeAction(isReminder);
-
-        } else {
-            Log.i("projections.", "action is  nulll!!!");
+        else
+        {
+            //receive ans save the incoming data and also check the
+            // condition if it happend or not
+            receiveData(intent);
         }
 
     }
@@ -194,10 +200,10 @@ public class CyclicProjectionAbstract extends projection {
     @Override
     public void registerToTriggring()
     {
-        IntentFilter intentFilter = new IntentFilter(ProjectionName);
+        IntentFilter intentFilter = new IntentFilter(ProjectionName+"_cyc");
 
         //register to triggring timer events
-        Log.i("register to trigger","register  to "+ProjectionName);
+        Log.i("register to trigger","register  to "+ProjectionName+"_cyc");
         context.registerReceiver(this, intentFilter);
 
         //register to remainder event
@@ -231,10 +237,6 @@ public class CyclicProjectionAbstract extends projection {
     @Override
     public void startAlarm()
     {
-
-        //TODO: UN COMMENT setReaminder ,  when finish implementing
-        //setReaminder(reminder_unit,reminder_amount);
-
         Date s=cyclicCalendar.getTime();
 
         // we dont use alarm by days -> but we use alarm every X day/hours..
@@ -295,7 +297,7 @@ public class CyclicProjectionAbstract extends projection {
 
     //set what will trigger the alarm
     public void setAlarmTrigger() {
-        Intent i=new Intent(this.ProjectionName);
+        Intent i=new Intent(this.ProjectionName+"_cyc");
 
         //context.sendBroadcast(i,android.Manifest.permission.VIBRATE);
 

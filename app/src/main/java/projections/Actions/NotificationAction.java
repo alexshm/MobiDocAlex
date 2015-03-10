@@ -14,11 +14,7 @@ public class NotificationAction extends Action {
         _actor=actor;
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
 
-        //Notification doesnt need to listen to anything
-    }
 
 
     @Override

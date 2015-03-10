@@ -16,7 +16,10 @@
         {
           "type":"mesure",
           "name":"BG Fasting",
-          "concept":"4985"
+           "actor":"patient",
+          "concept":"4985",
+           "success": {},
+            "fail": {}
         } ]
       },
     "condition": {}
