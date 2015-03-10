@@ -38,7 +38,7 @@ import static ch.lambdaj.Lambda.avg;
 import static ch.lambdaj.Lambda.count;
 import static ch.lambdaj.Lambda.sum;
 
-public  abstract class Action  implements Callable<Message> {
+public  abstract class Action extends BroadcastReceiver implements Callable<Message> {
 
     protected String actionName;
     protected String actionConcept;
@@ -53,8 +53,7 @@ public  abstract class Action  implements Callable<Message> {
 
     protected   Actor _actor;
 
-    compositeAction successAcc;
-    compositeAction failAcc;
+
 
     public enum AggregationAction {
         Sum, Avg, Count
@@ -84,8 +83,7 @@ public  abstract class Action  implements Callable<Message> {
         //===========================
         //TODO:Add implementaion for :
         _actor=null;
-        successAcc=null;
-        failAcc=null;
+
     }
 
     public void setIsReminder(boolean _isReminder)

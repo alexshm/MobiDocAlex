@@ -15,7 +15,10 @@ public class NotificationAction extends Action {
     }
 
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
 
+    }
 
     @Override
     public void doAction() {

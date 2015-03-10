@@ -1,6 +1,7 @@
 package projections.Actions;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
@@ -20,7 +21,10 @@ public class MeasurementAction extends Action {
 
     }
 
+    @Override
+    public void onReceive(Context context, Intent intent) {
 
+    }
     @Override
      public void doAction() {
 

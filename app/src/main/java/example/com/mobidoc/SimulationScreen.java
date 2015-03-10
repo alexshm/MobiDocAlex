@@ -36,8 +36,10 @@ import android.widget.Toast;
 import dalvik.system.DexClassLoader;
 import javassist.ClassPool;
 import projections.*;
+import projections.Actions.Action;
 import projections.Actions.MeasurementAction;
 import projections.Actions.NotificationAction;
+import projections.Actions.QuestionAction;
 import projections.Actions.compositeAction;
 import projections.mobiDocProjections.ProjectionBuilder;
 import projections.mobiDocProjections.projectionsManager;
@@ -174,27 +176,17 @@ public class SimulationScreen extends Activity {
             public void onClick(View v) {
                 //register to remainder event
                 count++;
-                IntentFilter RemainderintentFilter = new IntentFilter("ketanuria");
-                Intent i=new Intent("5021");
-                i.putExtra("concept","5021");
+
+                Intent i=new Intent("5037");
+                i.putExtra("concept","5037");
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
                 Date dateNow=new Date();
                 String now = sdf.format(dateNow);
                 i.putExtra("time",now);
-                if(count>6|| count<3)
-                i.putExtra("value",String.valueOf((84+count)));
-                else
-                i.putExtra("value", String.valueOf((100 + count)));
 
+                i.putExtra("value","yes");
                 sendBroadcast(i, android.Manifest.permission.VIBRATE);
-                IntentFilter RemainderintentFilter1 = new IntentFilter("ketanuria");
-                Intent i1=new Intent("5022");
-                i1.putExtra("concept","5022");
-                i1.putExtra("time",now);
 
-                i1.putExtra("value",String.valueOf((84)))  ;
-
-                sendBroadcast(i1, android.Manifest.permission.VIBRATE);
             }
         });
 
@@ -218,6 +210,8 @@ public class SimulationScreen extends Activity {
 
         String jsonString=readProjectionTxt(projectionId);
         projection p=pb.FromJson(jsonString);
+
+
         if(p!=null)
         {
             Log.i("start projection","starting projection : "+projectionId);

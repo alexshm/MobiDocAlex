@@ -85,6 +85,12 @@ public class MonitorAction extends  Action {
             mIsBound = false;
         }
     };
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+
+    }
+
     public void defineVar(String name, String concept, var.VarType type) {
         var v = null;
         switch (type) {

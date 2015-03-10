@@ -12,9 +12,6 @@ import projections.Actions.MonitorAction;
 
 public class MonitorProjection extends  projection{
 
-
-
-
     public MonitorProjection(String projectionName, Context c) {
         super(ProjectionType.Monitor, projectionName, c);
         condAction=new MonitorAction(projectionName,c);

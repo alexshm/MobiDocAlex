@@ -43,14 +43,14 @@ public class MsgRecieverService extends Service {
                     break;
                 case (QUESTION_MSG):
 
-                    ans = "question MSG "+msg.getData().getString("value");
+                    ans = "question msg "+msg.getData().getString("value");
                     break;
                 case (RECOMMENDATION_MSG):
 
                     ans = "reccomendation msg "+msg.getData().getString("value");
                     break;
                 case (MEASURE_MSG):
-                    ans = "measure MSG "+msg.getData().getString("value");
+                    ans = "measure msg "+msg.getData().getString("value");
 
                     break;
                 case (REMINDER_MSG):
