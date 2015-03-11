@@ -64,7 +64,7 @@ public  abstract class Action extends BroadcastReceiver implements Callable<Mess
     }
 
     public enum ActionType {
-        Question, Recommendation, Notification, Measurement, General, Remainder, Trigger
+        Question, Recommendation, Notification, Measurement, CallBack, Remainder,General,Trigger
     }
 
     public enum Actor {
@@ -113,9 +113,6 @@ public  abstract class Action extends BroadcastReceiver implements Callable<Mess
 
 
 
-    @Override
-    public Message call() throws Exception {
-        return null;
-    }
+
 
 }

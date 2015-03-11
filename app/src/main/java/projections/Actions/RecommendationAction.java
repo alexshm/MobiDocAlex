@@ -8,22 +8,26 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
+import projections.Utils;
+
 public class RecommendationAction extends Action{
 
 
     private  compositeAction successAcc;
     private  compositeAction failAcc;
+    private String acceptConcept;
+    private String declineConcept;
+    boolean isInit;
 
-
-    public RecommendationAction(String recommendationTxt, String concept, Actor actor,Context c) {
+    public RecommendationAction(String recommendationTxt, String concept ,String accept, String decline,Actor actor,Context c) {
         super(Action.ActionType.Recommendation, recommendationTxt, concept, c);
         _actor=actor;
         _actor=Actor.Patient;
-        successAcc=null;
-        failAcc=null;
-        IntentFilter intentFilter = new IntentFilter(concept);
-
-        context.registerReceiver(this, intentFilter);
+        successAcc=new compositeAction(c, Utils.ExecuteMode.Sequential);
+        failAcc=new compositeAction(c, Utils.ExecuteMode.Sequential);
+        acceptConcept=accept;
+        declineConcept=decline;
+        isInit=false;
     }
 
 
@@ -33,15 +37,15 @@ public class RecommendationAction extends Action{
     }
 
 
-    public void setSuccessAction(compositeAction action)
+    public void addToSuccessAction(Action action)
     {
-        successAcc=action;
+        successAcc.addAction(action);
     }
 
 
-    public void setFailAction(compositeAction action)
+    public void addToFailAction(Action action)
     {
-        failAcc=action;
+        failAcc.addAction(action);
     }
 
 
@@ -61,6 +65,16 @@ public class RecommendationAction extends Action{
 
     @Override
     public Message call()  {
+        Log.i("start building question","start building question");
+        if(!isInit)
+        {
+            IntentFilter acceptFilter = new IntentFilter(acceptConcept);
+            isInit=true;
+            context.registerReceiver(this, acceptFilter);
+            IntentFilter declineFilter = new IntentFilter(declineConcept);
+            context.registerReceiver(this, declineFilter);
+        }
+
         msgToSend = actionName;
         int msgType = type.ordinal() + 1;
 
@@ -68,7 +82,11 @@ public class RecommendationAction extends Action{
         Bundle bundle = new Bundle();
 
         bundle.putString("value", msgToSend);
-        Log.i("recommendation action- buil msg", "build msg for : " + actionName);
+
+        bundle.putString("accept", acceptConcept);
+        bundle.putString("decline", declineConcept);
+        Log.i("recommendation action- build msg", "build msg for recommendation ");
+
         msg.setData(bundle);
         return msg;
     }

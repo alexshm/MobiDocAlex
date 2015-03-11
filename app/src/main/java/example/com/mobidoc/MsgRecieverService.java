@@ -29,6 +29,7 @@ public class MsgRecieverService extends Service {
         private static final int RECOMMENDATION_MSG = 2;
         private static final int NOTIFICATION_MSG = 3;
         private static final int REMINDER_MSG = 6;
+         private static final int CALLBACK_MSG=5;
 
         @Override
         public void handleMessage(Message msg) {
@@ -43,11 +44,16 @@ public class MsgRecieverService extends Service {
                     break;
                 case (QUESTION_MSG):
 
-                    ans = "question msg "+msg.getData().getString("value");
+                    ans = "question msg "+msg.getData().getString("question");
+                    String yesAns=msg.getData().getString("yesVal");
+                    String noAns=msg.getData().getString("noVal");
                     break;
                 case (RECOMMENDATION_MSG):
 
                     ans = "reccomendation msg "+msg.getData().getString("value");
+                    String acceptConcept=msg.getData().getString("accept");
+                    String declineConcept=msg.getData().getString("decline");
+
                     break;
                 case (MEASURE_MSG):
                     ans = "measure msg "+msg.getData().getString("value");
@@ -57,8 +63,10 @@ public class MsgRecieverService extends Service {
                     ans = "this is a reminder msg for : "+msg.getData().getString("value");
 
                     break;
-
-
+                case (CALLBACK_MSG):
+                     ans = "CALLBACK msg "+msg.getData().getString("value");
+                    String Concept=msg.getData().getString("concept");
+                    break;
                 default:
                     super.handleMessage(msg);
             }

@@ -10,6 +10,8 @@ import android.util.Log;
 import java.text.ParseException;
 import java.util.Date;
 
+import projections.Utils;
+
 /**
  * Created by Moshe on 3/10/2015.
  */
@@ -17,28 +19,27 @@ public class QuestionAction extends Action{
 
     private  compositeAction successAcc;
     private  compositeAction failAcc;
+    boolean isInit;
 
 
     public QuestionAction(String txt, String concept, Context _context) {
         super(ActionType.Question, txt, concept, _context);
          _actor=Actor.Patient;
-        successAcc=null;
-        failAcc=null;
-        IntentFilter intentFilter = new IntentFilter(concept);
+        successAcc=new compositeAction(_context, Utils.ExecuteMode.Sequential);
+        failAcc=new compositeAction(_context, Utils.ExecuteMode.Sequential);
 
-        context.registerReceiver(this, intentFilter);
 
     }
 
-    public void setSuccessAction(compositeAction action)
+    public void addToSuccessAction(Action action)
     {
-        successAcc=action;
+        successAcc.addAction(action);
     }
 
 
-    public void setFailAction(compositeAction action)
+    public void addToFailAction(Action action)
     {
-        failAcc=action;
+        failAcc.addAction(action);
     }
 
 
@@ -63,14 +64,23 @@ public class QuestionAction extends Action{
 
     @Override
     public Message call()  {
+        Log.i("start building question","start building question");
+        if(!isInit)
+        {
+            IntentFilter intentFilter = new IntentFilter(getConcept());
+            isInit=true;
+            context.registerReceiver(this, intentFilter);
+        }
         msgToSend = actionName;
         int msgType = type.ordinal() + 1;
 
         Message msg = Message.obtain(null, msgType, 0, 0, 0);
         Bundle bundle = new Bundle();
 
-        bundle.putString("value", msgToSend);
-        Log.i("question action- buil msg", "build msg for : " + actionName);
+        bundle.putString("question", msgToSend);
+        bundle.putString("yesVal", "yes");
+        bundle.putString("noVal", "no");
+        Log.i("question action- build msg", "build msg for : ");
         msg.setData(bundle);
         return msg;
     }

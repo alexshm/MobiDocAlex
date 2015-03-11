@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
 import android.widget.Toast;
@@ -268,5 +269,10 @@ public class MonitorAction extends  Action {
     @Override
     public void doAction() {
 
+    }
+
+    @Override
+    public Message call() throws Exception {
+        return null;
     }
 }

@@ -208,9 +208,25 @@ public class SimulationScreen extends Activity {
        projectionsManager mg = new projectionsManager(this.getApplicationContext());
         ProjectionBuilder pb =new ProjectionBuilder(this.getApplicationContext());
 
-        String jsonString=readProjectionTxt(projectionId);
-        projection p=pb.FromJson(jsonString);
+        //String jsonString=readProjectionTxt(projectionId);
+        projection p=null;//pb.FromJson(jsonString);
 
+        CyclicProjectionAbstract proj = new CyclicProjectionAbstract("test", this.getApplicationContext(), "08:00");
+        //((CyclicProjectionAbstract)p).setFrequency(projection.ProjectionTimeUnit.Minute,1);
+        // ((CyclicProjectionAbstract)p).setReaminder(projection.ProjectionTimeUnit.Second,30);
+        ((CyclicProjectionAbstract)proj).setFrequency(Second,40);
+
+
+        Action m1 = new MeasurementAction("yes=mesure Ketonuria", "5021", this.getApplicationContext());
+
+        Action m2 = new MeasurementAction("no=mesure 2 test", "1234", this.getApplicationContext());
+
+        Action m3 = new QuestionAction("quesstion ask", "5037", this.getApplicationContext());
+        ((QuestionAction)m3).addToSuccessAction(m1);
+        ((QuestionAction)m3).addToFailAction(m2);
+
+        proj.addAction(m3);
+       p=proj;
 
         if(p!=null)
         {
