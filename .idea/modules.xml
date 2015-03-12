@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MobiDoc.iml" filepath="$PROJECT_DIR$/MobiDoc.iml" />
       <module fileurl="file://$PROJECT_DIR$/MobiDocAlex.iml" filepath="$PROJECT_DIR$/MobiDocAlex.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
