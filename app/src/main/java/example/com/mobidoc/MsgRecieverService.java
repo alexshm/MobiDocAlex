@@ -13,6 +13,7 @@ public class MsgRecieverService extends Service {
 
 
     public int count = 0;
+    //
     // Messenger Object that receives Messages from connected clients
     IncomingMsgHandler incomingMsgHandler = new IncomingMsgHandler();
     Messenger mMessenger = new Messenger(new IncomingMsgHandler());
