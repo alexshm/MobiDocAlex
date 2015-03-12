@@ -304,7 +304,7 @@ public class SimulationScreen extends Activity {
             return oS.toString();
 
         } catch (IOException e) {
-            Log.e("read Projecction file in","error reading file : "+projId);
+            Log.e("read Projecction file in","error reading file: "+projId);
            return null;
         }
     }
