@@ -5,7 +5,7 @@
     "id": "19964",
 
     "freq":{
-        "repeat":{"amount":"50","unit":"sec"},
+        "repeat":{"amount":"3","unit":"sec"},
         "start":"15:16",
         "reminder":{"amount":"0","unit":"minute"}
     },
