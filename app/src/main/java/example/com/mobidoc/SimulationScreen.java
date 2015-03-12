@@ -17,12 +17,19 @@ import java.util.concurrent.BlockingQueue;
 import android.annotation.SuppressLint;
 import android.app.*;
 import android.app.Dialog;
+import android.content.ComponentCallbacks;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.IBinder;
+import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -66,16 +73,36 @@ public class SimulationScreen extends Activity {
     private ArrayAdapter<CharSequence> projectionVals;
     private String projectionId;
     private    int count=1;
-    @Override
+
+    // Intent used for binding to LoggingService
+  private   Intent serviceIntent;
+    private Messenger mMessengerToLoggingService;
+    private boolean mIsBound;
+
+    // Object implementing Service Connection callbacks
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMessengerToLoggingService = new Messenger(service);
+            mIsBound = true;
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mMessengerToLoggingService = null;
+            mIsBound = false;        }
+    };
+
+
+        @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simulation_screen);
-
+       serviceIntent= new Intent(this.getApplicationContext(),example.com.mobidoc.MsgRecieverService.class);
         //   Toast.makeText(getApplicationContext(), "welcome to MobiDoc", Toast.LENGTH_LONG);
 
         final Button startbtn = (Button) findViewById(R.id.startSimulation);
-
+        final Button handlerSender = (Button) findViewById(R.id.button2);
 
         t = (EditText) findViewById(R.id.editText);
         everyXtxt = (EditText) findViewById(R.id.editText);
@@ -159,6 +186,20 @@ public class SimulationScreen extends Activity {
             }
 
         });
+        handlerSender.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mIsBound) {
+
+                    // Send Message to the Logging Service
+                    SendActionToHandler();
+
+                }
+
+            }
+        });
+
                 startbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -204,13 +245,35 @@ public class SimulationScreen extends Activity {
 
     }
 
+    private void SendActionToHandler()
+    {
+        Action a=new MeasurementAction("ss","5088",getApplicationContext());
+
+        try {
+            Message msg = a.call();
+            mMessengerToLoggingService.send(msg);
+
+        } catch (RemoteException e) {
+            Log.e("SendActionToHandler","error sending msg");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
     private void SimulateProjections(View v) {
-       projectionsManager mg = new projectionsManager(this.getApplicationContext());
-        ProjectionBuilder pb =new ProjectionBuilder(this.getApplicationContext());
+       //projectionsManager mg = new projectionsManager(this.getApplicationContext());
+        //ProjectionBuilder pb =new ProjectionBuilder(this.getApplicationContext());
 
-        //String jsonString=readProjectionTxt(projectionId);
-        projection p=null;//pb.FromJson(jsonString);
 
+
+      //  String jsonString=readProjectionTxt(projectionId);
+       // projection p=pb.FromJson(jsonString);
+
+        projection p=null;//pb.parse(jsonString);
+        /*
         CyclicProjectionAbstract proj = new CyclicProjectionAbstract("test", this.getApplicationContext(), "08:00");
         //((CyclicProjectionAbstract)p).setFrequency(projection.ProjectionTimeUnit.Minute,1);
         // ((CyclicProjectionAbstract)p).setReaminder(projection.ProjectionTimeUnit.Second,30);
@@ -227,7 +290,7 @@ public class SimulationScreen extends Activity {
 
         proj.addAction(m3);
        p=proj;
-
+        */
         if(p!=null)
         {
             Log.i("start projection","starting projection : "+projectionId);
@@ -285,6 +348,7 @@ public class SimulationScreen extends Activity {
             //==========================
 
             InputStream iS;
+            projId="rojection_test";
             int rID = getResources().getIdentifier("example.com.mobidoc:raw/p"+projId, null, null);
             iS = getResources().openRawResource(rID);
 
@@ -394,6 +458,27 @@ public class SimulationScreen extends Activity {
 
     }
 
+    // Bind to LoggingService
+    @Override
+    protected void onResume() {
+        super.onResume();
+       // Intent serviceIntent = new Intent(this,example.com.mobidoc.MsgRecieverService.class);
+
+
+        bindService(serviceIntent, mConnection,
+                Context.BIND_AUTO_CREATE);
+
+    }
+
+    // Unbind from the LoggingService
+    @Override
+    protected void onPause() {
+
+        if (mIsBound)
+            unbindService(mConnection);
+
+        super.onPause();
+    }
 
 
     private void generateDynamicClass(int generator)
