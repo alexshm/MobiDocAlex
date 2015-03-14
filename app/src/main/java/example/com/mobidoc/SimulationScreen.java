@@ -37,6 +37,7 @@ import dalvik.system.DexClassLoader;
 import javassist.ClassPool;
 import projections.Actions.Action;
 import projections.Actions.NotificationAction;
+import projections.mobiDocProjections.ProjectionBuilder;
 import projections.projection;
 
 @SuppressLint("ShowToast")
@@ -249,13 +250,14 @@ public class SimulationScreen extends Activity {
 
     private void SimulateProjections(View v) {
         //projectionsManager mg = new projectionsManager(this.getApplicationContext());
-        //ProjectionBuilder pb =new ProjectionBuilder(this.getApplicationContext());
+
+        ProjectionBuilder pb =new ProjectionBuilder(this.getApplicationContext());
 
 
-        //  String jsonString=readProjectionTxt(projectionId);
+         String jsonString=readProjectionTxt(projectionId);
         // projection p=pb.FromJson(jsonString);
 
-        projection p = null;//pb.parse(jsonString);
+        projection p =pb.build(jsonString);
         /*
         CyclicProjectionAbstract proj = new CyclicProjectionAbstract("test", this.getApplicationContext(), "08:00");
         //((CyclicProjectionAbstract)p).setFrequency(projection.ProjectionTimeUnit.Minute,1);
@@ -330,7 +332,7 @@ public class SimulationScreen extends Activity {
             //==========================
 
             InputStream iS;
-            projId = "rojection_test";
+
             int rID = getResources().getIdentifier("example.com.mobidoc:raw/p" + projId, null, null);
             iS = getResources().openRawResource(rID);
 
