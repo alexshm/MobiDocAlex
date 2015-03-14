@@ -25,10 +25,11 @@ public class MeasurementAction extends Action {
     public void onReceive(Context context, Intent intent) {
 
     }
-    @Override
-     public void doAction() {
 
-    }
+    /*
+           creating a message obj that will be sent to the msgHandler in
+           the Gui component
+        */
 
     @Override
     public Message call()  {
@@ -43,8 +44,10 @@ public class MeasurementAction extends Action {
         Bundle bundle = new Bundle();
 
         bundle.putString("value", msgToSend);
-        Log.i("mesure action- buil msg","build msg for : "+actionName);
+        bundle.putString("concept", this.getConcept());
+        Log.i("mesure action- build msg","build msg for : "+actionName);
         msg.setData(bundle);
         return msg;
     }
+
 }

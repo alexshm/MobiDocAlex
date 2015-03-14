@@ -31,10 +31,8 @@ public class projectionsManager {
         pb=new ProjectionBuilder(context);
         //TODO: change to convert from json to the projection
 
-        //**** SIMULATE INSERTION ***
-        //==============================
 
-        SimulateInsertionProjecctions(context);
+
 
     }
 
@@ -56,22 +54,5 @@ public class projectionsManager {
         return projectionCollection.get(concept);
     }
 
-    private void SimulateInsertionProjecctions( final Context c)
-    {
-        //projection # 19964
-        //=========================
-        projection proj=pb.SimulateBuild_Projection("19964");
-           projectionCollection.put("19964",proj);
 
-        //projection # 20093
-        //=========================
-        projection proj1=pb.SimulateBuild_Projection("20093");
-        projectionCollection.put("20093",proj1);
-
-        //Monitor projection # 1111
-        //=========================
-        projection proj2=pb.SimulateBuild_Projection("1111");
-        projectionCollection.put("1111",proj1);
-
-    }
 }

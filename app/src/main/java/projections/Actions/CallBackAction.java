@@ -10,15 +10,11 @@ import android.util.Log;
 /**
  * Created by Moshe on 3/11/2015.
  */
-public class CallBackAction extends Action{
+public class CallBackAction extends Action {
     public CallBackAction(String name, String concept, Context _context) {
         super(ActionType.CallBack, name, concept, _context);
     }
 
-    @Override
-    public void doAction() {
-
-    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -46,3 +42,4 @@ public class CallBackAction extends Action{
         return msg;
     }
 }
+

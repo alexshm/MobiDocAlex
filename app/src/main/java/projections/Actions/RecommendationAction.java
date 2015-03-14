@@ -30,13 +30,6 @@ public class RecommendationAction extends Action{
         isInit=false;
     }
 
-
-    @Override
-    public void doAction() {
-
-    }
-
-
     public void addToSuccessAction(Action action)
     {
         successAcc.addAction(action);
@@ -82,7 +75,7 @@ public class RecommendationAction extends Action{
         Bundle bundle = new Bundle();
 
         bundle.putString("value", msgToSend);
-
+        bundle.putString("concept", this.getConcept());
         bundle.putString("accept", acceptConcept);
         bundle.putString("decline", declineConcept);
         Log.i("recommendation action- build msg", "build msg for recommendation ");
@@ -90,4 +83,6 @@ public class RecommendationAction extends Action{
         msg.setData(bundle);
         return msg;
     }
+
+
 }

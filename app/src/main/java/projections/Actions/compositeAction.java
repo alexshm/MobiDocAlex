@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import projections.Utils;
 
 public class compositeAction  {
 
-    protected Collection<Action> actionsCollection;
+    public ArrayList<Action> actionsCollection;
     private Context context;
 
 
@@ -55,16 +56,15 @@ public class compositeAction  {
     public void invoke() {
 
         Runnable r = null;
-        ex.execute(r);
+        this.ex.execute(r);
 
 
     }
 
     public void addAction(Action action)
     {
+
         actionsCollection.add(action);
-        ex.addAction(action);
-
-
+        this.ex.addAction(action);
     }
 }

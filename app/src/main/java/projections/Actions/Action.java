@@ -71,6 +71,11 @@ public  abstract class Action extends BroadcastReceiver implements Callable<Mess
         Patient, physician
     }
 
+    public Action(ActionType _type)
+    {
+
+
+    }
     public Action(ActionType _type, String name, String concept, Context _context) {
 
         actionName = name;
@@ -109,7 +114,8 @@ public  abstract class Action extends BroadcastReceiver implements Callable<Mess
     public void setActor(Actor a) {
         _actor=a;
     }
-    public abstract void doAction();
+
+
 
 
 

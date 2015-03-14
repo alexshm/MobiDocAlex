@@ -51,7 +51,10 @@ public class var<T> {
         betweenConstraint=OperationBetweenConstraint.Or;
     }
 
-
+    public String getConcept()
+    {
+        return concept;
+    }
     public void addValueConstraint(String concept, Operators op, String val)
     {
         valueConstraint valc=new valueConstraint(concept,op,val);
@@ -99,4 +102,6 @@ public class var<T> {
         }
 
     }
+
+
 }

@@ -23,13 +23,22 @@ public class SerialExecutor extends actionExecutor implements Executor {
             super(c);
             pool = Executors.newSingleThreadExecutor();
             msgsrstlt=new ArrayList<Future<Message>>();
+            this.tasks = new ArrayList<Action>( );
             startService();
 
+
+
+        }
+        @Override
+        public  void addAction(Action a)
+        {
+            this.tasks.add(a);
         }
 
+        @Override
         public  void execute( Runnable r) {
 
-            for (Action task:tasks)
+            for (Action task:this.tasks)
             {
                 Log.i("Sequncial exiecuter-excute"," executing the action : "+task.getActionName());
                 Future rslt=pool.submit(task);
@@ -40,10 +49,5 @@ public class SerialExecutor extends actionExecutor implements Executor {
 
             }
 
-
-
         }
-
-
-
 }

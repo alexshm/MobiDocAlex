@@ -23,10 +23,6 @@ public class NotificationAction extends Action {
 
     }
 
-    @Override
-    public void doAction() {
-
-    }
 
 
     @Override
@@ -50,4 +46,6 @@ public class NotificationAction extends Action {
         }
         return null;
     }
+
+
 }

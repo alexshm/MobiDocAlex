@@ -203,10 +203,12 @@ public class MonitorAction extends  Action {
     }
 
 
-    public void addValueConstraint(String varName, String concept, var.Operators op, String val) {
+    public void addValueConstraint(String varName, var.Operators op, String val) {
+        var v = getVar(varName);
+        String concept=v.getConcept();
         valueConstraint valc = new valueConstraint(concept, op, val);
         data.addValueConstraint(concept,valc);
-        var v = getVar(varName);
+
         v.addValueConstraint(concept, op, val);
 
     }
@@ -215,6 +217,8 @@ public class MonitorAction extends  Action {
         data.setTimeConstraint(daysAgo);
 
     }
+
+
 
     public void startMonitoring() {
 
@@ -266,10 +270,6 @@ public class MonitorAction extends  Action {
     }
     //TODO: when ok, need to triggring the projecction
 
-    @Override
-    public void doAction() {
-
-    }
 
     @Override
     public Message call() throws Exception {

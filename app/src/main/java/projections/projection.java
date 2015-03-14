@@ -113,19 +113,22 @@ public abstract class projection extends BroadcastReceiver {
         return ProjectionName;
     }
 
+    public  ProjectionType getType()
+    {
+        return Type;
+    }
+
 
     public void  setExectuionMode(Utils.ExecuteMode executeMode)
     {
         mode=executeMode;
-        action.setExecuteMode(mode);
+        if(executeMode.equals(Utils.ExecuteMode.Parallel))
+            action.setExecuteMode(mode);
     }
     public void addAction(Action a)
     {
         //TODO:
-        action.addAction(a);
-        // setAction(m);
-
-        Log.i("projection "," add action ");
+       action.addAction(a);
     }
 
 
@@ -167,10 +170,10 @@ public abstract class projection extends BroadcastReceiver {
         if(this.condAction!=null)
             this.condAction.defineVar(varName,concept, type);
     }
-    public void addValueConstraint(String varName,String concept, var.Operators op, String val)
+    public void addValueConstraint(String varName, var.Operators op, String val)
     {
         if(this.condAction!=null)
-            this.condAction.addValueConstraint(varName,concept,op,val);
+            this.condAction.addValueConstraint(varName,op,val);
     }
 
     public void setTimeConstraint( int daysAgo)

@@ -15,30 +15,28 @@ import projections.Utils;
 /**
  * Created by Moshe on 3/10/2015.
  */
-public class QuestionAction extends Action{
+public class QuestionAction extends Action {
 
-    private  compositeAction successAcc;
-    private  compositeAction failAcc;
+    private compositeAction successAcc;
+    private compositeAction failAcc;
     boolean isInit;
 
 
     public QuestionAction(String txt, String concept, Context _context) {
         super(ActionType.Question, txt, concept, _context);
-         _actor=Actor.Patient;
-        successAcc=new compositeAction(_context, Utils.ExecuteMode.Sequential);
-        failAcc=new compositeAction(_context, Utils.ExecuteMode.Sequential);
+        _actor = Actor.Patient;
+        successAcc = new compositeAction(_context, Utils.ExecuteMode.Sequential);
+        failAcc = new compositeAction(_context, Utils.ExecuteMode.Sequential);
 
 
     }
 
-    public void addToSuccessAction(Action action)
-    {
+    public void addToSuccessAction(Action action) {
         successAcc.addAction(action);
     }
 
 
-    public void addToFailAction(Action action)
-    {
+    public void addToFailAction(Action action) {
         failAcc.addAction(action);
     }
 
@@ -51,24 +49,19 @@ public class QuestionAction extends Action{
         String time = String.valueOf(intent.getStringExtra("time"));
 
         // waiting for the answer of the question (yes/no) value
-        if(val.equals("yes"))
+        if (val.equals("yes"))
             successAcc.invoke();
         else
             failAcc.invoke();
     }
 
-    @Override
-    public void doAction() {
-
-    }
 
     @Override
-    public Message call()  {
-        Log.i("start building question","start building question");
-        if(!isInit)
-        {
+    public Message call() {
+        Log.i("start building question", "start building question");
+        if (!isInit) {
             IntentFilter intentFilter = new IntentFilter(getConcept());
-            isInit=true;
+            isInit = true;
             context.registerReceiver(this, intentFilter);
         }
         msgToSend = actionName;
@@ -84,4 +77,6 @@ public class QuestionAction extends Action{
         msg.setData(bundle);
         return msg;
     }
+
+
 }

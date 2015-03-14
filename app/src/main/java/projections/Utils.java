@@ -1,6 +1,7 @@
 package projections;
 
 
+import projections.Actions.Action;
 
 public  final class Utils {
     public static enum AggregationAction {
@@ -12,7 +13,7 @@ public  final class Utils {
     }
 
     public static enum ActionType {
-        Question, Recommendation, Notification, Measurement, General, Remainder, Trigger
+        Question, Recommendation, Notification, Measurement, General, Remainder, Trigger,CallBack
     }
 
     public static enum Actor {
@@ -48,12 +49,76 @@ public  final class Utils {
         return null;
     }
 
-    public static ProjectionType convertToProjectionType(String type) {
+    public static var.VarType getVarType(String  type){
+
+        switch(type) {
+            case "int":
+                return var.VarType.Int;
+            case "String":
+                return var.VarType.String;
+            case "char":
+                return var.VarType.Char;
+
+            case "Double":
+                return var.VarType.Double;
+        }
+        return null;
+
+    }
+
+    public  static Action.AggregationOperators getAggregationOp(String op)
+    {
+        switch(op) {
+            case "==":
+                return Action.AggregationOperators.Equal;
+            case ">=":
+                return Action.AggregationOperators.GreatEqual;
+            case "<=":
+                return Action.AggregationOperators.LessEqual;
+            case "<":
+                return Action.AggregationOperators.LessThen;
+            case ">":
+                return Action.AggregationOperators.GreaterThen;
+
+        }
+        return null;
+    }
+    public static var.Operators getVarOp(String op) {
+        switch(op) {
+            case "==":
+                return var.Operators.Equal;
+            case ">=":
+                return var.Operators.GreatEqual;
+            case "<=":
+                return var.Operators.LessEqual;
+            case "<":
+                return var.Operators.LessThen;
+            case ">":
+                return var.Operators.GreaterThen;
+
+        }
+        return null;
+    }
+
+    public  static Action.AggregationAction getAggregationAction(String op)
+    {
+        switch(op) {
+            case "count":
+                return Action.AggregationAction.Count;
+            case "avg":
+                return Action.AggregationAction.Avg;
+            case "sum":
+                return Action.AggregationAction.Sum;
+        }
+        return null;
+    }
+
+    public static projection.ProjectionType convertToProjectionType(String type) {
         switch(type) {
             case "cyc":
-                return ProjectionType.Cyclic;
+                return projection.ProjectionType.Cyclic;
             case "monitor":
-                return ProjectionType.Monitor;
+                return projection.ProjectionType.Monitor;
         }
         return null;
     }
