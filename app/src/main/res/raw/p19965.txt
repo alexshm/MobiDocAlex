@@ -1,0 +1,62 @@
+{
+  "projection": {
+    "type": "monitor",
+    "name": "Monitor 2 positive ketonuria in one week",
+    "id": "19965",
+    "freq": {},
+    "action": {
+      "mode": "seq",
+      "actions": [
+        {
+          "type": "question",
+          "name": "Valores de cetona alterados. ;Estas comiendo los hidratos de carbono suficientes?",
+          "concept": "5037",
+          "actor": "patient",
+          "success": {
+            "action": {
+              "mode": "seq",
+              "actions": [
+                {
+                  "type": "question",
+                  "name": "Valores de cetona alterados. ;Estas comiendo los hidratos de carbono suficientes?",
+                  "concept": "5037",
+                  "actor": "patient",
+                  "success": {},
+                  "fail": {}
+                }
+              ]
+            }
+          },
+          "fail": {
+            "action": {
+              "mode": "seq",
+              "actions": [
+                {
+                  "type": "question",
+                  "name": "Valores de cetona alterados. ;Estas comiendo los hidratos de carbono suficientes?",
+                  "concept": "5037",
+                  "actor": "patient",
+                  "success": {},
+                  "fail": {}
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "condition": {
+      "vars": [
+        {
+          "def": "def ('abnormal_ketonuria',5021,string)",
+          "expr": "[or var=='+',var=='++',var=='+++'])"
+        }
+      ],
+      "trigger": "count(abnormal_ketonuria)>=2",
+      "duration": {
+        "amount": "7",
+        "unit": "day"
+      }
+    }
+  }
+}

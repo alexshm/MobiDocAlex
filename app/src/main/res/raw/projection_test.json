@@ -1,0 +1,10 @@
+buildProjection("monitor","testss","one abnormal value in BP");
+setVar("invalid_SBP","5177","int");
+setVar("invalid_DBP","5178","int");
+defineVar("invalid_SBP","val>=140");
+defineVar("invalid_DBP","val>=90");
+
+setCondition("or [invalid_DBP,invalid_SBP]","count()>0","0 days");
+
+onTriggerEvent("[callback(5202,one abnormal value in BP was found ,system is calculating another BP schedule for you)]"
+,"seq");

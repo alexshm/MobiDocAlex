@@ -1,0 +1,5 @@
+buildProjection("cyc","20093","Routine Daily BG Lunch measurement");
+
+setFrequency("50 sec","13:30","0 minute");
+
+perform("seq","[mesure(\"BG Lunch\",\"4987\")]");

@@ -1,0 +1,5 @@
+buildProjection("cyc","20091","Routine Daily BG Fasting measurement");
+
+setFrequency("50 sec","15:36","0 minute");
+
+perform("seq","[mesure(\"BG Fasting\",\"4985\")]");
