@@ -1,0 +1,14 @@
+buildProjection("monitor","20119","2 abnormal measurements in past week");
+setVar("abnormal_BG_fast","4985","int");
+setVar("abnormal_BG_breakfest","4986","int");
+setVar("abnormal_BG_dinner","4988","int");
+setVar("abnormal_BG_lunch","4987","int");
+
+defineVar("abnormal_BG_fast","val>=150");
+defineVar("abnormal_BG_breakfest","val>=150");
+defineVar("abnormal_BG_dinner","val>=150");
+defineVar("abnormal_BG_lunch","val>=150");
+setCondition("or [abnormal_BG_fast,abnormal_BG_breakfest,abnormal_BG_dinner,abnormal_BG_lunch]","count()>=2","8 days");
+
+onTriggerEvent("seq","[callback(\"5112\",\"2 abnormal values in BG were found in your measurements in the past week, system is calculating another schedule for you for daily BG measurement\")]");
+
