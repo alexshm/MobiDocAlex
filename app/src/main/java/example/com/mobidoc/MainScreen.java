@@ -9,34 +9,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressLint("ShowToast")
 public class MainScreen extends Activity {
-     TextView t=null;
+    TextView t = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        final Button strSim=(Button)findViewById(R.id.startSimulation);
-            t=(TextView)findViewById(R.id.textView5);
-         //set listener for clicking the button
-        strSim.setOnClickListener(new View.OnClickListener(){
-
-
-            @Override
-            public void onClick(View v) {
-
-                    Intent mainScreen=new Intent(MainScreen.this,SimulationScreen.class);
-                    startActivity(mainScreen);
-            }
-
-        });
+//        t = (TextView) findViewById(R.id.textView5);
 
 
     }
@@ -80,6 +64,15 @@ public class MainScreen extends Activity {
                 });
             }
         }).start();
+    }
+
+    public void goToTests(View view) {
+        Intent SimulationScreen = new Intent(MainScreen.this, SimulationScreen.class);
+        startActivity(SimulationScreen);
+    }
+
+    public void goToSettings(View view) {
+
     }
 
 

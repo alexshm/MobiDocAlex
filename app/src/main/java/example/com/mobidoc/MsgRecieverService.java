@@ -8,12 +8,9 @@ import android.os.Message;
 import android.os.Messenger;
 
 
-
 public class MsgRecieverService extends Service {
 
-
     public int count = 0;
-    //
     // Messenger Object that receives Messages from connected clients
     IncomingMsgHandler incomingMsgHandler = new IncomingMsgHandler();
     Messenger mMessenger = new Messenger(new IncomingMsgHandler());
@@ -35,62 +32,88 @@ public class MsgRecieverService extends Service {
             count++;
             switch (msg.what) {
                 case (NOTIFICATION_MSG):
-                    ans = "notificatin msg " + msg.getData().getString("value");
-                    Intent intent = new Intent(MsgRecieverService.this,PopScreen.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("msg", "Take some drugs");
-                    getApplicationContext().startActivity(intent);
-
+                    handleNotification(msg);
                     break;
                 case (QUESTION_MSG):
-                    ans = "question msg " + msg.getData().getString("question");
-                    String yesAns = msg.getData().getString("yesVal");
-                    String noAns = msg.getData().getString("noVal");
-                    Intent intent2 = new Intent(MsgRecieverService.this,QuestionPopScreen.class);
-                    intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent2.putExtra("question", "are you ok?");
-                    intent2.putExtra("yesAns", "yesAns!!!");
-                    intent2.putExtra("noAns", "noAns!!!");
-                    getApplicationContext().startActivity(intent2);
+                    handleQuestion(msg);
                     break;
                 case (RECOMMENDATION_MSG):
-
-                    ans = "reccomendation msg " + msg.getData().getString("value");
-                    String acceptConcept = msg.getData().getString("accept");
-                    String declineConcept = msg.getData().getString("decline");
+                    handleRecomendation(msg);
 
                     break;
                 case (MEASURE_MSG):
-                    ans = "measure msg " + msg.getData().getString("value");
+                    handleMeasure(msg);
 
                     break;
                 case (REMINDER_MSG):
-                    ans = "this is a reminder msg for : " + msg.getData().getString("value");
+                    handleReminder(msg);
 
                     break;
                 case (CALLBACK_MSG):
-                    ans = "CALLBACK msg " + msg.getData().getString("value");
-                    String Concept = msg.getData().getString("concept");
+                    handleCallBack(msg);
                     break;
                 default:
                     super.handleMessage(msg);
             }
 
 
-
             //TODO: NEED TO FIX SHOWING DIALOG *****
 
-            Intent intent2 = new Intent(MsgRecieverService.this,QuestionPopScreen.class);
-            intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent2.putExtra("question", "are you ok?");
-            intent2.putExtra("yesAns", "yesAns!!!");
-            intent2.putExtra("noAns", "noAns!!!");
-            getApplicationContext().startActivity(intent2);
+//            Intent intent2 = new Intent(MsgRecieverService.this, QuestionPopScreen.class);
+//            intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent2.putExtra("question", "are you ok?");
+//            intent2.putExtra("yesAns", "yesAns!!!");
+//            intent2.putExtra("noAns", "noAns!!!");
+//            getApplicationContext().startActivity(intent2);
 
         }
 
 
+    }
 
+    private void handleCallBack(Message msg) {
+        String ans;
+        ans = "CALLBACK msg " + msg.getData().getString("value");
+        String Concept = msg.getData().getString("concept");
+    }
+
+    private void handleReminder(Message msg) {
+        String ans;
+        ans = "this is a reminder msg for : " + msg.getData().getString("value");
+    }
+
+    private void handleMeasure(Message msg) {
+        String ans;
+        ans = "measure msg " + msg.getData().getString("value");
+    }
+
+    private void handleRecomendation(Message msg) {
+        String ans;
+        ans = "reccomendation msg " + msg.getData().getString("value");
+        String acceptConcept = msg.getData().getString("accept");
+        String declineConcept = msg.getData().getString("decline");
+    }
+
+    private void handleNotification(Message msg) {
+        String ans;
+        ans = "notificatin msg " + msg.getData().getString("value");
+        Intent intent = new Intent(this, PopScreen.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("msg", "Take some drugs");
+        getApplicationContext().startActivity(intent);
+    }
+
+    private void handleQuestion(Message msg) {
+        String ans;
+        ans = "question msg " + msg.getData().getString("question");
+        String yesAns = msg.getData().getString("yesVal");
+        String noAns = msg.getData().getString("noVal");
+        Intent intent2 = new Intent(this, QuestionPopScreen.class);
+        intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent2.putExtra("question", "are you ok?");
+        intent2.putExtra("yesAns", "yesAns!!!");
+        intent2.putExtra("noAns", "noAns!!!");
+        getApplicationContext().startActivity(intent2);
     }
 
     @Override

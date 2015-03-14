@@ -1,28 +1,10 @@
 package example.com.mobidoc;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-
 import android.annotation.SuppressLint;
-import android.app.*;
-import android.app.Dialog;
-import android.content.ComponentCallbacks;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,18 +22,22 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 import dalvik.system.DexClassLoader;
 import javassist.ClassPool;
-import projections.*;
 import projections.Actions.Action;
-import projections.Actions.MeasurementAction;
 import projections.Actions.NotificationAction;
-import projections.Actions.QuestionAction;
-import projections.Actions.compositeAction;
-import projections.mobiDocProjections.ProjectionBuilder;
-import projections.mobiDocProjections.projectionsManager;
-
-import static projections.projection.ProjectionTimeUnit.*;
+import projections.projection;
 
 @SuppressLint("ShowToast")
 public class SimulationScreen extends Activity {
@@ -59,10 +45,10 @@ public class SimulationScreen extends Activity {
     static final int GENERATE_JAVA_ASSIST = 2;
     final BlockingQueue<String> q1 = new ArrayBlockingQueue<String>(1000);
     private EditText t;
-    private  RadioButton katProj;
-    private  RadioButton bgProj;
-    private  RadioButton monitorProj;
-    Messenger mMsg=null;
+    private RadioButton katProj;
+    private RadioButton bgProj;
+    private RadioButton monitorProj;
+    Messenger mMsg = null;
     private EditText everyXtxt;
     private EditText remaindertxt;
     private EditText startTimetxt;
@@ -72,10 +58,10 @@ public class SimulationScreen extends Activity {
     private String selectedProjection;
     private ArrayAdapter<CharSequence> projectionVals;
     private String projectionId;
-    private    int count=1;
+    private int count = 1;
 
     // Intent used for binding to LoggingService
-  private   Intent serviceIntent;
+    private Intent serviceIntent;
     private Messenger mMessengerToLoggingService;
     private boolean mIsBound;
 
@@ -86,19 +72,21 @@ public class SimulationScreen extends Activity {
             mMessengerToLoggingService = new Messenger(service);
             mIsBound = true;
         }
+
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mMessengerToLoggingService = null;
-            mIsBound = false;        }
+            mIsBound = false;
+        }
     };
 
 
-        @Override
+    @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simulation_screen);
-       serviceIntent= new Intent(this.getApplicationContext(),example.com.mobidoc.MsgRecieverService.class);
+        serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
         //   Toast.makeText(getApplicationContext(), "welcome to MobiDoc", Toast.LENGTH_LONG);
 
         final Button startbtn = (Button) findViewById(R.id.startSimulation);
@@ -133,7 +121,7 @@ public class SimulationScreen extends Activity {
         reminder_spinner.setAdapter(adapterReminder);
         //===============
 
-       // projections spinner
+        // projections spinner
         ////===========
         projections_spinner = (Spinner) findViewById(R.id.spinner3);
         // Create an ArrayAdapter using the string array and a default spinner layout
@@ -145,40 +133,37 @@ public class SimulationScreen extends Activity {
         projections_spinner.setAdapter(adapterprojections);
         //=================================================
 
-        projectionVals=ArrayAdapter.createFromResource(this,
+        projectionVals = ArrayAdapter.createFromResource(this,
                 R.array.projectionsVals, android.R.layout.simple_spinner_item);
 
 
         projections_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-              selectedProjection= parentView.getItemAtPosition(position).toString();
-              projectionId=projectionVals.getItem(position).toString();
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                selectedProjection = parentView.getItemAtPosition(position).toString();
+                projectionId = projectionVals.getItem(position).toString();
 
-              if(selectedProjection.contains("Monitor"))
-              {
-                  //visible all the start time+frequncy settings for cyclic
-                 everyXtxt.setVisibility(View.INVISIBLE);
-                  findViewById(R.id.textView2).setVisibility(View.INVISIBLE);
-                  findViewById(R.id.textView3).setVisibility(View.INVISIBLE);
-                  findViewById(R.id.textView4).setVisibility(View.INVISIBLE);
-                  remaindertxt.setVisibility(View.INVISIBLE);
-                  reminder_spinner.setVisibility(View.INVISIBLE);
-                  startTimetxt.setVisibility(View.INVISIBLE);
-                  spinner.setVisibility(View.INVISIBLE);
-              }
-              else
-              {
-                  everyXtxt.setVisibility(View.VISIBLE);
-                  findViewById(R.id.textView2).setVisibility(View.VISIBLE);
-                  findViewById(R.id.textView3).setVisibility(View.VISIBLE);
-                  findViewById(R.id.textView4).setVisibility(View.VISIBLE);
-                  remaindertxt.setVisibility(View.VISIBLE);
-                  reminder_spinner.setVisibility(View.VISIBLE);
-                  startTimetxt.setVisibility(View.VISIBLE);
-                  spinner.setVisibility(View.VISIBLE);
-              }
-          }
+                if (selectedProjection.contains("Monitor")) {
+                    //visible all the start time+frequncy settings for cyclic
+                    everyXtxt.setVisibility(View.INVISIBLE);
+                    findViewById(R.id.textView2).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.textView3).setVisibility(View.INVISIBLE);
+                    findViewById(R.id.textView4).setVisibility(View.INVISIBLE);
+                    remaindertxt.setVisibility(View.INVISIBLE);
+                    reminder_spinner.setVisibility(View.INVISIBLE);
+                    startTimetxt.setVisibility(View.INVISIBLE);
+                    spinner.setVisibility(View.INVISIBLE);
+                } else {
+                    everyXtxt.setVisibility(View.VISIBLE);
+                    findViewById(R.id.textView2).setVisibility(View.VISIBLE);
+                    findViewById(R.id.textView3).setVisibility(View.VISIBLE);
+                    findViewById(R.id.textView4).setVisibility(View.VISIBLE);
+                    remaindertxt.setVisibility(View.VISIBLE);
+                    reminder_spinner.setVisibility(View.VISIBLE);
+                    startTimetxt.setVisibility(View.VISIBLE);
+                    spinner.setVisibility(View.VISIBLE);
+                }
+            }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -200,17 +185,17 @@ public class SimulationScreen extends Activity {
             }
         });
 
-                startbtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+        startbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                        if (selectedProjection.contains("Monitor")||(!selectedProjection.contains("Monitor")&&everyXtxt.getText().toString() != "" && Integer.parseInt(everyXtxt.getText().toString()) > 0))
-                            SimulateProjections(v);
-                        else
-                            Toast.makeText(v.getContext(), "You enter in valid number. please enter again", Toast.LENGTH_LONG).show();
+                if (selectedProjection.contains("Monitor") || (!selectedProjection.contains("Monitor") && everyXtxt.getText().toString() != "" && Integer.parseInt(everyXtxt.getText().toString()) > 0))
+                    SimulateProjections(v);
+                else
+                    Toast.makeText(v.getContext(), "You enter in valid number. please enter again", Toast.LENGTH_LONG).show();
 
-                    }
-                });
+            }
+        });
 
         con.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,14 +203,14 @@ public class SimulationScreen extends Activity {
                 //register to remainder event
                 count++;
 
-                Intent i=new Intent("5037");
-                i.putExtra("concept","5037");
+                Intent i = new Intent("5037");
+                i.putExtra("concept", "5037");
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
-                Date dateNow=new Date();
+                Date dateNow = new Date();
                 String now = sdf.format(dateNow);
-                i.putExtra("time",now);
+                i.putExtra("time", now);
 
-                i.putExtra("value","yes");
+                i.putExtra("value", "yes");
                 sendBroadcast(i, android.Manifest.permission.VIBRATE);
 
             }
@@ -245,16 +230,15 @@ public class SimulationScreen extends Activity {
 
     }
 
-    private void SendActionToHandler()
-    {
-        Action a=new MeasurementAction("ss","5088",getApplicationContext());
-
+    private void SendActionToHandler() {
+//        Action a = new MeasurementAction("ss", "5088", getApplicationContext());
+        Action a = new NotificationAction("Dont forget your pills" ,"5088",Action.Actor.Patient,getApplicationContext());
         try {
             Message msg = a.call();
             mMessengerToLoggingService.send(msg);
 
         } catch (RemoteException e) {
-            Log.e("SendActionToHandler","error sending msg");
+            Log.e("SendActionToHandler", "error sending msg");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -264,15 +248,14 @@ public class SimulationScreen extends Activity {
 
 
     private void SimulateProjections(View v) {
-       //projectionsManager mg = new projectionsManager(this.getApplicationContext());
+        //projectionsManager mg = new projectionsManager(this.getApplicationContext());
         //ProjectionBuilder pb =new ProjectionBuilder(this.getApplicationContext());
 
 
+        //  String jsonString=readProjectionTxt(projectionId);
+        // projection p=pb.FromJson(jsonString);
 
-      //  String jsonString=readProjectionTxt(projectionId);
-       // projection p=pb.FromJson(jsonString);
-
-        projection p=null;//pb.parse(jsonString);
+        projection p = null;//pb.parse(jsonString);
         /*
         CyclicProjectionAbstract proj = new CyclicProjectionAbstract("test", this.getApplicationContext(), "08:00");
         //((CyclicProjectionAbstract)p).setFrequency(projection.ProjectionTimeUnit.Minute,1);
@@ -291,9 +274,8 @@ public class SimulationScreen extends Activity {
         proj.addAction(m3);
        p=proj;
         */
-        if(p!=null)
-        {
-            Log.i("start projection","starting projection : "+projectionId);
+        if (p != null) {
+            Log.i("start projection", "starting projection : " + projectionId);
             p.startProjection();
 
         }
@@ -339,8 +321,8 @@ public class SimulationScreen extends Activity {
 
         */
     }
-    private String readProjectionTxt(String projId)
-    {
+
+    private String readProjectionTxt(String projId) {
         try {
             //=================================
             // read file   data from raw resources
@@ -348,8 +330,8 @@ public class SimulationScreen extends Activity {
             //==========================
 
             InputStream iS;
-            projId="rojection_test";
-            int rID = getResources().getIdentifier("example.com.mobidoc:raw/p"+projId, null, null);
+            projId = "rojection_test";
+            int rID = getResources().getIdentifier("example.com.mobidoc:raw/p" + projId, null, null);
             iS = getResources().openRawResource(rID);
 
             //create a buffer that has the same size as the InputStream
@@ -368,11 +350,12 @@ public class SimulationScreen extends Activity {
             return oS.toString();
 
         } catch (IOException e) {
-            Log.e("read Projecction file in","error reading file: "+projId);
-           return null;
+            Log.e("read Projecction file in", "error reading file: " + projId);
+            return null;
         }
     }
-    private void loadAndInvokeJar(){
+
+    private void loadAndInvokeJar() {
 
         Class<?>[] params = new Class[]{BlockingQueue.class};
         try {
@@ -408,15 +391,13 @@ public class SimulationScreen extends Activity {
     }
 
 
-
-    private void generateDynamicallyDexFileTest()
-    {
+    private void generateDynamicallyDexFileTest() {
         final File tmpDir = getDir("dex", 0);
 
         final ClassPool cp = ClassPool.getDefault();
         //create class using dexMakerJava assist
         //==============================
-        boolean IsToGenerate=false;
+        boolean IsToGenerate = false;
 
         if (IsToGenerate) {
             generateDynamicClass(GENERATE_JAVA_ASSIST);
@@ -429,7 +410,7 @@ public class SimulationScreen extends Activity {
 
         //Class<CyclicProjection> classToLoad = null;
         try {
-            final Class<?> classToLoadw =  classloader.loadClass("TestClass1");
+            final Class<?> classToLoadw = classloader.loadClass("TestClass1");
             final Object myInstance = classToLoadw.newInstance();
             // Method initmeth = classToLoadw.getMethod("init", params);
 
@@ -438,8 +419,8 @@ public class SimulationScreen extends Activity {
             start.setAccessible(true);
             // showToastFromBackground("");
             int res = (int) start.invoke(myInstance);
-            System.out.println("the ans from dynamicaly generated is : "+res);
-            int d=9;
+            System.out.println("the ans from dynamicaly generated is : " + res);
+            int d = 9;
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -455,14 +436,13 @@ public class SimulationScreen extends Activity {
         //  DexMaker dexMaker = new DexMaker();
 
 
-
     }
 
     // Bind to LoggingService
     @Override
     protected void onResume() {
         super.onResume();
-       // Intent serviceIntent = new Intent(this,example.com.mobidoc.MsgRecieverService.class);
+        // Intent serviceIntent = new Intent(this,example.com.mobidoc.MsgRecieverService.class);
 
 
         bindService(serviceIntent, mConnection,
@@ -481,25 +461,18 @@ public class SimulationScreen extends Activity {
     }
 
 
-    private void generateDynamicClass(int generator)
-    {
-        ClassGenerator cg=new ClassGenerator();
+    private void generateDynamicClass(int generator) {
+        ClassGenerator cg = new ClassGenerator();
 
-        if (generator==GENERATE_WITH_DEXMAKER)
-        {
+        if (generator == GENERATE_WITH_DEXMAKER) {
 
             cg.generateDex();
 
-        }
-        else
-        {
-            ClassPool pool=new ClassPool(true);
-            cg.javaAssistGenerator("testfile",this,pool);
+        } else {
+            ClassPool pool = new ClassPool(true);
+            cg.javaAssistGenerator("testfile", this, pool);
         }
     }
-
-
-
 
 
 }
