@@ -48,8 +48,6 @@ public abstract class projection extends BroadcastReceiver {
         Second, Minute, Hour, Day, Week,Month ,None
     }
 
-
-
     protected void receiveData(Intent intent)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
@@ -64,7 +62,7 @@ public abstract class projection extends BroadcastReceiver {
 
             boolean okToInsert =condAction.isSatisfyVarsConditions(val);
             if (okToInsert)
-                condAction.insertData(concept, val, dateNow);
+                this.condAction.insertData(concept, val, dateNow);
 
         } catch (ParseException e) {
             Log.e("Action", "error parsing date in onReceive");
@@ -124,6 +122,23 @@ public abstract class projection extends BroadcastReceiver {
         mode=executeMode;
         if(executeMode.equals(Utils.ExecuteMode.Parallel))
             action.setExecuteMode(mode);
+    }
+
+    public void initMonitoringEvents() {
+        condAction = new MonitorAction(context);
+    }
+
+
+    public void initTriggerActions(Utils.ExecuteMode mode) {
+        actionToTrigger = new compositeAction(context, mode);
+    }
+
+    public void addActionToTrigger(Action a)
+    {
+        if (actionToTrigger!=null)
+        {
+            actionToTrigger.addAction(a);
+        }
     }
     public void addAction(Action a)
     {

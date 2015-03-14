@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import projections.Actions.Action;
+import projections.Actions.CallBackAction;
 import projections.Actions.MeasurementAction;
 import projections.Utils;
 
@@ -66,8 +67,9 @@ public class ActionParser {
 
     private Action parseCallBack(String[] actionParms)
     {
-        //TODO:
-        return null;
+        String name=actionParms[1];
+        String conceptId=actionParms[0];
+        return  new CallBackAction(name,conceptId, context);
     }
 
 

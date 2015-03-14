@@ -137,8 +137,14 @@ public  final class Utils {
         switch(type) {
             case "mesure":
                 return ActionType.Measurement;
-            case "notificaion":
+            case "callback":
+                return ActionType.CallBack;
+            case "ask":
+                return ActionType.Question;
+            case "notification":
                 return ActionType.Notification;
+            case "recommendation":
+                return ActionType.Recommendation;
         }
         return null;
     }

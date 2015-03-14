@@ -43,7 +43,7 @@ public class MonitorAction extends  Action {
     protected var.OperationBetweenConstraint betweenVars;
     protected AggregationOperators aggregationOperator;
 
-    public Vector<String> conceptsToMonitor;
+    private Vector<String> conceptsToMonitor;
     //=============================
     public Intent serviceIntent = null;
     protected AggregationAction aggregationAction;
@@ -51,8 +51,8 @@ public class MonitorAction extends  Action {
     protected boolean isReminder;
 
 
-    public MonitorAction( String name, Context _context) {
-        super(ActionType.Trigger, name, "", _context);
+    public MonitorAction(Context _context) {
+        super(ActionType.Trigger, "", "", _context);
         count = 0;
 
         ansVal = "";
@@ -89,7 +89,7 @@ public class MonitorAction extends  Action {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+        Log.i("monitoring action.","Receive data");
     }
 
     public void defineVar(String name, String concept, var.VarType type) {
@@ -114,7 +114,8 @@ public class MonitorAction extends  Action {
 
 
         //TODO: SUBSCRIBE in the projection for this concept
-        //SubscribeConcept(concept);
+        //add the concept to the monitoring comcepts
+        addConceptToMonitor(concept);
     }
     public void setOpBetweenValueConstraints(String varName, var.OperationBetweenConstraint op) {
         var v = getVar(varName);
@@ -140,6 +141,10 @@ public class MonitorAction extends  Action {
 
     }
 
+    public Vector<String>getConceptsToMonitor()
+    {
+        return conceptsToMonitor;
+    }
     public void printDataCollections() {
         System.out.println("printong data");
         System.out.println("--------------------------------------");
@@ -265,8 +270,9 @@ public class MonitorAction extends  Action {
     //TODO: not sure if we need this
     public void addConceptToMonitor( String conceptId)
     {
-       actionConcept=conceptId;
-       SubscribeConcept(conceptId);
+        if(!conceptsToMonitor.contains(conceptId))
+       conceptsToMonitor.add(conceptId);
+      // SubscribeConcept(conceptId);
     }
     //TODO: when ok, need to triggring the projecction
 

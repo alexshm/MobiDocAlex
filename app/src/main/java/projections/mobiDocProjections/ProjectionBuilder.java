@@ -45,36 +45,4 @@ public class ProjectionBuilder {
         parser p=new parser(cont);
         return p.parse(str);
     }
-    /*action":[{"type":"mesure","name":"mesurename","conept":"5021"}*/
-
-    private void setprojectionFreq(JSONObject freqJson) throws JSONException
-
-    {
-        int len=freqJson.length();
-        //parse if there is a frequency(for cyc) for this projection
-        if(len>0) {
-
-            String startTime = freqJson.getString("start");
-
-            //=========================================
-            JSONObject repeatObj = freqJson.getJSONObject("repeat");
-            int amount = repeatObj.getInt("amount");
-            String unit=repeatObj.getString("unit");
-            projection.ProjectionTimeUnit timeUnit=Utils.getTimeUnit(unit);
-            //=========================================
-            JSONObject reminderObj = freqJson.getJSONObject("reminder");
-            int remAmount = reminderObj.getInt("amount");
-            String remUnit=reminderObj.getString("unit");
-            projection.ProjectionTimeUnit remTimeUnit=Utils.getTimeUnit(unit);
-
-
-            ((CyclicProjectionAbstract)projectionToBuild).setFrequency(timeUnit,amount);
-            ((CyclicProjectionAbstract)projectionToBuild).setReaminder(remTimeUnit,remAmount);
-            ((CyclicProjectionAbstract)projectionToBuild).setStartTime(startTime);
-        }
-    }
-
-
-
-
 }

@@ -88,9 +88,9 @@ public class parser {
 
                 char isOp=args[1].charAt(4);
                 if(isOp=='=')
-                    op=args[1].substring(3,4);
+                    op=args[1].substring(3,5);
                 else
-                    op=args[1].substring(3,3);
+                    op=args[1].substring(3,4);
 
                 // if the value is string type
                 if(args[1].contains("'"))
@@ -108,15 +108,15 @@ public class parser {
                 String opBetween = args[0].split(" ")[0];
                 String aggregation = args[1];
                 int timeConstraint=Integer.parseInt(args[2].split(" ")[0]);
-                String aggregationAction=aggregation.split("()")[0];
+                String aggregationAction=aggregation.split("\\(\\)")[0];
                 String aggregationOp="";
                 String aggregationVal="";
-
-                char isop=aggregation.split("()")[1].charAt(1);
+                String operation=aggregation.split("\\(\\)")[1];
+                char isop=operation.charAt(1);
                 if(isop=='=')
-                    aggregationOp=aggregation.split("()")[1].substring(0,1);
+                    aggregationOp=operation.substring(0,2);
                 else
-                    aggregationOp=aggregation.split("()")[1].substring(0,0);
+                    aggregationOp=operation.substring(0,1);
 
                 aggregationVal=aggregation.split(aggregationOp)[1];
                 int aggVal=Integer.parseInt(aggregationVal);
@@ -125,9 +125,17 @@ public class parser {
                 break;
 
             case "onTriggerEvent":
-                String mode = args[1];
-                String actions = args[0];
+                String triggerActions=args[1];
+                triggerActions=triggerActions.substring(1,triggerActions.length()-1);
+                String triggerExMode=args[0];
+
+                String [] MonitoringActions=triggerActions.split("\\\"\\),");
+
+                performActionsOnTrigger(triggerExMode, MonitoringActions);
+
                 break;
+
+
             case "setFrequency":
                 String repetFreq = args[0];
                 int repeatAmout=Integer.parseInt(repetFreq.split(" ")[0]);
@@ -181,6 +189,29 @@ public class parser {
         return ap.parse(actionParms);
 
     }
+
+    private void performActionsOnTrigger(String executionMode,String[] actions) {
+        Utils.ExecuteMode mode=Utils.convertToExecuteMode(executionMode);
+        //sets the mode of all the actions ( seqeuncially/parralell)
+        projectionToBuild.initTriggerActions(mode);
+
+        for (String action : actions) {
+            action = action.replaceAll("\\\\", "");
+            final Pattern pattern = Pattern.compile("([a-z|A-Z]+)\\((.*)\\)");
+            final Matcher m = pattern.matcher("");
+            m.reset(action);
+            //parse the action from the given projection and
+            // adds it to the built projection
+            if (m.find()) {
+                String actionType = m.group(1);
+                String actionToParse = m.group(2);
+                actionToParse=actionToParse.substring(1,actionToParse.length()-1);
+                Action a = buildAction(actionType, actionToParse);
+                projectionToBuild.addActionToTrigger(a);
+            }
+        }
+    }
+
 
     /*
     =================================================
