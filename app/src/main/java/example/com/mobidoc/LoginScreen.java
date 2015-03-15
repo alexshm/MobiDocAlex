@@ -5,8 +5,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.BoringLayout;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,74 +17,147 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+
 import android.widget.Toast;
 
 public class LoginScreen extends Activity {
 	@SuppressLint("ShowToast")
-	@Override
+
+
+
+    private ProgressDialog mProgressDialog;
+    private EditText username;
+    private EditText  pass;
+    private Boolean isAuth;
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_screen);
-		
-		final EditText username=(EditText)findViewById(R.id.usernametxt);
-		final EditText pass=(EditText)findViewById(R.id.passtext);
-		final Button loginbtn=(Button)findViewById(R.id.loginButton);
-		
+        username=(EditText)findViewById(R.id.usernametxt);
+        pass=(EditText)findViewById(R.id.passtext);
+
+
+		Button loginbtn=(Button)findViewById(R.id.loginButton);
+
 		
 		
 		//set listener for clicking the button
-		loginbtn.setOnClickListener(new OnClickListener(){
+		loginbtn.setOnClickListener(new OnClickListener() {
 
-			
-			@Override
-			public void onClick(View v) {
-				
-				
-				EditText usrname= (EditText)v.findViewById(R.id.usernametxt);
-				EditText password= (EditText)v.findViewById(R.id.passtext);
-				boolean authrize=checkLogin(username.getText(),pass.getText());
-				
-				//check the login for the user
-				//if ok move to the next screen
-				if (authrize){
-					
-					//for now the user name is : admin pass :12345
-					
-					Intent mainScreen=new Intent(LoginScreen.this,MainScreen.class);
-					startActivity(mainScreen);
-					
-				}
-				else
-				{
-					username.setText("");
-					pass.setText("");
-					TextView error=(TextView)findViewById(R.id.errorlable);
-					error.setText("you typed wrong login deatails.\n please type again." );
-					error.setTextColor(Color.RED);
-					
-					
-				}
-			}
-			
+
+            @Override
+            public void onClick(View v) {
+
+
+
+               checkLoginInDB(username.getText().toString(), pass.getText().toString());
+
+            }
 		});
-		
-		
-	}
 
-	
-	//check the login cardentails for the user
-	public boolean checkLogin(Editable username, Editable password) {
-		
-		String user=username.toString();
-		String pass=password.toString();
-		
-		System.out.println("user name : "+user);
-		
-		if (user.equals("admin") && pass.equals("12345"))
-			return true;
-		
-		return false;
-	}
+    }
+
+
+    private void checkLoginInDB(String user,String password) {
+
+        new DownloadFileAsync().execute(user,password);
+    }
+    @Override
+    protected Dialog onCreateDialog(int id) {
+
+                mProgressDialog = new ProgressDialog(this);
+                // Set Dialog message
+                mProgressDialog.setMessage("Please Wait..");
+                mProgressDialog.setTitle("Verifying login");
+                // Dialog will be displayed for an unknown amount of time
+                mProgressDialog.setIndeterminate(true);
+                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.show();
+                return mProgressDialog;
+
+    }
+    class DownloadFileAsync extends AsyncTask<String, Boolean, Boolean> {
+
+       @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showDialog(0);
+        }
+
+        @Override
+
+        protected Boolean doInBackground(String... params) {
+            int count;
+
+            try {
+                Thread.sleep(1500);
+                Boolean ans = CheckLoginDialog(params[0], params[1]);
+                return ans;
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        // Class that creates the ProgressDialog
+
+        private boolean CheckLoginDialog(String user, String pass) {
+            //System.out.println("user name : "+user);
+
+            if (user.equals("admin") && pass.equals("12345"))
+                return true;
+
+            return false;
+        }
+
+        private void continueLogin(final Boolean result) {
+            if (result) {
+                Intent mainScreen = new Intent(LoginScreen.this, MainScreen.class);
+
+                startActivity(mainScreen);
+
+            } else {
+
+                pass.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        TextView error = (TextView) findViewById(R.id.errorlable);
+                        error.setText("");
+                        username.setText("");
+                        pass.setText("");
+
+                        error.setText("you typed wrong login deatails.\n please type again.");
+                        error.setTextColor(Color.RED);
+                    }
+                });
+
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            mProgressDialog.dismiss();
+            continueLogin(result);
+
+        }
+    }
+
+
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+    }
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
