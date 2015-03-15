@@ -1,11 +1,6 @@
 buildProjection("monitor","19965","Monitor 2 positive ketonuria in one week");
 
-onTriggerEvent(
-{
-    question(\"5037\",\"Valores de cetona alterados.Estas comiendo los hidratos de carbono suficientes?\")
 
-
-});
 
 setVar("abnormal_ketonuria","5021","string");
 
@@ -13,4 +8,14 @@ defineVar("abnormal_ketonuria","or val=='+' val=='++' val=='+++'");
 
 setCondition("or [abnormal_ketonuria]","count()>=2","7 days");
 
+onTriggerEvent(
+{
 
+
+    question(\"5037\",\"Valores de cetona alterados.Estas comiendo los hidratos de carbono suficientes?,
+
+
+    \")
+
+
+});
