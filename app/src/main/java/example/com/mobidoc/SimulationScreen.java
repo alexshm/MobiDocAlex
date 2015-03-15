@@ -206,31 +206,18 @@ public class SimulationScreen extends Activity {
                 //register to remainder event
                 count++;
 
-                Intent i = new Intent("5037");
-                i.putExtra("concept", "5037");
+                Intent i = new Intent("4985");
+                i.putExtra("concept", "4985");
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
                 Date dateNow = new Date();
                 String now = sdf.format(dateNow);
                 i.putExtra("time", now);
 
-                i.putExtra("value", "yes");
+                i.putExtra("value", "150");
                 sendBroadcast(i, android.Manifest.permission.VIBRATE);
 
             }
         });
-
-    /*
-        test t=new test();
-        var v=new var();
-        System.out.println("the action before is : ");
-        v.test();
-
-        System.out.println("the action after is : ");
-        t.test();
-
-*/
-
-
     }
 
     private void SendActionToHandler() {
@@ -254,33 +241,14 @@ public class SimulationScreen extends Activity {
 
 
     private void SimulateProjections(View v) {
-        //projectionsManager mg = new projectionsManager(this.getApplicationContext());
 
         ProjectionBuilder pb =new ProjectionBuilder(this.getApplicationContext());
 
 
          String jsonString=readProjectionTxt(projectionId);
-        // projection p=pb.FromJson(jsonString);
 
         projection p =pb.build(jsonString);
-        /*
-        CyclicProjectionAbstract proj = new CyclicProjectionAbstract("test", this.getApplicationContext(), "08:00");
-        //((CyclicProjectionAbstract)p).setFrequency(projection.ProjectionTimeUnit.Minute,1);
-        // ((CyclicProjectionAbstract)p).setReaminder(projection.ProjectionTimeUnit.Second,30);
-        ((CyclicProjectionAbstract)proj).setFrequency(Second,40);
 
-
-        Action m1 = new MeasurementAction("yes=mesure Ketonuria", "5021", this.getApplicationContext());
-
-        Action m2 = new MeasurementAction("no=mesure 2 test", "1234", this.getApplicationContext());
-
-        Action m3 = new QuestionAction("quesstion ask", "5037", this.getApplicationContext());
-        ((QuestionAction)m3).addToSuccessAction(m1);
-        ((QuestionAction)m3).addToFailAction(m2);
-
-        proj.addAction(m3);
-       p=proj;
-        */
         if (p != null) {
             Log.i("start projection", "starting projection : " + projectionId);
             p.startProjection();
@@ -288,45 +256,6 @@ public class SimulationScreen extends Activity {
         }
 
 
-
-       /*
-            PROJECTION EXAMPLE
-            ======================
-            int amount = Integer.parseInt(everyXtxt.getText().toString());
-            int remider = Integer.parseInt(remaindertxt.getText().toString());
-            String startTime = startTimetxt.getText().toString();
-
-            CyclicProjectionAbstract proj = new CyclicProjectionAbstract("test", this.getApplicationContext(), "08:00");
-            //((CyclicProjectionAbstract)p).setFrequency(projection.ProjectionTimeUnit.Minute,1);
-           // ((CyclicProjectionAbstract)p).setReaminder(projection.ProjectionTimeUnit.Second,30);
-            ((CyclicProjectionAbstract)proj).setFrequency(Second,40);
-
-
-            MeasurementAction m1 = new MeasurementAction("mesure Ketonuria", "5021", this.getApplicationContext());
-
-            MeasurementAction m2 = new MeasurementAction("mesure 2 test", "1234", this.getApplicationContext());
-
-            MeasurementAction m3 = new MeasurementAction("mesure 3 test", "12345", this.getApplicationContext());
-            proj.addAction(m1);
-           proj.addAction(m2);
-
-            proj.addAction(m3);
-            proj.setExectuionMode(Utils.ExecuteMode.Parallel);
-
-        p=proj;
-
-            //TODO: uncomment startTime below
-            // ((CyclicProjectionAbstract)p).setStartTime(startTime);
-        }
-
-        //start the projection
-        //////////////////////
-
-        if (!p.Isbound()) {
-            p.startProjection();
-        }
-
-        */
     }
 
     private String readProjectionTxt(String projId) {
@@ -445,7 +374,7 @@ public class SimulationScreen extends Activity {
 
     }
 
-    // Bind to LoggingService
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -457,7 +386,7 @@ public class SimulationScreen extends Activity {
 
     }
 
-    // Unbind from the LoggingService
+
     @Override
     protected void onPause() {
 

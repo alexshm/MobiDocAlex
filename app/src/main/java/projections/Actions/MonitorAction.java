@@ -267,7 +267,7 @@ public class MonitorAction extends  Action {
         }
     }
 
-    //TODO: not sure if we need this
+
     public void addConceptToMonitor( String conceptId)
     {
         if(!conceptsToMonitor.contains(conceptId))

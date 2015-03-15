@@ -10,6 +10,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Vector;
 
 public class CyclicProjectionAbstract extends projection {
 
@@ -68,7 +69,7 @@ public class CyclicProjectionAbstract extends projection {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-
+        Log.i("cyclic projection -  onReceive.", "recive data : projection name : "+this.ProjectionName);
         //get the name of the Intent
         boolean isReminder = intent.getAction().contains("_remainder");
         boolean isCyc = intent.getAction().contains("_cyc");
@@ -86,7 +87,7 @@ public class CyclicProjectionAbstract extends projection {
             if (action != null) {
                 Log.i("cyclic projection -  onReceive.", "action not null");
                 action.invoke();
-                // this.InvokeAction(isReminder);
+
 
             } else {
                 Log.e("projections.", "action is  nulll!!!");
@@ -214,10 +215,20 @@ public class CyclicProjectionAbstract extends projection {
         //register to satisfy condition events like : 2 abnormal in past week
         String triggerName="condition";
 
-        //TODO: register action to condition trigger( after the change of compositeAction
+        //register all the concepts defined in the actions
+        // appears in the CompositeAction
 
-        //if( action!=null)
-         //   triggerName=action.getActionName()+"_condition";
+
+        Vector<IntentFilter> intentesToMonitor=new Vector<IntentFilter>();
+        Vector<String> conceptsToMonitor=action.getAllConcepts();
+        Log.i("Cyclic Projection","the size of the concepts  is : "+conceptsToMonitor.size());
+        for (int i=0;i<conceptsToMonitor.size();i++)
+        {
+            IntentFilter in = new IntentFilter(conceptsToMonitor.get(i));
+            Log.i("Cyclic Projection","registering to concept: "+conceptsToMonitor.get(i));
+            intentesToMonitor.add(in);
+            context.registerReceiver(this, in);
+        }
 
         IntentFilter TriggerConditionIntentFilter = new IntentFilter(triggerName);
 

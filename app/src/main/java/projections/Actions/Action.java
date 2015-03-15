@@ -71,11 +71,7 @@ public  abstract class Action extends BroadcastReceiver implements Callable<Mess
         Patient, physician
     }
 
-    public Action(ActionType _type)
-    {
 
-
-    }
     public Action(ActionType _type, String name, String concept, Context _context) {
 
         actionName = name;

@@ -238,7 +238,6 @@ public class parser {
                 projectionToBuild.addAction(a);
             }
         }
-        //sets the mode of all the actions ( seqeuncially/parralell)
 
     }
 

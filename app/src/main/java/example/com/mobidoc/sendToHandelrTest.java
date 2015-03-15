@@ -22,13 +22,20 @@ import projections.Actions.Action;
  */
 public class sendToHandelrTest {
 
-    private Intent serviceIntent =null;
-    private Context context;
-    private Messenger MessengerToMsgService=null;
+    public Intent serviceIntent =null;
+    public Context context;
+    public  Messenger MessengerToMsgService;
 
-    private boolean mIsBound;
+    public sendToHandelrTest(Context c)
+    {
+        context =new ContextWrapper(c);
+        mIsBound=false;
+        serviceIntent  = new Intent(c,example.com.mobidoc.MsgRecieverService.class);
 
-    private ServiceConnection mconnection= new ServiceConnection() {
+
+    }
+
+    public ServiceConnection mconnection= new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -43,36 +50,36 @@ public class sendToHandelrTest {
             mIsBound=false;
         }
     };
+    public boolean mIsBound;
 
-    public sendToHandelrTest(Context c)
-    {
-        context =new ContextWrapper(c);
-        mIsBound=false;
-        serviceIntent  = new Intent(context, example.com.mobidoc.MsgRecieverService.class);
-        startService();
-    }
+
+
+
 
 
     public   void startService() {
-        if (!mIsBound) {
-            context.bindService(serviceIntent, mconnection, Context.BIND_AUTO_CREATE);
-            this.mIsBound = true;
+        if (mIsBound) {
+           Log.i("sendToHandelrTest", "service allready started");
+        } else {
+
+            context.bindService(serviceIntent, this.mconnection, Context.BIND_AUTO_CREATE);
+            mIsBound = true;
+            Toast.makeText(context, "service succefully started", Toast.LENGTH_LONG).show();
+        }
 
         }
-    }
+
 
     public void send(Action action)
     {
-
+        startService();
             try {
-                if(action!=null) {
-
                     Message m = action.call();
                    Log.i("sendToHandelrTest","sending: "+m.getData().getString("value"));
 
                     if (m != null)
-                        this.MessengerToMsgService.send(m);
-                }
+                        MessengerToMsgService.send(m);
+
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

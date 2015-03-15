@@ -50,6 +50,7 @@ public abstract class projection extends BroadcastReceiver {
 
     protected void receiveData(Intent intent)
     {
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
         String concept = intent.getStringExtra("concept");
         String val = String.valueOf(intent.getStringExtra("value"));
@@ -59,21 +60,25 @@ public abstract class projection extends BroadcastReceiver {
         try {
             Date dateNow = sdf.parse(time);
 
+            if(condAction!=null) {
+                boolean okToInsert = condAction.isSatisfyVarsConditions(val);
+                if (okToInsert)
+                    this.condAction.insertData(concept, val, dateNow);
 
-            boolean okToInsert =condAction.isSatisfyVarsConditions(val);
-            if (okToInsert)
-                this.condAction.insertData(concept, val, dateNow);
+                //check if the value constraints+ time constraints is happening after Receiving
+                // the last data
+                if (condAction.isNeedToTrigger()) {
+                    Log.i("Action On recive", "trigger the conditin trigger ");
+                    triggerEvent();
+                }
+
+            }
+
 
         } catch (ParseException e) {
             Log.e("Action", "error parsing date in onReceive");
         }
 
-        //check if the value constraints+ time constraints is happening after Receiving
-        // the last data
-        if (condAction.isNeedToTrigger()) {
-           Log.i("Action On recive", "trigger the conditin trigger ");
-            triggerEvent();
-        }
 
         //TODO:  save the dataitem to DB or in file in SDCARD using service :  MonitoingDB service
         /*
@@ -151,7 +156,7 @@ public abstract class projection extends BroadcastReceiver {
     {
         Type=type;
         ProjectionName=_ProjectionName;
-        context =new ContextWrapper(_context);
+        context =_context;
         action=new compositeAction(context, Utils.ExecuteMode.Sequential);
         mode= Utils.ExecuteMode.Sequential;
         condAction=null;
