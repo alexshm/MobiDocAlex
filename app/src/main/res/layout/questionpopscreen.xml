@@ -6,12 +6,12 @@
     android:layout_centerInParent="true"
     android:background="@android:color/transparent">
 
-    <LinearLayout
+    <AbsoluteLayout
         android:layout_width="242dp"
         android:layout_height="236dp"
         android:orientation="vertical"
         android:layout_margin="1dp"
-        android:background="@android:color/darker_gray"
+        android:background="#007AB7"
         android:layout_x="101dp"
         android:layout_y="165dp"
         android:layout_gravity="center"
@@ -23,42 +23,65 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_launcher" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="20dp">
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_margin="20dp">-->
 
             <TextView
                 android:id="@+id/questionMessage"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="What is your name?" />
+                android:textSize="17dp"
+                android:textColor="@color/abc_primary_text_disable_only_material_dark"
+                android:text="What is your name?"
+                android:layout_x="15dp"
+                android:layout_y="58dp" />
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_x="6dp"
+            android:layout_y="108dp">
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="answer1"
+            android:textColor="@color/abc_primary_text_disable_only_material_dark"
             android:id="@+id/answer1"
             android:onClick="answer1Clicked"
-            android:checked="false" />
+            android:checked="false"
+            android:layout_x="11dp"
+            android:layout_y="145dp" />
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="answer2"
+            android:textColor="@color/abc_primary_text_disable_only_material_dark"
             android:onClick="answer2Clicked"
             android:id="@+id/answer2"
-            android:checked="false" />
+            android:checked="false"
+            android:layout_x="10dp"
+            android:layout_y="104dp" />
+        </RadioGroup>
 
-        <Button
-            android:layout_width="152dp"
-            android:layout_height="wrap_content"
-            android:text="Thank you"
-            android:onClick="close"
-            android:visibility="invisible"
-            android:id="@+id/done" />
-    </LinearLayout>
+        <!--<Button-->
+            <!--android:layout_width="152dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Thank you"-->
+            <!--android:onClick="close"-->
+            <!--android:background="@color/switch_thumb_normal_material_dark"-->
+            <!--android:textSize="15dp"-->
+            <!--android:layout_x="48dp"-->
+            <!--android:layout_y="177dp" />-->
+            <!--android:visibility="invisible"-->
+            android:id="@+id/done"
+            android:layout_x="47dp"
+            android:layout_y="190dp" />
+    </AbsoluteLayout>
 </FrameLayout>

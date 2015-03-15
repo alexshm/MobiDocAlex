@@ -36,7 +36,9 @@ import java.util.concurrent.BlockingQueue;
 import dalvik.system.DexClassLoader;
 import javassist.ClassPool;
 import projections.Actions.Action;
+import projections.Actions.MeasurementAction;
 import projections.Actions.NotificationAction;
+import projections.Actions.QuestionAction;
 import projections.mobiDocProjections.ProjectionBuilder;
 import projections.projection;
 
@@ -233,7 +235,10 @@ public class SimulationScreen extends Activity {
 
     private void SendActionToHandler() {
 //        Action a = new MeasurementAction("ss", "5088", getApplicationContext());
-        Action a = new NotificationAction("Dont forget your pills" ,"5088",Action.Actor.Patient,getApplicationContext());
+//        Action a = new NotificationAction("Dont forget your pills" ,"5088",Action.Actor.Patient,getApplicationContext());
+//        Action a = new QuestionAction("what is your name?" ,"5088",getApplicationContext());
+        Action a = new MeasurementAction("what is your name?" ,"5088",getApplicationContext());
+
         try {
             Message msg = a.call();
             mMessengerToLoggingService.send(msg);
