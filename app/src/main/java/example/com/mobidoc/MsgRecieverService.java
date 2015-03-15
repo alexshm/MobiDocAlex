@@ -85,6 +85,11 @@ public class MsgRecieverService extends Service {
     private void handleMeasure(Message msg) {
         String ans;
         ans = "measure msg " + msg.getData().getString("value");
+        Intent intent = new Intent(this, MessurePop.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("msg", "Take some drugs");
+        getApplicationContext().startActivity(intent);
+
     }
 
     private void handleRecomendation(Message msg) {

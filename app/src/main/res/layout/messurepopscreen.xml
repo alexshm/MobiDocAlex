@@ -25,22 +25,30 @@
 
         <Button
             android:id="@+id/dismiss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="close"
+            android:layout_width="43dp"
+            android:layout_height="26dp"
+            android:onClick="done"
             android:background="@color/switch_thumb_normal_material_dark"
-            android:text="Dismiss"
-            android:layout_x="50dp"
+            android:text="Done"
+            android:layout_x="121dp"
             android:textSize="10dp"
-            android:layout_y="116dp" />
+            android:layout_y="103dp" />
+        <EditText
+            android:id="@+id/answer"
+            android:layout_width="117dp"
+            android:layout_height="70dp"
+            android:background="@color/switch_thumb_normal_material_dark"
+            android:inputType="textEmailAddress"
+            android:layout_x="2dp"
+            android:layout_y="83dp" />
 
         <TextView
-            android:id="@+id/popUpMessage"
+            android:id="@+id/message"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/abc_primary_text_disable_only_material_dark"
             android:text="It's a PopupWindow"
-            android:layout_x="9dp"
-            android:layout_y="61dp" />
+            android:layout_x="1dp"
+            android:layout_y="47dp" />
     </AbsoluteLayout>
 </FrameLayout>

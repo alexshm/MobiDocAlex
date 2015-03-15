@@ -33,10 +33,11 @@
         <activity
             android:name=".RegisterScreen"
             android:label="@string/app_name">
-
         </activity>
 
         <activity android:name=".PopScreen" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".QuestionPopScreen" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".MessurePop" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity
             android:name="example.com.mobidoc.SimulationScreen"

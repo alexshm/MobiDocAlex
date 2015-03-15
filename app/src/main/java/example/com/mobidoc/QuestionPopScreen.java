@@ -29,7 +29,6 @@ public class QuestionPopScreen extends Activity {
         answer1.setText(yesAns);
         answer2.setText(noAns);
 
-
     }
 
     public void close(View view) {
@@ -38,12 +37,12 @@ public class QuestionPopScreen extends Activity {
 
 
     public void answer1Clicked(View view) {
-        Button done = (Button) findViewById(R.id.done);
+        Button done = (Button) findViewById(R.id.answer1);
         done.setVisibility(View.VISIBLE);
     }
 
     public void answer2Clicked(View view) {
-        Button done = (Button) findViewById(R.id.done);
+        Button done = (Button) findViewById(R.id.answer2);
         done.setVisibility(View.VISIBLE);
     }
 }
