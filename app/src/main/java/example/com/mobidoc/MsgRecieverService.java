@@ -2,10 +2,18 @@ package example.com.mobidoc;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.util.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.Date;
 
 
 public class MsgRecieverService extends Service {
@@ -56,7 +64,7 @@ public class MsgRecieverService extends Service {
                     super.handleMessage(msg);
             }
 
-
+            saveToDB("5021","66",new Date());
             //TODO: NEED TO FIX SHOWING DIALOG *****
 
 //            Intent intent2 = new Intent(MsgRecieverService.this, QuestionPopScreen.class);
@@ -88,6 +96,7 @@ public class MsgRecieverService extends Service {
         Intent intent = new Intent(this, MessurePop.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("msg", "Take some drugs");
+
         getApplicationContext().startActivity(intent);
 
     }
@@ -120,6 +129,38 @@ public class MsgRecieverService extends Service {
         intent2.putExtra("noAns", "noAns!!!");
         getApplicationContext().startActivity(intent2);
     }
+
+
+    private void saveToDB(final String concept, final String val, final Date date)
+    {
+        //saving the data to DB/ SDCARD
+        ///========================================
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final String libPath = Environment.getExternalStorageDirectory()+"/MobiDoc/data.txt";
+                    File myFile = new File(libPath);
+                    myFile.createNewFile();
+                    FileOutputStream fOut = new FileOutputStream(myFile);
+                    OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
+                    myOutWriter.append( "#concept : "+concept+" val: "+val+"time: "+date.toString());
+                    myOutWriter.close();
+                    fOut.close();
+                    Log.i("MonitoringDBservice", "saving the data to the SDCARD . " +
+                            "concept : " + concept + " val: " + val + "time: " + date.toString());
+
+                }
+                catch (Exception e)
+                {
+                    Log.e("MonitoringDBservice","error saving data in SDCARD. tha data that was trying to be saved is "+
+                            "concept : "+concept+" val: "+val+"time: "+date.toString()+ "error msg : "+e.getMessage());
+                }
+            }
+        }).start();
+
+    }
+
 
     @Override
     public IBinder onBind(Intent intent) {
