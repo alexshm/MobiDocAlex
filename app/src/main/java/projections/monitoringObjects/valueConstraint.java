@@ -3,6 +3,9 @@ package projections.monitoringObjects;
 
 import projections.var;
 import android.text.TextUtils;
+/*
+
+ */
 public class valueConstraint {
 
     private String TriggerName;

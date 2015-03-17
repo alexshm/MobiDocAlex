@@ -8,7 +8,17 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.util.Log;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import example.com.mobidoc.MessurePop;
 
 
 public class MonitoringDBservice extends Service {
@@ -20,59 +30,68 @@ public class MonitoringDBservice extends Service {
 
         class IncomingMsgHandler extends Handler {
 
-
-            private static final int NO_VAR = 1;
-            private static final int CYCLIC = 2;
-            private static final int MONITOR = 3;
-
-
             @Override
             public void handleMessage(Message msg) {
-                String ans="";
-                String concept="";
-                String val="";
-                String var="";
+                try {
+                    //extracting  msg data
 
-                switch (msg.what) {
-                    case (NO_VAR):
-                            //need only to save the data in the DB
-                        System.out.println("the msg recieeced!!!!!");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
 
-                        break;
-                    case (CYCLIC):
+                    String concept=msg.getData().getString("concept");
+                    String val=msg.getData().getString("value");
+                    String time = msg.getData().getString("time");
+                    Date dateNow = sdf.parse(time);
+                    saveToSDCard(concept, val, dateNow);
+                   // saveToDB(concept,val,dateNow);
 
-                        System.out.println("the msg recieeced2222222222!!!!!");
-                        break;
-                    case (MONITOR):
-                            concept=msg.getData().getString("value");
-                            val=msg.getData().getString("value");
-                            var=msg.getData().getString("var");
-                            String op=var.split("#")[0];
-                            String desc=var.split("#")[1];
-
-                        System.out.println("the arrived msg is :\n\n");
-                        System.out.println("op: "+op+"  descc: "+desc);
-                        break;
-
-                    default:
-                        super.handleMessage(msg);
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-
-
-                Toast.makeText(getBaseContext(), ans + " total msg count: " + 7, Toast.LENGTH_LONG).show();
-
-                saveToDB("","","");
-
             }
 
 
         }
 
+    private void saveToSDCard(final String concept, final String val, final Date date)
+    {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
 
-        private void saveToDB(String concept,String val,String date)
+                    File myFile = new File("/sdcard/MobiDoc/data.txt");
+                    myFile.createNewFile();
+                    FileOutputStream fOut = new FileOutputStream(myFile);
+                    OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
+                    myOutWriter.append( "#concept : "+concept+" val: "+val+"time: "+date.toString());
+                    myOutWriter.close();
+                    fOut.close();
+                    Log.e("MonitoringDBservice","saving the data to the SDCARD . "+
+                            "concept : "+concept+" val: "+val+"time: "+date.toString());
+
+                }
+                catch (Exception e)
+                {
+                    Log.e("MonitoringDBservice","error data in SDCARD. tha data that was trying to be saved is "+
+                    "concept : "+concept+" val: "+val+"time: "+date.toString());
+                }
+            }
+        });
+
+
+
+    }
+
+
+        private void saveToDB(String concept,String val,Date date)
         {
+
+
             //TODO: function to saave data to the DB+  to internal file in the SDCARD
         }
+
+
+
         @Override
         public IBinder onBind(Intent intent) {
 
