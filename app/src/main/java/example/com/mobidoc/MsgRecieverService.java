@@ -22,7 +22,7 @@ public class MsgRecieverService extends Service {
     // Messenger Object that receives Messages from connected clients
     IncomingMsgHandler incomingMsgHandler = new IncomingMsgHandler();
     Messenger mMessenger = new Messenger(new IncomingMsgHandler());
-
+    private DB db;
 
     class IncomingMsgHandler extends Handler {
 
@@ -64,7 +64,7 @@ public class MsgRecieverService extends Service {
                     super.handleMessage(msg);
             }
 
-            saveToDB("5021","66",new Date());
+
             //TODO: NEED TO FIX SHOWING DIALOG *****
 
 //            Intent intent2 = new Intent(MsgRecieverService.this, QuestionPopScreen.class);
@@ -138,25 +138,12 @@ public class MsgRecieverService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    final String libPath = Environment.getExternalStorageDirectory()+"/MobiDoc/data.txt";
-                    File myFile = new File(libPath);
-                    myFile.createNewFile();
-                    FileOutputStream fOut = new FileOutputStream(myFile);
-                    OutputStreamWriter myOutWriter =new OutputStreamWriter(fOut);
-                    myOutWriter.append( "#concept : "+concept+" val: "+val+"time: "+date.toString());
-                    myOutWriter.close();
-                    fOut.close();
-                    Log.i("MonitoringDBservice", "saving the data to the SDCARD . " +
-                            "concept : " + concept + " val: " + val + "time: " + date.toString());
+                    db.insertToDB(concept,val,date);
 
                 }
-                catch (Exception e)
-                {
-                    Log.e("MonitoringDBservice","error saving data in SDCARD. tha data that was trying to be saved is "+
-                            "concept : "+concept+" val: "+val+"time: "+date.toString()+ "error msg : "+e.getMessage());
-                }
-            }
+
+
+
         }).start();
 
     }
@@ -164,6 +151,7 @@ public class MsgRecieverService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+        db=new DB(getApplicationContext());
         return mMessenger.getBinder();
     }
 }
