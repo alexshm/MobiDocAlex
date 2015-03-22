@@ -3,8 +3,11 @@ package projections;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -24,13 +27,15 @@ public class CyclicProjectionAbstract extends projection {
     public Calendar remainderCalendar;
 
     public long remainderTime;
-    public AlarmManager alramMng;
+    private AlarmManager alramMng;
     public AlarmManager repeatmMng;
     public PendingIntent alarmInt;
     public PendingIntent reaminderInt;
     public  long reapetTime;
-    protected  Date  normal;
-    protected Date remainder;
+    protected Date reminderTime;
+    protected Date cycTime;
+
+    Context c1;
     protected  String[]  days;
     protected  int onSpacificCount;
     public  String StartTime;
@@ -39,31 +44,17 @@ public class CyclicProjectionAbstract extends projection {
 
     public CyclicProjectionAbstract(String projectionName, Context c,String startTime) {
         super(ProjectionType.Cyclic, projectionName, c);
-
-        alramMng= (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        repeatmMng= (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        ProjectionName=projectionName;
+        this.alramMng= (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         hasAlarm=true;
         StartTime=startTime;
         reminderUnit=null;
         reminder_amount=0;
         remainderCalendar=null;
-        cyclicCalendar=null;
-        //============================== Start time===========
-        Date nowT=new Date();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        cyclicCalendar=Calendar.getInstance();
         days=null;
-        this.cyclicCalendar=Calendar.getInstance();
-        this.cyclicCalendar.setTime(nowT);
-        this.cyclicCalendar.add(Calendar.MINUTE, 2);
-        String now= sdf.format(cyclicCalendar.getTime());
-        //============================== Start time===========
-        StartTime=now;
         onSpacificCount=0;
-        //setting the Calendar for the start time
-        setStartTime(now);
-       // this.addAction(new MeasurementAction("testmeasure_test","58",c));
-        //repeatOnDays("1,5");
+
     }
 
     @Override
@@ -72,6 +63,27 @@ public class CyclicProjectionAbstract extends projection {
         Log.i("cyclic projection -  onReceive.", "recive data : projection name : "+this.ProjectionName);
         //get the name of the Intent
         boolean isReminder = intent.getAction().contains("_remainder");
+
+        Log.i("cyclic projection -  onReceive.", "has reminder : "+isReminder);
+        if(isReminder)
+        {
+            reminderTime.setTime(reminderTime.getTime()+reapetTime);
+            Log.i("cyclic on recieve ","the new reminder time is : "+reminderTime);
+           // alramMng.cancel(reaminderInt);
+            //   alramMng.getNextAlarmClock().getShowIntent()
+            alramMng.set(AlarmManager.RTC_WAKEUP,cycTime.getTime(),alarmInt);
+        }
+        else
+        {
+            cycTime.setTime(cycTime.getTime()+reapetTime);
+            Log.i("cyclic on recieve ","the new cyclic  time is : "+cycTime);
+          //  alramMng.cancel(alarmInt);
+
+            alramMng.set(AlarmManager.RTC_WAKEUP,reminderTime.getTime(),reaminderInt);
+
+        }
+
+
         boolean isCyc = intent.getAction().contains("_cyc");
 
         if(isCyc||isReminder) {
@@ -79,6 +91,7 @@ public class CyclicProjectionAbstract extends projection {
             // if days!=null -> we trigger the alaram with "repeatDays_TriggerNextDay"
             Log.i("cyclic projection -  onReceive.", "trigger action successfully");
             if (days != null && !isReminder) {
+
                 alramMng.cancel(alarmInt);
                 repeatDays_TriggerNextDay();
 
@@ -86,7 +99,7 @@ public class CyclicProjectionAbstract extends projection {
 
             if (action != null) {
                 Log.i("cyclic projection -  onReceive.", "action not null");
-                action.invoke();
+                action.invoke(isReminder);
 
 
             } else {
@@ -104,13 +117,14 @@ public class CyclicProjectionAbstract extends projection {
     public void setStartTime(String startTime)
     {
         //===========================================
-        int hour=Integer.parseInt(StartTime.split(":")[0]);
-        int minute=Integer.parseInt(StartTime.split(":")[1]);
+        int hour=Integer.parseInt(startTime.split(":")[0]);
+        int minute=Integer.parseInt(startTime.split(":")[1]);
         this.cyclicCalendar.set(Calendar.HOUR_OF_DAY, hour);
         this.cyclicCalendar.set(Calendar.MINUTE,minute);
+        this.cycTime=cyclicCalendar.getTime();
         Log.i("cyclic projection", "the normal calander is set to : " + cyclicCalendar.get(Calendar.HOUR_OF_DAY) + ":" + cyclicCalendar.get(Calendar.MINUTE) + ":" + cyclicCalendar.get(Calendar.SECOND));
 
-        this.normal=cyclicCalendar.getTime();
+
     }
     public boolean hasReaminder()
     {
@@ -121,14 +135,14 @@ public class CyclicProjectionAbstract extends projection {
     public void repeatOnDays(String listOfDays)
     {
         setAlarmTrigger();
-       days=listOfDays.split(",");
+        days=listOfDays.split(",");
         onSpacificCount=0;
         repeatDays_TriggerNextDay();
     }
     private void repeatDays_TriggerNextDay()
     {
 
-       Calendar temp= Calendar.getInstance();
+        Calendar temp= Calendar.getInstance();
         temp.setTime(new Date());
         int today=temp.get(Calendar.DAY_OF_WEEK);
         int index=onSpacificCount %days.length;
@@ -142,14 +156,14 @@ public class CyclicProjectionAbstract extends projection {
         temp.add(Calendar.DATE,daystoadd);
         System.out.println("the new date is  is : "+ temp.getTime());
 
-       alramMng.set(AlarmManager.RTC_WAKEUP,temp.getTimeInMillis(),alarmInt);
+        alramMng.set(AlarmManager.RTC_WAKEUP,temp.getTimeInMillis(),alarmInt);
         onSpacificCount++;
 
     }
     public  void setFrequency(ProjectionTimeUnit timeunit,int amount) {
 
         reapetTime=0;
-        Log.i("setFrequency","the amount is : "+amount);
+
         switch (timeunit) {
 
             case Second:
@@ -173,44 +187,36 @@ public class CyclicProjectionAbstract extends projection {
 
         }
 
-        Log.i("projection","set reapet time for : "+reapetTime);
-
-        //TODO: change and fix the time start - the location where it happend
-
         //set what will trigger the alarm
         setAlarmTrigger();
 
-    }
-
-    // what action to do
-    public  void makeTestCyclic(){
 
     }
+
 
     @Override
-     public void initProjection() {
-
-        makeTestCyclic();
+    public void initProjection() {
 
         this.registerToTriggring();
 
 
 
-      }
+    }
 
     @Override
     public void registerToTriggring()
     {
         IntentFilter intentFilter = new IntentFilter(ProjectionName+"_cyc");
 
+
         //register to triggring timer events
         Log.i("register to trigger","register  to "+ProjectionName+"_cyc");
         context.registerReceiver(this, intentFilter);
-
         //register to remainder event
-        IntentFilter RemainderintentFilter = new IntentFilter(ProjectionName+"_remainder");
+        IntentFilter RemainderintentFilter = new IntentFilter(this.ProjectionName+"_remainder");
 
-        context.registerReceiver(this, RemainderintentFilter);
+        context.registerReceiver(CyclicProjectionAbstract.this, RemainderintentFilter);
+
 
         //register to satisfy condition events like : 2 abnormal in past week
         String triggerName="condition";
@@ -248,23 +254,35 @@ public class CyclicProjectionAbstract extends projection {
     @Override
     public void startAlarm()
     {
-        Date s=cyclicCalendar.getTime();
-
-        // we dont use alarm by days -> but we use alarm every X day/hours..
-        // if days!=null -> we trigger the alaram with "repeatDays_TriggerNextDay"
-        if(days==null)
-            alramMng.setRepeating(AlarmManager.RTC_WAKEUP,normal.getTime(),reapetTime,alarmInt);
-
-        if (remainderTime>0) {
-
-
-            setRemainderTrigger();
-          //  Log.i("projection", "the normal trigger is set to : " + cyclicCalendar.get(Calendar.HOUR_OF_DAY) + ":" + cyclicCalendar.get(Calendar.MINUTE) + ":" + cyclicCalendar.get(Calendar.SECOND));
-            Log.i("projection", "the remainder is set to : "+ remainder) ;
-
-            repeatmMng.setRepeating(AlarmManager.RTC_WAKEUP,  remainder.getTime(), reapetTime, reaminderInt);
+        // if there is no reminder run the alarm by setRepeating
+        if(!hasReaminder())
+        {
+            alramMng.setRepeating(AlarmManager.RTC_WAKEUP,cyclicCalendar.getTimeInMillis(),reapetTime,alarmInt);
 
         }
+        else
+        {
+            //  if we have a reminder -> first set the alarm
+            Date s=remainderCalendar.getTime();
+            //  Log.i("projection", "the normal trigger is set to : " + cyclicCalendar.get(Calendar.HOUR_OF_DAY) + ":" + cyclicCalendar.get(Calendar.MINUTE) + ":" + cyclicCalendar.get(Calendar.SECOND));
+            Log.i("projection when startAlarm", "the remainder is set to : "+ remainderCalendar.getTime()) ;
+
+            alramMng.set(AlarmManager.RTC_WAKEUP, remainderCalendar.getTimeInMillis(), reaminderInt);
+            reminderTime=new Date(remainderCalendar.getTimeInMillis());
+            cycTime=new Date(cyclicCalendar.getTimeInMillis());
+
+            //  alramMng.setRepeating(AlarmManager.RTC_WAKEUP, remainderCalendar.getTimeInMillis(), reapetTime, reaminderInt);
+
+        }
+
+
+
+        // TODO: fix the repet withj dayys
+        // we dont use alarm by days -> but we use alarm every X day/hours..
+        // if days!=null -> we trigger the alaram with "repeatDays_TriggerNextDay"
+        // if(days==null)
+        //   alramMng.setRepeating(AlarmManager.RTC_WAKEUP,cyclicCalendar.getTimeInMillis(),reapetTime,alarmInt);
+
 
 
 
@@ -274,6 +292,7 @@ public class CyclicProjectionAbstract extends projection {
     public  void setReaminder(ProjectionTimeUnit unit, int amount)
     {
         remainderTime=0;
+
         switch (unit) {
 
             case Second:
@@ -297,27 +316,42 @@ public class CyclicProjectionAbstract extends projection {
         reminder_amount=amount;
         if(cyclicCalendar!=null)
         {
+
             remainderCalendar=Calendar.getInstance();
-            remainder=new Date(normal.getTime()-remainderTime);
-           // remainderCalendar.setTimeInMillis(cyclicCalendar.getTimeInMillis()- remainderTime);
-            Log.i("set reminder", "set the reminder for "+remainder);
-            Log.i("set reminder", "the reminder is :  "+remainderTime);
+            remainderCalendar.setTime(cyclicCalendar.getTime());
+
+            remainderCalendar.setTimeInMillis(cyclicCalendar.getTimeInMillis()-remainderTime);
+            Log.i("set reminder", "set the reminder for "+remainderCalendar.getTime());
+            setRemainderTrigger();
+            // remainderCalendar.setTimeInMillis(cyclicCalendar.getTimeInMillis()- remainderTime);
+
+
         }
 
     }
 
     //set what will trigger the alarm
     public void setAlarmTrigger() {
+
         Intent i=new Intent(this.ProjectionName+"_cyc");
 
-        //context.sendBroadcast(i,android.Manifest.permission.VIBRATE);
 
-        alarmInt= PendingIntent.getBroadcast(context, 0, i, 0);
+        alarmInt= PendingIntent.getBroadcast(context, 1, i, PendingIntent.FLAG_CANCEL_CURRENT);
+
     }
+
+
     //set what will trigger the remainder alarm
     public void setRemainderTrigger() {
+
+
+        //int numIntent=Utils.getIntentCounter();
         Intent i2 = new Intent(this.ProjectionName + "_remainder");
-        reaminderInt = PendingIntent.getBroadcast(context, 1, i2, 0);
+
+        Log.i("cyclic projection ","setRemainderTrigger : "+this.ProjectionName + "_remainder");
+
+        reaminderInt = PendingIntent.getBroadcast(context, 35, i2, PendingIntent.FLAG_CANCEL_CURRENT);
+
 
     }
 }

@@ -11,8 +11,8 @@ public class NotificationAction extends Action {
 
     Actor _actor;
 
-    public NotificationAction(String notificationTxt, String concept, Actor actor,Context c) {
-        super(ActionType.Notification, notificationTxt, concept, c);
+    public NotificationAction(String notificationTxt, String concept, Actor actor) {
+        super(ActionType.Notification, notificationTxt, concept);
 
         _actor=actor;
     }

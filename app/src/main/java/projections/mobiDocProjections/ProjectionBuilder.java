@@ -33,16 +33,26 @@ public class ProjectionBuilder {
 
     private Context cont;
     private projection projectionToBuild;
+    private parser p;
     public ProjectionBuilder(Context c)
     {
 
        // String _jsontest=
         cont=c;
+        p=new parser(cont);
+
     }
 
+        public void clearParams()
+        {
+            p.clerParams();
+        }
+    public void setProjectionParamsTest(String starttime,String remainderAmount,String remainderUnit,String freqAmount,String frequnit) {
+       p.setProjectionParamsTest(starttime,remainderAmount,remainderUnit,freqAmount,frequnit);
+    }
     public projection build(String str)
     {
-        parser p=new parser(cont);
+
         return p.parse(str);
     }
 }

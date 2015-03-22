@@ -3,13 +3,9 @@ package example.com.mobidoc;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.BoringLayout;
-import android.text.Editable;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,15 +13,11 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.os.Bundle;
 
-import android.widget.Toast;
+import projections.ScriptingLayer.JsScriptExecutor;
+
 
 public class LoginScreen extends Activity {
 	@SuppressLint("ShowToast")
@@ -46,7 +38,8 @@ public class LoginScreen extends Activity {
 
 		Button loginbtn=(Button)findViewById(R.id.loginButton);
 
-		
+
+
 		
 		//set listener for clicking the button
 		loginbtn.setOnClickListener(new OnClickListener() {
@@ -54,7 +47,6 @@ public class LoginScreen extends Activity {
 
             @Override
             public void onClick(View v) {
-
 
 
                checkLoginInDB(username.getText().toString(), pass.getText().toString());

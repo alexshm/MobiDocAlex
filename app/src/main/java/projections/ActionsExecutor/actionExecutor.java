@@ -33,6 +33,7 @@ import projections.Utils;
 public abstract class actionExecutor implements Executor{
 
     protected ArrayList<Action> tasks ;
+    protected ArrayList<Action> Reminderstasks ;
     protected List<Future<Message>> msgsrstlt;
     protected boolean mIsBound=false;
     protected ExecutorService pool;
@@ -42,10 +43,12 @@ public abstract class actionExecutor implements Executor{
     public Messenger MessengerToMsgService;
 
 
+    protected boolean runReminders;
 
     public actionExecutor(Context c)
     {
         context =c;
+        runReminders=false;
         serviceIntent  = new Intent(context, example.com.mobidoc.MsgRecieverService.class);
     }
 
@@ -75,6 +78,11 @@ public abstract class actionExecutor implements Executor{
         }
     }
 
+
+    public void setRunReminder(boolean runReminders)
+    {
+        this.runReminders=runReminders;
+    }
     public   void StopService() {
 
         if (mIsBound) {
@@ -100,8 +108,18 @@ public abstract class actionExecutor implements Executor{
 
     public  void addAction(Action a)
     {
-        Log.i(" actionExecutier" ,"adding action - do nothing");
+        if(a.getType().equals(Action.ActionType.Remainder))
+            this.Reminderstasks.add(a);
+        else
+            this.tasks.add(a);
     }
+
+    protected abstract void executeReminders();
+
+    protected abstract void executeActions();
+
+
+
     public ArrayList getCollection()
     {
         return  tasks;
@@ -132,7 +150,11 @@ public abstract class actionExecutor implements Executor{
 
     @Override
       public void execute(Runnable command) {
-        Log.i(" actionExecutier" ,"do nothing");
+
+        if(runReminders)
+            this.executeReminders();
+        else
+            this.executeActions();
 
     }
 

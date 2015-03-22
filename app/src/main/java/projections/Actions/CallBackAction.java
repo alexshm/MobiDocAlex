@@ -11,8 +11,8 @@ import android.util.Log;
  * Created by Moshe on 3/11/2015.
  */
 public class CallBackAction extends Action {
-    public CallBackAction(String name, String concept, Context _context) {
-        super(ActionType.CallBack, name, concept, _context);
+    public CallBackAction(String name, String concept) {
+        super(ActionType.CallBack, name, concept);
     }
 
 

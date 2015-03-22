@@ -65,6 +65,7 @@ public class SimulationScreen extends Activity {
 
     // Intent used for binding to LoggingService
     private Intent serviceIntent;
+    private ProjectionBuilder pb ;
     private Messenger mMessengerToLoggingService;
     private boolean mIsBound;
 
@@ -91,7 +92,7 @@ public class SimulationScreen extends Activity {
         setContentView(R.layout.simulation_screen);
         serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
         //   Toast.makeText(getApplicationContext(), "welcome to MobiDoc", Toast.LENGTH_LONG);
-
+        pb =new ProjectionBuilder(this.getApplicationContext());
         final Button startbtn = (Button) findViewById(R.id.startSimulation);
         final Button handlerSender = (Button) findViewById(R.id.button2);
 
@@ -165,6 +166,7 @@ public class SimulationScreen extends Activity {
                     reminder_spinner.setVisibility(View.VISIBLE);
                     startTimetxt.setVisibility(View.VISIBLE);
                     spinner.setVisibility(View.VISIBLE);
+
                 }
             }
 
@@ -224,7 +226,7 @@ public class SimulationScreen extends Activity {
 //        Action a = new MeasurementAction("ss", "5088", getApplicationContext());
 //        Action a = new NotificationAction("Dont forget your pills" ,"5088",Action.Actor.Patient,getApplicationContext());
 //        Action a = new QuestionAction("what is your name?" ,"5088",getApplicationContext());
-        Action a = new MeasurementAction("what is your name?" ,"5088",getApplicationContext());
+        Action a = new MeasurementAction("what is your name?" ,"5088");
 
         try {
             Message msg = a.call();
@@ -241,11 +243,22 @@ public class SimulationScreen extends Activity {
 
 
     private void SimulateProjections(View v) {
-
-        ProjectionBuilder pb =new ProjectionBuilder(this.getApplicationContext());
-
-
          String jsonString=readProjectionTxt(projectionId);
+
+        if (!selectedProjection.contains("Monitor")) {
+            String starttime = startTimetxt.getText().toString();
+            String remamount ="20";
+            String remunit = "sec";
+            String freqamount = everyXtxt.getText().toString();
+            String frequnit = "sec";
+
+            pb.setProjectionParamsTest(starttime,remamount,remunit,freqamount,frequnit);
+        }
+
+        else
+        {
+            pb.clearParams();
+        }
 
         projection p =pb.build(jsonString);
 
@@ -295,11 +308,12 @@ public class SimulationScreen extends Activity {
 
         Class<?>[] params = new Class[]{BlockingQueue.class};
         try {
-            final String libPath = Environment.getExternalStorageDirectory() + "/makejar.jar";
+           // final String libPath = Environment.getExternalStorageDirectory() + "/makejar.jar";
+            final String libPath="";
             final File tmpDir = getDir("dex", 0);
 
             final DexClassLoader classloader = new DexClassLoader(libPath, tmpDir.getAbsolutePath(), null, this.getClass().getClassLoader());
-            final Class<Object> classToLoad = (Class<Object>) classloader.loadClass("com.example.makejar.example.com.mobidoc.test");
+            final Class<Object> classToLoad = (Class<Object>) classloader.loadClass("projections.ScriptingLayer");
 
 
             final Object myInstance = classToLoad.newInstance();

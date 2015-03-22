@@ -37,6 +37,7 @@ public class SerialExecutor extends actionExecutor implements Executor {
             super(c);
             pool = Executors.newSingleThreadExecutor();
             msgsrstlt=new ArrayList<Future<Message>>();
+            this.Reminderstasks=new ArrayList<Action>( );
             this.tasks = new ArrayList<Action>( );
             startService();
 
@@ -50,7 +51,10 @@ public class SerialExecutor extends actionExecutor implements Executor {
         */
         public  void addAction(Action a)
         {
-            this.tasks.add(a);
+            if(a.getType().equals(Action.ActionType.Remainder))
+                this.Reminderstasks.add(a);
+             else
+                this.tasks.add(a);
         }
 
         @Override
@@ -60,18 +64,35 @@ public class SerialExecutor extends actionExecutor implements Executor {
         send() - reads the list of msgs to be deliverd and send them to the GUI
                     by using the send Method in the Service
          */
-        public  void execute( Runnable r) {
 
-            for (Action task:this.tasks)
-            {
-                Log.i("Sequncial exiecuter-excute"," executing the action : "+task.getActionName());
-                Future rslt=pool.submit(task);
+    protected void executeActions() {
+            for (Action task : this.tasks) {
+                Log.i("Sequncial exiecuter-excute", " executing the action : " + task.getActionName());
+                Future rslt = pool.submit(task);
                 msgsrstlt.add(rslt);
                 send();
                 clean();
 
 
             }
+        }
+
+    /*
+        execute the Reminders to be sent
+        send them in sequencial order
+     */
+    @Override
+    protected void executeReminders() {
+        for (Action task : this.Reminderstasks) {
+            Log.i("Sequncial Reminders exiecuter-excute", " executing the action : " + task.getActionName());
+            Future rslt = pool.submit(task);
+            msgsrstlt.add(rslt);
+            send();
+            clean();
+
 
         }
+    }
+
+
 }

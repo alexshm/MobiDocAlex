@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import example.com.mobidoc.ServicesToMainServer.PicardCommunicationLayer;
+
 @SuppressLint("ShowToast")
 public class MainScreen extends Activity {
     TextView t = null;

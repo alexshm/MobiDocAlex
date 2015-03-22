@@ -71,6 +71,20 @@ public  abstract class Action extends BroadcastReceiver implements Callable<Mess
         Patient, physician
     }
 
+    public Action(ActionType _type, String name, String concept) {
+
+        actionName = name;
+        type = _type;
+        actionConcept = concept;
+
+        context = null;
+
+        isReminder=false;
+        //===========================
+        //TODO:Add implementaion for :
+        _actor=null;
+
+    }
 
     public Action(ActionType _type, String name, String concept, Context _context) {
 
@@ -87,10 +101,7 @@ public  abstract class Action extends BroadcastReceiver implements Callable<Mess
 
     }
 
-    public void setIsReminder(boolean _isReminder)
-    {
-        isReminder=_isReminder;
-    }
+
     public String getActionName() {
         return actionName;
     }

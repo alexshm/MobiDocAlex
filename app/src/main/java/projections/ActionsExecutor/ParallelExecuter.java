@@ -26,15 +26,16 @@ public class ParallelExecuter extends actionExecutor implements Executor {
 
     public ParallelExecuter(Context c) {
             super(c);
-        pool=Executors.newFixedThreadPool(2);
+        pool=Executors.newFixedThreadPool(3);
         startService();
 
     }
 
-    public  void executeAll() {
+    @Override
+    protected void executeActions() {
         try {
-            Log.i("Sequncial exiecuter-excute", " executing the actions ");
-           msgsrstlt= pool.invokeAll(tasks);
+            Log.i("parrallel exiecuter- execute actions", " executing the actions ");
+            msgsrstlt= pool.invokeAll(tasks);
             send();
             clean();
 
@@ -43,9 +44,21 @@ public class ParallelExecuter extends actionExecutor implements Executor {
         }
 
     }
+
     @Override
-    public void execute(Runnable command) {
-        executeAll();
-          }
+    protected void executeReminders() {
+        try {
+            Log.i("parrallel exiecuter- execute reminders", " executing the reminders ");
+            msgsrstlt= pool.invokeAll(Reminderstasks);
+            send();
+            clean();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 }
 

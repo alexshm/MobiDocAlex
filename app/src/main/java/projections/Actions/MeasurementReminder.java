@@ -6,16 +6,14 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
-import java.util.concurrent.Callable;
-
-import projections.Utils;
-
-public class MeasurementAction extends Action {
-
-    public MeasurementAction(String measureName,  String conceptId)
+/**
+ *  remiander obj
+ */
+public class MeasurementReminder extends Action {
+    public MeasurementReminder(String measureName)
     {
-        super(ActionType.Measurement,measureName, conceptId);
-        setType(ActionType.Measurement);
+        super(ActionType.Remainder,measureName, "Reminder");
+        setType(ActionType.Remainder);
         //TODO:SubscribeConcept(conceptId);
         _actor=Actor.Patient;
 
@@ -27,9 +25,9 @@ public class MeasurementAction extends Action {
     }
 
     /*
-           creating a message obj that will be sent to the msgHandler in
-           the Gui component
-        */
+    creating a message obj that will be sent to the msgHandler in
+    the Gui component
+    */
 
     @Override
     public Message call()  {
@@ -41,9 +39,10 @@ public class MeasurementAction extends Action {
 
         bundle.putString("value", msgToSend);
         bundle.putString("concept", this.getConcept());
-        Log.i("mesure action- build msg","build msg for : "+actionName);
+        Log.i("reminder action- build reminder", "build msg for : " + actionName);
         msg.setData(bundle);
         return msg;
     }
 
 }
+

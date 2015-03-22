@@ -65,11 +65,11 @@ public class compositeAction  {
         executed the tasks according to the executed who was defined
 
      */
-    public void invoke() {
+    public void invoke(boolean runReminder) {
 
         Runnable r = null;
+        ex.setRunReminder(runReminder);
         this.ex.execute(r);
-
 
     }
 

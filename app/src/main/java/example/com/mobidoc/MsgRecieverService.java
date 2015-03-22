@@ -15,6 +15,8 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Date;
 
+import example.com.mobidoc.ServicesToMainServer.PicardCommunicationLayer;
+
 
 public class MsgRecieverService extends Service {
 
@@ -81,21 +83,22 @@ public class MsgRecieverService extends Service {
 
     private void handleCallBack(Message msg) {
         String ans;
-        ans = "CALLBACK msg " + msg.getData().getString("value");
+        ans = msg.getData().getString("value");
         String Concept = msg.getData().getString("concept");
     }
 
     private void handleReminder(Message msg) {
         String ans;
         ans = "this is a reminder msg for : " + msg.getData().getString("value");
+        Log.i("MsgRecieverService","get reminder : "+ans);
     }
 
     private void handleMeasure(Message msg) {
-        String ans;
-        ans = "measure msg " + msg.getData().getString("value");
+        String txt;
+        txt = msg.getData().getString("value");
         Intent intent = new Intent(this, MessurePop.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("msg", "Take some drugs");
+        intent.putExtra("msg", txt);
 
         getApplicationContext().startActivity(intent);
 
@@ -110,10 +113,10 @@ public class MsgRecieverService extends Service {
 
     private void handleNotification(Message msg) {
         String ans;
-        ans = "notificatin msg " + msg.getData().getString("value");
+        String txt =  msg.getData().getString("value");
         Intent intent = new Intent(this, PopScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("msg", "Take some drugs");
+        intent.putExtra("msg", txt);
         getApplicationContext().startActivity(intent);
     }
 

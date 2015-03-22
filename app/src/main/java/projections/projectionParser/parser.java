@@ -2,11 +2,13 @@ package projections.projectionParser;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.util.Log;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import projections.Actions.Action;
+import projections.Actions.MeasurementReminder;
 import projections.CyclicProjectionAbstract;
 import projections.MonitorProjection;
 import projections.Utils;
@@ -20,14 +22,38 @@ public class parser {
 
 
     private Context cont;
+    private String freqTime;
+    private String freqUnit;
+    private String startTimeTxt;
+    private String remTime;
+    private String remUnit;
     private projection projectionToBuild;
     public parser(Context c)
     {
 
-        // String _jsontest=
+       freqTime="";
+        freqUnit="";
+        startTimeTxt="";
+        remTime="";
+        remUnit="";
         cont=c;
     }
-
+    public void clerParams()
+    {
+        freqTime="";
+        freqUnit="";
+        startTimeTxt="";
+        remTime="";
+        remUnit="";
+    }
+    public void setProjectionParamsTest(String starttime,String remainderAmount,String remainderUnit,String freqAmount,String frequnit)
+    {
+        freqTime=freqAmount;
+        freqUnit=frequnit;
+        startTimeTxt=starttime;
+        remTime=remainderAmount;
+        remUnit=remainderUnit;
+    }
     public projection parse(String str)
 
     {
@@ -144,8 +170,18 @@ public class parser {
                 String remainder=args[2];
                 int remainderAmout=Integer.parseInt(remainder.split(" ")[0]);
                 String remainderUnit = remainder.split(" ")[1];
+                // fill this parameters in the test simulation screen
+                if(this.startTimeTxt!="")
+                {
 
+                    repeatAmout=Integer.parseInt(this.freqTime);
+                    repeatUnit = this.freqUnit;
+                    startTime=this.startTimeTxt;
+                    remainderAmout=Integer.parseInt(this.remTime);
+                    remainderUnit = this.remUnit;
+                }
                 setFreq(repeatAmout,repeatUnit,startTime,remainderAmout,remainderUnit);
+
                 break;
             case "perform":
                 String actionsarr=args[1];
@@ -186,7 +222,9 @@ public class parser {
         String[] actionParms=actionToParse.split("\",\"");
         Utils.ActionType acType=Utils.getActionType(type);
         ActionParser ap=new ActionParser(acType,cont);
+
         return ap.parse(actionParms);
+
 
     }
 
@@ -236,12 +274,20 @@ public class parser {
                 actionToParse=actionToParse.substring(1,actionToParse.length()-1);
                 Action a = buildAction(actionType, actionToParse);
                 projectionToBuild.addAction(a);
+                // in case the action mesure and we have remidnder
+                addRemminderAction(a.getType(),a.getActionName());
+
             }
         }
 
     }
-
-
+    private void addRemminderAction(Action.ActionType type,String reminderTxt)
+    {
+        if(type.equals(Action.ActionType.Measurement) && remTime!="0") {
+            Action remider = new MeasurementReminder(reminderTxt);
+            projectionToBuild.addAction(remider);
+        }
+    }
 
     /*
     =================================================
@@ -295,6 +341,7 @@ public class parser {
         {
             projection.ProjectionTimeUnit repUnit=Utils.getTimeUnit(repeatUnit);
             projection.ProjectionTimeUnit remUnit=Utils.getTimeUnit(remainderUnit);
+
             ((CyclicProjectionAbstract) projectionToBuild).setStartTime(startTime);
             ((CyclicProjectionAbstract)projectionToBuild).setReaminder(remUnit,remainderAmout);
             ((CyclicProjectionAbstract)projectionToBuild).setFrequency(repUnit,repeatAmout);

@@ -3,7 +3,11 @@ package projections;
 
 import projections.Actions.Action;
 
+
 public  final class Utils {
+
+
+    static int intentCounter;
     public static enum AggregationAction {
         Sum, Avg, Count
     }
@@ -30,6 +34,13 @@ public  final class Utils {
         Second, Minute, Hour, Day, Week,Month ,None
     }
 
+    public static synchronized int getIntentCounter()
+    {
+        intentCounter++;
+        int ans=intentCounter;
+
+        return ans;
+    }
     public static projection.ProjectionTimeUnit getTimeUnit(String type) {
         switch(type) {
             case "sec":

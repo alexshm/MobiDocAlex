@@ -1,6 +1,6 @@
 buildProjection("cyc","19964","Ketonuria Daily measurement");
 
-setFrequency("50 sec","15:36","0 minute");
+setFrequency("50 sec","15:36","10 sec");
 
 perform("seq","[mesure(\"Ketonuria\",\"5021\")]");
 

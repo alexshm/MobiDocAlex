@@ -26,6 +26,7 @@ public class ActionParser {
         switch (type) {
             case Measurement:
                 return parseMeasure(actionParms);
+
             case Recommendation:
                 return parseRecommendation(actionParms);
             case CallBack:
@@ -43,7 +44,7 @@ public class ActionParser {
     {
        String name=actionParms[0];
         String conceptId=actionParms[1];
-        return  new MeasurementAction(name,conceptId, context);
+        return  new MeasurementAction(name,conceptId);
     }
 
 
@@ -69,7 +70,7 @@ public class ActionParser {
     {
         String name=actionParms[1];
         String conceptId=actionParms[0];
-        return  new CallBackAction(name,conceptId, context);
+        return  new CallBackAction(name,conceptId);
     }
 
 

@@ -50,9 +50,9 @@ public class QuestionAction extends Action {
 
         // waiting for the answer of the question (yes/no) value
         if (val.equals("yes"))
-            successAcc.invoke();
+            successAcc.invoke(false);
         else
-            failAcc.invoke();
+            failAcc.invoke(false);
     }
 
 
