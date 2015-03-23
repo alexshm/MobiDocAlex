@@ -15,6 +15,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.widget.Toast;
+
+import java.util.Properties;
 
 import projections.ScriptingLayer.JsScriptExecutor;
 

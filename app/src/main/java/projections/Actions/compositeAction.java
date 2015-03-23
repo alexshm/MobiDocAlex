@@ -26,7 +26,12 @@ import projections.ActionsExecutor.*;
 
 import projections.Utils;
 
-
+/**
+ * holds many actions to be preformed
+ *  the actions can be executed in  parallel / sequential order .
+ *  this can be done in the actionExecutor class that determine the
+ *  execute order for the actions.
+ */
 public class compositeAction  {
 
     public ArrayList<Action> actionsCollection;
@@ -63,8 +68,8 @@ public class compositeAction  {
 
     /*
         executed the tasks according to the executed who was defined
-
      */
+
     public void invoke(boolean runReminder) {
 
         Runnable r = null;

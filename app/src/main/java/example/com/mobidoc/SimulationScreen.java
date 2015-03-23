@@ -247,7 +247,7 @@ public class SimulationScreen extends Activity {
 
         if (!selectedProjection.contains("Monitor")) {
             String starttime = startTimetxt.getText().toString();
-            String remamount ="20";
+            String remamount =remaindertxt.getText().toString();
             String remunit = "sec";
             String freqamount = everyXtxt.getText().toString();
             String frequnit = "sec";

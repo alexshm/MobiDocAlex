@@ -8,7 +8,8 @@ import android.os.Message;
 import android.util.Log;
 
 /**
- * Created by Moshe on 3/11/2015.
+ * Action for the callback operation
+ *  in the Call method it return a msg to be sent to the Gui
  */
 public class CallBackAction extends Action {
     public CallBackAction(String name, String concept) {

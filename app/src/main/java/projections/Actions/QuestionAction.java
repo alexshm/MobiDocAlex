@@ -13,7 +13,8 @@ import java.util.Date;
 import projections.Utils;
 
 /**
- * Created by Moshe on 3/10/2015.
+ * Action for the  Question operation
+ *  in the Call method it return a msg to be sent to the Gui
  */
 public class QuestionAction extends Action {
 

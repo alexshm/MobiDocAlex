@@ -10,6 +10,11 @@ import android.util.Log;
 
 import projections.Utils;
 
+/**
+ * Action for the  Question operation
+ *  in the Call method it return a msg to be sent to the Gui
+ */
+
 public class RecommendationAction extends Action{
 
 

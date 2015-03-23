@@ -10,6 +10,10 @@ import java.util.concurrent.Callable;
 
 import projections.Utils;
 
+/**
+ * Action for the Measurement operation
+ *  in the Call method it return a msg to be sent to the Gui
+ */
 public class MeasurementAction extends Action {
 
     public MeasurementAction(String measureName,  String conceptId)

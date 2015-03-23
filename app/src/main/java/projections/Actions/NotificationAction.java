@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
 
+/**
+ * Action for the  Notification operation
+ *  in the Call method it return a msg to be sent to the Gui
+ */
 public class NotificationAction extends Action {
 
     Actor _actor;

@@ -38,6 +38,28 @@ import static ch.lambdaj.Lambda.avg;
 import static ch.lambdaj.Lambda.count;
 import static ch.lambdaj.Lambda.sum;
 
+/*
+ an abstract class that represent a single action to do like :
+ question/recommendation/notification/measure/ measure reminder ...
+ every action is extends thread class(or callable )
+
+ the call method is like the Run method implemented in threads however,
+ it returns a value. the returns value is a msg to be sent to the Gui.
+
+ in this class there are also some constants(enums) for monitioring action
+ ===========================================================================
+ * AggregationAction - ( Sum, Avg, Count) - actions to accoumlate if we have conditions
+                    (i.e we want to count how many abnormal BP we had)
+
+ * AggregationOperators - (Equal, GreaterThen, LessThen, GreatEqual, LessEqual)
+ *                          =, > , < , >= , <=
+     operations for the aggregation (i.e we want to trigger something only if
+     the count for abnormal BP is greaterthan(>) 4)
+
+  *
+  *Actor - the antity to whom we need to sent the action
+  *
+ */
 public  abstract class Action extends BroadcastReceiver implements Callable<Message> {
 
     protected String actionName;
@@ -64,7 +86,7 @@ public  abstract class Action extends BroadcastReceiver implements Callable<Mess
     }
 
     public enum ActionType {
-        Question, Recommendation, Notification, Measurement, CallBack, Remainder,General,Trigger
+        Question, Recommendation, Notification, Measurement, CallBack, Remainder,Trigger
     }
 
     public enum Actor {

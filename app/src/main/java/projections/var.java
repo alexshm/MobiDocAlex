@@ -14,7 +14,10 @@ import projections.monitoringObjects.valueConstraint;
 import static ch.lambdaj.Lambda.*;
 import java.lang.Iterable;
 
+/*
 
+
+ */
 public class var<T> {
 
     private String name;

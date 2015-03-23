@@ -15,11 +15,11 @@ import projections.DataItem;
 import projections.projection;
 
     /*
-    class that saves all the data according to the constrains defined in the projection.
-    the DataCollection saves *only* the relevant data and not all the data.
-    we can defined it more like a local small DB to store and monitor  *only* the relevant data.
+        saves all the data according to the constrains defined in the projection.
+        the DataCollection saves *only* the relevant data and not all the data.
+        we can defined it more like a local small DB to store and monitor  *only* the relevant data.
 
-    * the DataCollection obj exists in each Projection obj
+        *   the DataCollection obj exists in each Projection obj
      */
 public class DataCollection {
 
