@@ -32,27 +32,47 @@ import projections.var;
 public class ProjectionBuilder {
 
     private Context cont;
-    private projection projectionToBuild;
+    private projection buildProj;
+
     private parser p;
-    public ProjectionBuilder(Context c)
-    {
 
-       // String _jsontest=
-        cont=c;
-        p=new parser(cont);
+    public ProjectionBuilder(Context c) {
+
+        // String _jsontest=
+        cont = c;
+        p = new parser(cont);
 
     }
 
-        public void clearParams()
-        {
-            p.clerParams();
-        }
-    public void setProjectionParamsTest(String starttime,String remainderAmount,String remainderUnit,String freqAmount,String frequnit) {
-       p.setProjectionParamsTest(starttime,remainderAmount,remainderUnit,freqAmount,frequnit);
+    public void clearParams() {
+        p.clerParams();
     }
-    public projection build(String str)
-    {
+
+    public void setProjectionParamsTest(String starttime, String remainderAmount, String remainderUnit, String freqAmount, String frequnit) {
+        p.setProjectionParamsTest(starttime, remainderAmount, remainderUnit, freqAmount, frequnit);
+    }
+
+    public projection build(String str) {
 
         return p.parse(str);
+    }
+
+    public projection buildNewProjecction(String type, String name, String id) {
+        projection.ProjectionType projectionType = Utils.convertToProjectionType(type);
+
+        //TODO: ADD id to projection
+        switch (projectionType) {
+            case Cyclic:
+                buildProj = new CyclicProjectionAbstract(name, cont, "");
+                break;
+            case Monitor:
+                buildProj = new MonitorProjection(name, cont);
+                break;
+            default:
+                buildProj = null;
+        }
+        System.out.println("the type of the proj is : "+buildProj.getType().name());
+        return buildProj;
+
     }
 }

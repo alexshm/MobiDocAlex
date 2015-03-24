@@ -74,7 +74,9 @@ public class compositeAction  {
 
         Runnable r = null;
         ex.setRunReminder(runReminder);
-        this.ex.execute(r);
+       this.ex.execute(r);
+
+
 
     }
 

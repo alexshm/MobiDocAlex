@@ -19,11 +19,13 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import projections.Actions.Action;
 import projections.Actions.MonitorAction;
 import projections.Actions.compositeAction;
+import projections.monitoringObjects.valueConstraint;
 
 
 public abstract class projection extends BroadcastReceiver {
@@ -35,6 +37,7 @@ public abstract class projection extends BroadcastReceiver {
 
     public Context context;
 
+    protected Hashtable<String, compositeAction> compActionTable;
     protected MonitorAction condAction;
     protected boolean hasAlarm;
     protected compositeAction action;
@@ -132,6 +135,7 @@ public abstract class projection extends BroadcastReceiver {
         mode= Utils.ExecuteMode.Sequential;
         hasAlarm=false;
         condAction=null;
+       compActionTable=new Hashtable<String, compositeAction>();
 
     }
 
