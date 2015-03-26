@@ -15,9 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.widget.Toast;
-
-import java.util.Properties;
 
 import projections.ScriptingLayer.JsScriptExecutor;
 
@@ -43,8 +40,12 @@ public class LoginScreen extends Activity {
 
 
 
-		
+		JsScriptExecutor js=new JsScriptExecutor(this.getApplicationContext());
+//        js.runScript("");
 		//set listener for clicking the button
+
+
+
 		loginbtn.setOnClickListener(new OnClickListener() {
 
 
@@ -58,6 +59,8 @@ public class LoginScreen extends Activity {
 		});
 
     }
+
+
 
 
     private void checkLoginInDB(String user,String password) {

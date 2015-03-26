@@ -17,6 +17,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Type;
 
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -35,7 +36,7 @@ public class ClassGenerator {
     public  void generateDex(){
         DexMaker dexMaker = new DexMaker();
 
-        // Generate a HelloWorld class.
+       // Generate a HelloWorld class.
         TypeId<?> helloWorld = TypeId.get("LHelloTest;");
 
        //generate constractor

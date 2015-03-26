@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import example.com.mobidoc.ServicesToMainServer.PicardCommunicationLayer;
+import example.com.mobidoc.Screens.webComScreen;
 
 @SuppressLint("ShowToast")
 public class MainScreen extends Activity {
@@ -77,7 +77,10 @@ public class MainScreen extends Activity {
 
     }
 
-
+    public void goToWebTests(View view) {
+        Intent webScreen = new Intent(MainScreen.this, webComScreen.class);
+        startActivity(webScreen);
+    }
     public static class BuildDialog extends DialogFragment {
 
         private static String msg;

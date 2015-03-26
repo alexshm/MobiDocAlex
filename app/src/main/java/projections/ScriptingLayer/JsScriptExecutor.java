@@ -2,6 +2,8 @@ package projections.ScriptingLayer;
 
 import android.util.Log;
 
+import com.google.dexmaker.TypeId;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
@@ -17,6 +19,7 @@ import org.mozilla.classfile.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -94,21 +97,25 @@ try {
             scope.put("DexClassLoader",scope,classloader);
             Class<Object> testclass = (Class<Object>)classloader.loadClass("example.com.mobidoc.test");
             scope.put("test",scope,testclass);
-            Class<Object> dataitemClass = (Class<Object>)classloader.loadClass("projections.DataItem");
+            Class<DataItem> dataitemClass = (Class<DataItem>)classloader.loadClass("projections.DataItem");
             scope.put("dataitemClass",scope,dataitemClass);
 
-            scope.put("builder",scope,new ProjectionBuilder(c));
-            System.out.println("after finishing loading classes");
+            TypeId<DataItem> a = TypeId.get(dataitemClass);
+
+            scope.put("builder", scope, new ProjectionBuilder(c));
 
 
             // Build the script
             String script ="var today = new java.util.Date();java.lang.System.out.println('Today is ' + today);" +
 
-                    "var item=test.newInstance();" +
-                    "var ans=item.testing();" +
-                    "java.lang.System.out.println('the ans is  ' + ans);"+
-                    "var temp= builder.buildNewProjecction('cyc','11','44');"+
-                   "java.lang.System.out.println('the type is   ' + temp.getProjectionName());";
+                 //   "var item=test.newInstance();" +
+                //    "var ans=item.testing();" +
+                 //   "java.lang.System.out.println('the ans is  ' + ans);"+
+                 //   "var temp= builder.buildNewProjecction('cyc','11','44');"+
+                //   "java.lang.System.out.println('the type is   ' + temp.getProjectionName());"+
+
+
+                    "var newinstance=new dataitemClass('11' ,'22',today);";
 
            //working "var newinstance=dataitemClass(con ,eee,today);";
                    // "var createdata= function (concept,val,date) {var newinstance=dataitemClass.newInstance();";

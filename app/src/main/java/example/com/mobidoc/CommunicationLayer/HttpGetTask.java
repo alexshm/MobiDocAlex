@@ -1,4 +1,4 @@
-package example.com.mobidoc.ServicesToMainServer;
+package example.com.mobidoc.CommunicationLayer;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -9,48 +9,65 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
-public class HttpPostTask extends AsyncTask<String, String, String>  {
+public abstract class HttpGetTask extends AsyncTask<String, String, String>  implements TaskIF{
 
+    private String answer;
+    public HttpGetTask()
+    {
+        answer="";
+    }
+    public String getAnswer()
+    {
+        return answer;
+    }
     @Override
     protected String doInBackground(String... uri) {
         HttpClient httpclient = new DefaultHttpClient();
         HttpResponse response;
         String responseString = null;
         try {
-            response = httpclient.execute(new HttpPost(uri[0]));
+            response = httpclient.execute(new HttpGet(uri[0]));
+
             StatusLine statusLine = response.getStatusLine();
             if (statusLine.getStatusCode() == HttpStatus.SC_OK) {
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
                 response.getEntity().writeTo(out);
-                out.close();
-                responseString = out.toString();
 
+                responseString = out.toString();
+                out.close();
+              //  publishProgress(responseString);
+                return responseString;
             } else {
                 //Closes the connection.
                 response.getEntity().getContent().close();
                 throw new IOException(statusLine.getReasonPhrase());
             }
         } catch (ClientProtocolException e) {
-            Log.e("HttpPostTask", "error communicate Picard");
-            //TODO Handle problems..
+            Log.e("HttpRequestTask", "error communicate Picard");
+           return "ClientProtocolError  "+e.getMessage();
         } catch (IOException e) {
-            Log.e("HttpPostTask", "error communicate Picard");
-            //TODO Handle problems..
+            Log.e("HttpRequestTask", "error communicate Picard");
+            return "IOException Error : "+e.getMessage();
         }
-        return responseString;
+
     }
+
 
     @Override
     protected void onPostExecute(String result) {
-        super.onPostExecute(result);
-        System.out.println("the ans is :" + result);
-        //Do anything with response..
+        Log.i("on recieve  - httpget-","recieve the result "+result);
+        onResponseReceived(result);
     }
+
+
+    public abstract void onResponseReceived(String result);
 }

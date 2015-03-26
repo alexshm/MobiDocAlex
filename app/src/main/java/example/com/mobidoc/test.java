@@ -96,15 +96,17 @@ public class test   extends Activity{
 	    	  
 	      };};
 	    
-	
+	public String testing()
+    {
+       return  "this is a test class";
+    }
 	  
 	     
 	 final  Runnable t= new Runnable() {
 	       public void run() { //beeperHandle.cancel(true);
 	       txt.setText("wait   ");}
 	 };
-	   
-	public void beepForAnHour() {
+	  	public void beepForAnHour() {
 	     
 		scheduler.schedule(t, 60 * 60, SECONDS);
 	}

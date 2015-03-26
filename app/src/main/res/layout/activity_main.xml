@@ -54,6 +54,41 @@
             android:src="@drawable/tests"
             android:textAlignment="center" />
 
+        <TextView
+            android:layout_width="186dp"
+            android:layout_height="107dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Projections Test"
+            android:id="@+id/textView6"
+            android:layout_gravity="left|top"
+            android:gravity="bottom" />
+
+        <TextView
+            android:layout_width="186dp"
+            android:layout_height="107dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Settings"
+            android:id="@+id/textView5"
+            android:layout_gravity="left|center_vertical"
+            android:gravity="bottom" />
+
+        <ImageView
+            android:layout_width="110dp"
+            android:layout_height="82dp"
+            android:id="@+id/imageView"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/communication"
+            android:onClick="goToWebTests" />
+
+        <TextView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Web Test"
+            android:id="@+id/textView7"
+            android:layout_gravity="right|center_vertical"
+            android:gravity="bottom|center_horizontal" />
+
 
     </FrameLayout>
 

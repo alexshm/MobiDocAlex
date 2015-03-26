@@ -2,20 +2,13 @@ package example.com.mobidoc;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.Date;
-
-import example.com.mobidoc.ServicesToMainServer.PicardCommunicationLayer;
 
 
 public class MsgRecieverService extends Service {
