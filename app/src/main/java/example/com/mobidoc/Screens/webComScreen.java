@@ -31,7 +31,7 @@ public class webComScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.webcommunicationscreen);
+        setContentView(R.layout.communicationscreen);
         ans = (TextView) findViewById(R.id.ansTxt);
         ip = (EditText) findViewById(R.id.editText4);
 
