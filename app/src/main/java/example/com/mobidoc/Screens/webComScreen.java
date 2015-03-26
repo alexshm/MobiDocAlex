@@ -23,7 +23,7 @@ public class webComScreen extends Activity {
 
     private ProgressDialog mProgressDialog;
     private TextView ans;
-    private String MAIN_SERVER_LINK ="";
+    private String MAIN_SERVER_LINK ="http://";
     private PowerManager.WakeLock mWakeLock;
     private String url;
     private EditText ip;
@@ -35,7 +35,6 @@ public class webComScreen extends Activity {
         ans = (TextView) findViewById(R.id.ansTxt);
         ip = (EditText) findViewById(R.id.editText4);
 
-        MAIN_SERVER_LINK=ip.getText().toString()+":8081/openmrs-standalone/ws/rest/v1";
         Button send = (Button) findViewById(R.id.button3);
 
 
@@ -43,8 +42,10 @@ public class webComScreen extends Activity {
             @Override
             public void onClick(View v) {
 
-                  url = MAIN_SERVER_LINK + "/obs?q=123456";
-                Log.i("getFromUrl", "connecting to web.. ");
+                   MAIN_SERVER_LINK= "http://"+ip.getText().toString()+":8081/openmrs-standalone/ws/rest/v1/session";
+                  url = MAIN_SERVER_LINK ;
+
+                Log.i("getFromUrl", "connecting to web.. "+url);
                         getFromUrl(url);
 
 
