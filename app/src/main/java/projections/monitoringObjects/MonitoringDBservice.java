@@ -1,7 +1,6 @@
 package projections.monitoringObjects;
 
 
-import android.app.DialogFragment;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
@@ -9,7 +8,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,8 +15,6 @@ import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import example.com.mobidoc.MessurePop;
 
 
 public class MonitoringDBservice extends Service {

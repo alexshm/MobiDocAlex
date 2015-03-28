@@ -13,7 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 import example.com.mobidoc.CommunicationLayer.HttpGetTask;
+import example.com.mobidoc.CommunicationLayer.HttpRecTask;
 import example.com.mobidoc.R;
 
 /**
@@ -23,7 +26,7 @@ public class webComScreen extends Activity {
 
     private ProgressDialog mProgressDialog;
     private TextView ans;
-    private String MAIN_SERVER_LINK ="http://";
+    private String baseUrl = "http://";
     private PowerManager.WakeLock mWakeLock;
     private String url;
     private EditText ip;
@@ -42,11 +45,11 @@ public class webComScreen extends Activity {
             @Override
             public void onClick(View v) {
 
-                   MAIN_SERVER_LINK= "http://"+ip.getText().toString()+":8081/openmrs-standalone/ws/rest/v1/session";
-                  url = MAIN_SERVER_LINK ;
-
-                Log.i("getFromUrl", "connecting to web.. "+url);
-                        getFromUrl(url);
+                baseUrl = "http://" + ip.getText().toString() + ":8081/openmrs-standalone/ws/rest/v1/";
+//                url = baseUrl;
+                Log.i("getFromUrl", "connecting to web.. " + url);
+//                getFromUrl(url);
+                getRecTest();
 
 
             }
@@ -54,19 +57,36 @@ public class webComScreen extends Activity {
 
     }
 
+    private void getRecTest() {
+        HashMap<String, String> getHash = new HashMap<String, String>();
+        getHash.put("requestType", "Get");
+        final String resultString = getHash.put("URLPath", "session");
+        System.out.println("########################");
+        System.out.println("Search the persons that have name  JOHN");
+        new HttpRecTask("admin", "Admin123", baseUrl) {
+            @Override
+            public void onPostExecute(String result) {
+//                mProgressDialog.dismiss();
+                ans.setText(result);
+
+            }
+        }.execute(getHash);
+
+    }
+
     private void getFromUrl(String url) {
 
         this.showDialog(0);
 
-            new HttpGetTask() {
+        new HttpGetTask() {
 
-                @Override
-                public void onResponseReceived(String result) {
-                    mProgressDialog.dismiss();
-                    ans.setText(result);
+            @Override
+            public void onResponseReceived(String result) {
+                mProgressDialog.dismiss();
+                ans.setText(result);
 
-                }
-            }.execute(url);
+            }
+        }.execute(url);
 
 
     }
@@ -76,7 +96,7 @@ public class webComScreen extends Activity {
 
         mProgressDialog = new ProgressDialog(this);
         // Set Dialog message
-        mProgressDialog.setMessage("Connecting to "+url);
+        mProgressDialog.setMessage("Connecting to " + url);
         mProgressDialog.setTitle("Please Wait while Connecting..");
         // Dialog will be displayed for an unknown amount of time
         mProgressDialog.setIndeterminate(true);

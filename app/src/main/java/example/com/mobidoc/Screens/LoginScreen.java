@@ -1,4 +1,4 @@
-package example.com.mobidoc;
+package example.com.mobidoc.Screens;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 
+import example.com.mobidoc.R;
 import projections.ScriptingLayer.JsScriptExecutor;
 
 

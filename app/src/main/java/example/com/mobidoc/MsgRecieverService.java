@@ -10,6 +10,10 @@ import android.util.Log;
 
 import java.util.Date;
 
+import example.com.mobidoc.Screens.popUpScreens.MessurePop;
+import example.com.mobidoc.Screens.popUpScreens.PopScreen;
+import example.com.mobidoc.Screens.popUpScreens.QuestionPopScreen;
+
 
 public class MsgRecieverService extends Service {
 

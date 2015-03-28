@@ -1,4 +1,4 @@
-package example.com.mobidoc;
+package example.com.mobidoc.Screens.popUpScreens;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import example.com.mobidoc.R;
 
 /**
  * Created by alex.shmaltsuev on 12/03/2015.

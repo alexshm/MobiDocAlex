@@ -1,4 +1,4 @@
-package example.com.mobidoc;
+package example.com.mobidoc.Screens;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import example.com.mobidoc.Screens.webComScreen;
+import example.com.mobidoc.R;
 
 @SuppressLint("ShowToast")
 public class MainScreen extends Activity {
@@ -69,7 +69,7 @@ public class MainScreen extends Activity {
     }
 
     public void goToTests(View view) {
-        Intent SimulationScreen = new Intent(MainScreen.this, SimulationScreen.class);
+        Intent SimulationScreen = new Intent(MainScreen.this, example.com.mobidoc.SimulationScreen.class);
         startActivity(SimulationScreen);
     }
 
