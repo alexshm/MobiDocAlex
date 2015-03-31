@@ -25,16 +25,16 @@ public class MeasurementAction extends Action {
 
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-
-    }
-
     /*
            creating a message obj that will be sent to the msgHandler in
            the Gui component
         */
 
+    @Override
+    public  void setOnReceiveConcept(String compositeActionName, String concept)
+    {
+
+    }
     @Override
     public Message call()  {
         msgToSend = actionName;

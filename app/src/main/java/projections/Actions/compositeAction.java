@@ -34,12 +34,29 @@ import projections.Utils;
  */
 public class compositeAction  {
 
+    private String name;
     public ArrayList<Action> actionsCollection;
     private Context context;
     private Vector<String> conceptsToMonitor;
 
 
    private actionExecutor ex;
+    public compositeAction(Context c) {
+        actionsCollection= new ArrayList<Action>( );
+        context =new ContextWrapper(c);
+        conceptsToMonitor=new Vector<String>();
+       ex=null;
+
+
+    }
+    // set and add concepts for the spacieal actions (recommendation/qeustion)
+    // add only these two kind of actions
+    //
+    public void addConceptForOnRecieve(String concept)
+    {
+      conceptsToMonitor.add(concept);
+    }
+
 
     public compositeAction(Context c, Utils.ExecuteMode mode) {
         actionsCollection= new ArrayList<Action>( );
@@ -49,6 +66,8 @@ public class compositeAction  {
             ex=new SerialExecutor(c);
         else
             ex=new ParallelExecuter(c);
+
+
 
 
     }

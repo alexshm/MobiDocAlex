@@ -71,6 +71,12 @@ public class MonitorAction extends  Action {
 
 
     }
+    @Override
+    public  void setOnReceiveConcept(String compositeActionName, String concept)
+    {
+
+    }
+
     protected ServiceConnection mconnection = new ServiceConnection() {
 
         @Override
@@ -86,11 +92,6 @@ public class MonitorAction extends  Action {
             mIsBound = false;
         }
     };
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Log.i("monitoring action.","Receive data");
-    }
 
     public void defineVar(String name, String concept, var.VarType type) {
         var v = null;
@@ -245,6 +246,10 @@ public class MonitorAction extends  Action {
         betweenVars = op;
     }
 
+
+    /*=============================================
+       //TODO: NOT SURE IF NEEDED - NO ONE CALL FOR THIS FUNCTION
+     *===========================================*/
     public void SubscribeConcept(String concept) {
 
         IntentFilter intentFilter = new IntentFilter(concept);

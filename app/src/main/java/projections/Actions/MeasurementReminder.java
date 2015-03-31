@@ -18,9 +18,9 @@ public class MeasurementReminder extends Action {
         _actor=Actor.Patient;
 
     }
-
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public  void setOnReceiveConcept(String compositeActionName, String concept)
+    {
 
     }
 

@@ -57,7 +57,7 @@ public class parser {
     public projection parse(String str)
 
     {
-        final Pattern pattern = Pattern.compile("([a-z|A-Z]+)\\((.*)\\)");
+        final Pattern pattern = Pattern.compile("([a-z|A-Z|0|1-9]+)\\{(.*)\\)");
         final Matcher m = pattern.matcher("");
 
         str = str.replaceAll("\\r\\n|\\r|\\n|\\t", "").trim();

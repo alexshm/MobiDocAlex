@@ -60,7 +60,8 @@ import static ch.lambdaj.Lambda.sum;
   *Actor - the antity to whom we need to sent the action
   *
  */
-public  abstract class Action extends BroadcastReceiver implements Callable<Message> {
+public  abstract class Action  implements Callable<Message> {
+
 
     protected String actionName;
     protected String actionConcept;
@@ -108,6 +109,7 @@ public  abstract class Action extends BroadcastReceiver implements Callable<Mess
 
     }
 
+
     public Action(ActionType _type, String name, String concept, Context _context) {
 
         actionName = name;
@@ -122,6 +124,8 @@ public  abstract class Action extends BroadcastReceiver implements Callable<Mess
         _actor=null;
 
     }
+
+    public abstract void setOnReceiveConcept(String compositeActionName, String concept);
 
 
     public String getActionName() {

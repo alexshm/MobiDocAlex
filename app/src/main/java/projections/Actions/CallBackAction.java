@@ -17,11 +17,12 @@ public class CallBackAction extends Action {
     }
 
 
+
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public  void setOnReceiveConcept(String compositeActionName, String concept)
+    {
 
     }
-
     @Override
     public Message call() throws Exception {
 

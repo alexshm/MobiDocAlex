@@ -14,6 +14,7 @@ import android.content.ComponentName;
 import android.content.ServiceConnection;
 
 import android.util.Log;
+import android.util.Pair;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -26,6 +27,7 @@ import projections.Actions.Action;
 import projections.Actions.MonitorAction;
 import projections.Actions.compositeAction;
 import projections.monitoringObjects.valueConstraint;
+import projections.projectionParser.ActionParser;
 
 
 public abstract class projection extends BroadcastReceiver {
@@ -38,6 +40,14 @@ public abstract class projection extends BroadcastReceiver {
     public Context context;
 
     protected Hashtable<String, compositeAction> compActionTable;
+
+    // map for saving the onReceive concepts ** only for question/recommendations
+    // and not for all the actions. TODO: not sure the currentCompositeAction need to be saved , maybe just the concept
+    // the structure : oncept,compositeAction
+    //concept is the primary key
+    protected Hashtable<String, compositeAction> conceptsActionMap;
+
+    protected String currentCompositeAction;
     protected MonitorAction condAction;
     protected boolean hasAlarm;
     protected compositeAction action;
@@ -53,6 +63,22 @@ public abstract class projection extends BroadcastReceiver {
         Second, Minute, Hour, Day, Week, Month, None
     }
 
+    public projection(ProjectionType type,String _ProjectionName,Context _context)
+    {
+        Type=type;
+        ProjectionName=_ProjectionName;
+        context =_context;
+        action=new compositeAction(context, Utils.ExecuteMode.Sequential);
+        mode= Utils.ExecuteMode.Sequential;
+        hasAlarm=false;
+        condAction=null;
+        compActionTable=new Hashtable<String, compositeAction>();
+        currentCompositeAction="";
+        conceptsActionMap=new Hashtable<>();
+
+    }
+
+
     protected void receiveData(Intent intent) {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
@@ -63,6 +89,11 @@ public abstract class projection extends BroadcastReceiver {
 
         try {
             Date dateNow = sdf.parse(time);
+
+            // apply the next action to trigger when recieve concepts regarding to recommendation/qeustion
+            //if needed
+            if(this.conceptsActionMap.containsKey(concept))
+                    this.conceptsActionMap.get(concept).invoke(false);
 
             if (condAction != null) {
                 boolean okToInsert = condAction.isSatisfyVarsConditions(val);
@@ -75,6 +106,8 @@ public abstract class projection extends BroadcastReceiver {
                     Log.i("Action On recive", "trigger the conditin trigger ");
                     triggerEvent();
                 }
+
+
 
             }
 
@@ -119,6 +152,36 @@ public abstract class projection extends BroadcastReceiver {
             actionToTrigger.addAction(a);
         }
     }
+
+    public void addNewCompositeAction(String compositeActionName)
+    {
+        compositeAction ca=new compositeAction(context);
+        compActionTable.put(compositeActionName,ca);
+    }
+
+    public void setOnReceiveConcept(String compositeActionNameToTrigger, String concept)
+    {
+        compositeAction comp=compActionTable.get(compositeActionNameToTrigger);
+        comp.addConceptForOnRecieve(concept);
+        conceptsActionMap.put(concept,comp);
+
+    }
+    public void addActionToComposite(String compositeActionName,String type, String actionname, String actionConcept)
+    {
+        Utils.ActionType acType=Utils.getActionType(type);
+        ActionParser ap=new ActionParser(acType,context);
+       String[] params={actionname,actionConcept};
+       Action a= ap.parse(params);
+       compActionTable.get(compositeActionName).addAction(a);
+
+    }
+
+    public void addActionToComposite(String compositeActionName,Action a)
+    {
+        compActionTable.get(compositeActionName).addAction(a);
+
+    }
+
     public void addAction(Action a)
     {
         //TODO:
@@ -126,18 +189,7 @@ public abstract class projection extends BroadcastReceiver {
     }
 
 
-    public projection(ProjectionType type,String _ProjectionName,Context _context)
-    {
-        Type=type;
-        ProjectionName=_ProjectionName;
-        context =_context;
-        action=new compositeAction(context, Utils.ExecuteMode.Sequential);
-        mode= Utils.ExecuteMode.Sequential;
-        hasAlarm=false;
-        condAction=null;
-       compActionTable=new Hashtable<String, compositeAction>();
 
-    }
 
     public abstract  void registerToTriggring();
 
@@ -198,6 +250,7 @@ public abstract class projection extends BroadcastReceiver {
     }
 
     public   void startProjection() {
+        this.currentCompositeAction=compActionTable.keys().nextElement();
         initProjection();
         //TODO : start the compositeActin serivice
 
@@ -214,9 +267,9 @@ public abstract class projection extends BroadcastReceiver {
         }
     protected void triggerEvent() {
         if(actionToTrigger!=null)
-        actionToTrigger.invoke(false);
-        else
-            Log.i("projection ", "the action to trigger is null");
+            actionToTrigger.invoke(false);
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Log.i("projection ", "the action to trigger is null");
     }
 
 }

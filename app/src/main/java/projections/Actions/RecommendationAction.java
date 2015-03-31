@@ -18,8 +18,7 @@ import projections.Utils;
 public class RecommendationAction extends Action{
 
 
-    private  compositeAction successAcc;
-    private  compositeAction failAcc;
+
     private String acceptConcept;
     private String declineConcept;
     boolean isInit;
@@ -28,49 +27,23 @@ public class RecommendationAction extends Action{
         super(Action.ActionType.Recommendation, recommendationTxt, concept, c);
         _actor=actor;
         _actor=Actor.Patient;
-        successAcc=new compositeAction(c, Utils.ExecuteMode.Sequential);
-        failAcc=new compositeAction(c, Utils.ExecuteMode.Sequential);
-        acceptConcept=accept;
-        declineConcept=decline;
+
         isInit=false;
     }
 
-    public void addToSuccessAction(Action action)
-    {
-        successAcc.addAction(action);
-    }
-
-
-    public void addToFailAction(Action action)
-    {
-        failAcc.addAction(action);
-    }
 
 
     @Override
-    public void onReceive(Context context, Intent intent) {
-        String concept = intent.getStringExtra("concept");
-        String val = String.valueOf(intent.getStringExtra("value"));
-        Log.i("RecommendationAction geting value ", "get value of : " + val);
-        String time = String.valueOf(intent.getStringExtra("time"));
+    public  void setOnReceiveConcept(String compositeActionName, String concept)
+    {
 
-        // waiting for the answer of the question (yes/no) value
-        if(val.equals("yes"))
-            successAcc.invoke(false);
-        else
-            failAcc.invoke(false);
     }
-
     @Override
     public Message call()  {
         Log.i("start building question","start building question");
         if(!isInit)
         {
-            IntentFilter acceptFilter = new IntentFilter(acceptConcept);
-            isInit=true;
-            context.registerReceiver(this, acceptFilter);
-            IntentFilter declineFilter = new IntentFilter(declineConcept);
-            context.registerReceiver(this, declineFilter);
+         isInit=true;
         }
 
         msgToSend = actionName;
