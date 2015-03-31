@@ -80,18 +80,19 @@ try {
     }
 
     public String preProssesing(String script) {
-        String temp = script;//"(waitPeriodic)(.\".*;\"*,)(.*?,)(.*?)(;)"
-        final Pattern pattern = Pattern.compile("(.*?)(declareActionsequance\\{var.*?\\};.*?)");
+        String temp = script;
+        final Pattern pattern = Pattern.compile(".*?var\\s([a-z|A-Z|0-9|_]+=declareActionsequance\\{(.*?))\\};.*?");
         final Matcher m = pattern.matcher("");
-
+        final String str="function()";
         //eliminate spaces and new lines
         temp = temp.replaceAll("\\r\\n|\\r|\\n|\\t", "").trim();
 
         m.reset(temp);
         while (m.find()) {
-            String comnd1 = m.group(0);
-            String comnd2 = m.group(1);
-            String comnd = m.group(2);
+
+            String parsedScript1 = m.group(1);
+            String parsedScript2 = m.group(2);
+            String newScript="eval(function"+parsedScript1+");";
 
             int y=0;
         }
@@ -211,7 +212,7 @@ try {
             // Execute the script
             String evalScript=initScript+" \n "+script+" \n "+finishScript();
           //  System.out.println(evalScript);
-            Object obj = context.evaluateString(scope,evalScript, "TestScript", 1, null);
+            Object obj = context.evaluateString(scope,"eval(", "TestScript", 1, null);
             System.out.println("Object: " + obj);
 
             // Cast the result to a string
@@ -273,7 +274,8 @@ try {
                             "}"+
                             "};\n\n\n"+
 
-                    "declareActionsequance{var t='test';};"+
+                    "var count=declareActionsequance{actionsToPreform('katenuria' ,'22','22','test');" +
+                            "var a = new action('aa','aaaaa');};"+
                     "function insertActionToProjection()" +
                             "{" +
                             "for(var i=0;i< compositeCollection.length;i++)\n" +
