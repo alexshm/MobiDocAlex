@@ -205,10 +205,10 @@ public class parser {
         //TODO: ADD id to projection
         switch(projectionType) {
             case Cyclic:
-                projectionToBuild= new CyclicProjectionAbstract(name,cont,"");
+               // projectionToBuild= new CyclicProjectionAbstract(name,cont,"");
                 break;
             case Monitor:
-                projectionToBuild=new MonitorProjection(name,cont);
+               // projectionToBuild=new MonitorProjection(name,cont);
                 break;
             default:
                 projectionToBuild= null;
@@ -343,8 +343,8 @@ public class parser {
             projection.ProjectionTimeUnit remUnit=Utils.getTimeUnit(remainderUnit);
 
             ((CyclicProjectionAbstract) projectionToBuild).setStartTime(startTime);
-            ((CyclicProjectionAbstract)projectionToBuild).setReaminder(remUnit,remainderAmout);
-            ((CyclicProjectionAbstract)projectionToBuild).setFrequency(repUnit,repeatAmout);
+            //((CyclicProjectionAbstract)projectionToBuild).setReaminder(remUnit,remainderAmout);
+            //((CyclicProjectionAbstract)projectionToBuild).setFrequency(repUnit,repeatAmout);
 
         }
 

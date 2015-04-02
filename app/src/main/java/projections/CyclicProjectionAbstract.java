@@ -42,12 +42,12 @@ public class CyclicProjectionAbstract extends projection {
     public ProjectionTimeUnit reminderUnit;
     public int reminder_amount;
 
-    public CyclicProjectionAbstract(String projectionName, Context c,String startTime) {
-        super(ProjectionType.Cyclic, projectionName, c);
+    public CyclicProjectionAbstract(String projectionName,String id, Context c ) {
+        super(ProjectionType.Cyclic, projectionName, id,c);
         ProjectionName=projectionName;
         this.alramMng= (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         hasAlarm=true;
-        StartTime=startTime;
+        StartTime="";
         reminderUnit=null;
         reminder_amount=0;
         remainderCalendar=null;
@@ -160,11 +160,11 @@ public class CyclicProjectionAbstract extends projection {
         onSpacificCount++;
 
     }
-    public  void setFrequency(ProjectionTimeUnit timeunit,int amount) {
+    public  void setFrequency(String timeunit,int amount) {
 
         reapetTime=0;
-
-        switch (timeunit) {
+        projection.ProjectionTimeUnit repUnit=Utils.getTimeUnit(timeunit);
+        switch (repUnit) {
 
             case Second:
                 reapetTime = amount * SECOND;
@@ -287,9 +287,14 @@ public class CyclicProjectionAbstract extends projection {
 
 
     }
+    public void setReaminder(String remainderUnit, int amount)
+    {
 
+        projection.ProjectionTimeUnit remUnit=Utils.getTimeUnit(remainderUnit);
+        setCyclicReaminder(remUnit,amount);
+    }
 
-    public  void setReaminder(ProjectionTimeUnit unit, int amount)
+    private  void setCyclicReaminder(ProjectionTimeUnit unit, int amount)
     {
         remainderTime=0;
 

@@ -63,10 +63,10 @@ public class ProjectionBuilder {
         //TODO: ADD id to projection
         switch (projectionType) {
             case Cyclic:
-                buildProj = new CyclicProjectionAbstract(name, cont, "");
+               // buildProj = new CyclicProjectionAbstract(name, cont, "");
                 break;
             case Monitor:
-                buildProj = new MonitorProjection(name, cont);
+              //  buildProj = new MonitorProjection(name, cont);
                 break;
             default:
                 buildProj = null;

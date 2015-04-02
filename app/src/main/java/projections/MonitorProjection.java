@@ -14,8 +14,8 @@ import projections.Actions.MonitorAction;
 
 public class MonitorProjection extends  projection{
 
-    public MonitorProjection(String projectionName, Context c) {
-        super(ProjectionType.Monitor, projectionName, c);
+    public MonitorProjection(String projectionName, String id,Context c) {
+        super(ProjectionType.Monitor, projectionName,id, c);
         initMonitoringEvents();
         action=null;
         hasAlarm=false;

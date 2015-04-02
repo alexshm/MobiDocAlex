@@ -7,9 +7,10 @@ import projections.projection;
  */
 public interface Iscript {
 
+
     public void init();
 
-    public void makeProjection();
+    public projection buildProjection();
 
     void runScript(String scriptToRun, projection projection);
 

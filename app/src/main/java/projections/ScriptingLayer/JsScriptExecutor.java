@@ -1,5 +1,6 @@
 package projections.ScriptingLayer;
 
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import com.google.dexmaker.TypeId;
@@ -11,13 +12,18 @@ import org.mozilla.javascript.*;
 
 import dalvik.system.DexClassLoader;
 import projections.DataItem;
+import projections.MonitorProjection;
+import projections.Utils;
 import projections.mobiDocProjections.ProjectionBuilder;
 import projections.projection;
 import projections.CyclicProjectionAbstract;
 import projections.projection.ProjectionTimeUnit;
 import org.mozilla.classfile.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,188 +37,124 @@ import java.util.regex.Pattern;
 
 public class JsScriptExecutor {
 //
+    private String basicScript;
+    private String s;
         android.content.Context c;
     public JsScriptExecutor( android.content.Context cont)
     {
         c=cont;
+        basicScript=readbasicScript("projectionscript");
+        s=readbasicScript("p19964");
     }
-   public void init(){
-
-    }
-        /* IMPORTANT - INCLUDE THIS IN THE PARSER
-    <script language="javascript">
-    load('foo.js');
-    </script>
-*/
-    private static final String DataItem = "var DataItem = " +
-            "java.lang.Class.forName(\"" + JsScriptExecutor.class.getName() + "\", true, javaLoader);" +
-            "var methodbuildProj = DataItem.getMethod(\"buildProj\", [java.lang.String]);" +
-            "var proj = function (name) {return methodbuildProj.invoke(null, name);};";
 
 
-
-    /* call java funcition from the script
-    =======================================
-
-    String script = "function abc(x,y) {return x+y;}"
-        + "function def(u,v) {return u-v;}";
-Context context = Context.enter();
-try {
-    ScriptableObject scope = context.initStandardObjects();
-    context.evaluateString(scope, script, "script", 1, null);
-    Function fct = (Function)scope.get("abc", scope);
-    Object result = fct.call(
-            context, scope, scope, new Object[] {2, 3});
-    System.out.println(Context.jsToJava(result, int.class));
-} finally {
-    Context.exit();
-}
-========================================================
-     */
-    public   String readUrl(String url) {
-        // Read the HTML text with HttpClient
-
-        return url;
-    }
-    public projection buildProj(String name)
+    private projection buildProj(String script)
     {
-        return new CyclicProjectionAbstract(name,c,"08:00");
-    }
-
-    public String preProssesing(String script) {
         String temp = script;
-        final Pattern pattern = Pattern.compile(".*?var\\s([a-z|A-Z|0-9|_]+=declareActionsequance\\{(.*?))\\};.*?");
+        final Pattern pattern = Pattern.compile(".*?beginProjection\\((.*?,.*?,*,?)\\);*?");
         final Matcher m = pattern.matcher("");
-        final String str="function()";
         //eliminate spaces and new lines
         temp = temp.replaceAll("\\r\\n|\\r|\\n|\\t", "").trim();
-
+        String replacedScript=temp;
         m.reset(temp);
-        while (m.find()) {
+        if (m.find()) {
+            String[] projection = m.group(1).substring(1,m.group(1).length()-1).split("','");
+            String type = projection[0];
+            String name = projection[1];
+            String id = projection[2];
 
-            String parsedScript1 = m.group(1);
-            String parsedScript2 = m.group(2);
-            String newScript="eval(function"+parsedScript1+");";
+            projection.ProjectionType projectionType = Utils.convertToProjectionType(type);
 
-            int y=0;
+            switch (projectionType) {
+                case Cyclic:
+                    return new CyclicProjectionAbstract(name, id, c);
+
+                case Monitor:
+                    return new MonitorProjection(name, id, c);
+
+            }
         }
 
         return null;
+
     }
 
 
-    private void evalScipt(String script)
+    private String preProssesing(String script) {
+        String temp = script;
+        final Pattern pattern = Pattern.compile(".*?var\\s([a-z|A-Z|0-9|_]+=declareActionsequance\\('seq'\\)\\{(.*?))\\};.*?");
+        final Matcher m = pattern.matcher("");
+        //eliminate spaces and new lines
+        String beginstr=temp.split(":")[0];
+        temp=temp.replace(beginstr+":","");
+        temp = temp.replaceAll("\\r\\n|\\r|\\n|\\t", "").trim();
+        String replacedScript=temp;
+        m.reset(temp);
+        while (m.find()) {
+
+            String declareActionScript = m.group(1);
+            String innerDeclareActionScript = m.group(2);
+            String compositename = declareActionScript.split("=")[0];
+            String compType=declareActionScript.split("'")[1];
+           String newScript= evalScipt(innerDeclareActionScript, compositename, compType);
+            replacedScript = replacedScript.replace(declareActionScript+"};", newScript).trim();
+
+            int y = 0;
+
+        }
+
+        return replacedScript;
+    }
+
+
+    private String evalScipt(String script,String compositeActionName,String type)
 
     {
+        final Pattern pattern = Pattern.compile(".*?([a-z|A-Z|0-9|_]+)=new\\sAction\\(.*?\\);");
+        final Matcher m = pattern.matcher("");
+        m.reset(script);
+        String declareCompositeAction = compositeActionName+"=new actionSequance('"+compositeActionName+"');\n"+
+                compositeActionName+".order='"+type+"';";
+
+        String addScript="";
+        while (m.find()) {
+
+            String action = m.group(1);
+            addScript += compositeActionName + ".addAction(" + action + ");\n";
+        }
 
 
+
+            return declareCompositeAction+script+addScript+"\n";
     }
 
-    public void continueTest()
-    {
 
-        /*
-     --done--   1) we will create the obj projection not in script
-    --done--    2) for the recommendation/qeustion we will make
-    --done-     3)  set concepts for answers(or set answerConcepts)
-    --done--   4) then we will setOnconceptRecive(string concept,composite action)
 
-           5) the declaration of the composite action will done erallier and we pass just
-            the name(or id) and search in the map /globals vars
+    public   void runScript(String scriptToRun) {
 
-    --done--      6)   then we will do something like p.action.setOncecept..()
-    --done--   7)  and inside the method that will implemented in the projection class
-                we search the name in the composite actions map and connect to it.
 
-    --done--    1)  in the java scriipt i declare an object - actionSequance()-emotye constractor
-            actionsequance: name
-                           : list of actionsToPreform need to be also actionsToPreform() -constractor
-                                      each action like this has:
-                                      {
-                                            name(identifier)
-                                             concept
-                                             type(measure/callback/quetion/notifiaction....)
-                                             txt of msg
+        projection p=buildProj(s);
 
-                                          }
-                           :order (sequncial/parralel)
-    --done--     2)  we will have javascript function -declareActionsequance(name)
-                in this function we call to a function in ht projection class that init a new CompositeAction
-                and insert to the map of composite.
-    --done--    3) we will set a function to the javascript actionSequance obj that will add a  new
-            actionsToPreform() obj will all the needed params.
-    --done--    4) than again in the javascript function -declareActionsequance(name):-
-                we will iterate for all the actions in the list and build a coresponding Action object
-                andd add to the composite action we declare before.
+        String script=preProssesing(s);
 
-    --done--   6) add implementation to thr projection addAction(name..params)/(name,Action)
-
-         */
-
-    }
-
-    public projection buildProjection()
-    {
-        return null;
-    }
-    public   void runScript(String scriptToRun,projection p) {
-
-        String initScript = initScript();
         Context context = Context.enter();
         context.setOptimizationLevel(-1);
+
         try {
             // Initialize the standard objects (Object, Function, etc.). This must be done before scripts can be
             // executed. The null parameter tells initStandardObjects
             // to create and return a scope object that we use
             // in later calls.
+
             Scriptable scope = context.initStandardObjects();
-            scope.put("classLoader", scope, c.getClass().getClassLoader());
-            final String libPath = "";
-            final File tmpDir = c.getDir("dex", 0);
-            final DexClassLoader classloader = new DexClassLoader(libPath, tmpDir.getAbsolutePath(), null, c.getClassLoader());
-            scope.put("DexClassLoader", scope, classloader);
-
-            Class<DataItem> dataitemClass = (Class<DataItem>) classloader.loadClass("projections.DataItem");
-            scope.put("dataitemClass", scope, dataitemClass);
             scope.put("proj", scope, p);
-
-            scope.put("builder", scope, new ProjectionBuilder(c));
-
-
             // Build the script
-            String script = "var today = new java.util.Date();java.lang.System.out.println('Today is ' + today);" +
-
-                    //   "var item=test.newInstance();" +
-                    //    "var ans=item.testing();" +
-                    //   "java.lang.System.out.println('the ans is  ' + ans);"+
-                    //   "var temp= builder.buildNewProjecction('cyc','11','44');"+
-                    //   "java.lang.System.out.println('the type is   ' + temp.getProjectionName());"+
-
-
-                    "var newinstance=new actionsToPreform('katenuria' ,'22','22','test');" +
-
-                    "var comp=new actionSequance('compkatenuria','seq');" +
-                    "java.lang.System.out.println('the size is : '+compositeCollection.length);" +
-                    //"java.lang.System.out.println('the size is : '+comp.actionList.length);"+
-                    //"comp.actionList.push(newinstance);"+
-                    "if(compositeCollection.length>0)" +
-                    // "java.lang.System.out.println('the size is : '+compositeCollection[0].name);"+
-                    "comp.addAction(newinstance);" +
-                    "java.lang.System.out.println('the size is : '+compositeCollection[0].actionList.length);" +
-                    "comp.printElements();" +
-                    "var comp1=new actionSequance('testtt','seq');" +
-                    "var newinstance2=new actionsToPreform('katenuria222' ,'22','22','test');" +
-                    "comp1.addAction(newinstance2);" +
-                    "java.lang.System.out.println('the action to do before is : '+newinstance.actionToDo.length);"+
-                    "newinstance.setOnConceptRecive('12','test');"+
-                    "java.lang.System.out.println('the action to do after is : '+newinstance.actionToDo[0].compName);"+
-                    "java.lang.System.out.println('the size is : '+compositeCollection.length);";
 
 
             // Execute the script
-            String evalScript=initScript+" \n "+script+" \n "+finishScript();
+            String evalScript=basicScript+" \n "+script+" \n "+finishScript();
           //  System.out.println(evalScript);
-            Object obj = context.evaluateString(scope,"eval(", "TestScript", 1, null);
+            Object obj = context.evaluateString(scope,evalScript, "TestScript", 1, null);
             System.out.println("Object: " + obj);
 
             // Cast the result to a string
@@ -228,77 +170,52 @@ try {
 
     }
     private  String finishScript() {
-        String finishScript ="";
-                //"insertActionToProjection();";
+        String finishScript =
+                "insertActionToProjection();";
 
                 return finishScript;
 
     }
 
-    //receive the Script from the server with Http request
-    private  String initScript() {
 
 
 
-            String script =
+    private String readbasicScript(String FileName) {
+        try {
 
-                    "compositeCollection=[];"+
-                    "function actionsToPreform(name,type,concept,txt)"+
-                    "{this.name=name;"+
-                      "this.type=type;this.concept=concept;this.txt=txt;" +
-                           "}"+
-                " actionsToPreform.prototype.actionToDo=[];"+
-                "actionsToPreform.prototype.setOnConceptRecive=function(c,compActionName){\n" +
-                "actionsToPreform.prototype.__defineSetter__('setaction', function(action)\n\t" +
-                "{actionsToPreform.prototype.actionToDo.push(action);});\n" +
-                "var a={compName:compActionName,concept:c};this.setaction=a;\n"+
-                "};\n\n"+
+                //=================================
+                // read file   data from raw resources
+                // TODO: read data from input streamer that was recived from the web(server) and not from the raw resorces
+                //==========================
 
-                    "function actionSequance(name,ExecutionOrder) {" +
-                            "this.name=name;" +
-                            "this.order=ExecutionOrder;" +
-                            "compositeCollection.push(this);}"+
+                InputStream iS;
 
+                int rID = c.getResources().getIdentifier("example.com.mobidoc:raw/" + FileName, null, null);
+                iS = c.getResources().openRawResource(rID);
 
-                    " actionSequance.prototype.actionList=[];"+
-                    "actionSequance.prototype.addAction=function(action){\n" +
-                            "actionSequance.prototype.__defineSetter__('addaction', function(action)\n\t" +
-                                     "{ actionSequance.prototype.actionList.push(action);});\n" +
-                                      "this.addaction=action;\n"+
-                            "};"+
+                //create a buffer that has the same size as the InputStream
+                byte[] buffer = new byte[iS.available()];
+                //read the text file as a stream, into the buffer
+                iS.read(buffer);
+                //create a output stream to write the buffer into
+                ByteArrayOutputStream oS = new ByteArrayOutputStream();
+                //write this buffer to the output stream
+                oS.write(buffer);
+                //Close the Input and Output streams
+                oS.close();
+                iS.close();
 
-                    " actionSequance.prototype.printElements=function(){" +
-                            "for(var i=0;i< actionSequance.prototype.actionList.length;i++)\n" +
-                            "{\n" +
-                            "java.lang.System.out.println('the actionName is :  ' + actionSequance.prototype.actionList[i].name);" +
-                            "}"+
-                            "};\n\n\n"+
+                //return the output stream as a String
+                return oS.toString();
 
-                    "var count=declareActionsequance{actionsToPreform('katenuria' ,'22','22','test');" +
-                            "var a = new action('aa','aaaaa');};"+
-                    "function insertActionToProjection()" +
-                            "{" +
-                            "for(var i=0;i< compositeCollection.length;i++)\n" +
-                            "{\n" +
-                                "var compositeName=compositeCollection[i].name;"+
-
-                                "for(var j=0;i< compositeCollection[i].length;j++)\n" +
-                                 "{proj.addActionToComposite(compositeName,compositeCollection[i].type,compositeCollection[i].txt,"+
-                                                            "compositeCollection[i].concept);" +
-                                    "var conceptsList=compositeCollection[i].actionToDo;\n" +
-                                    "for(var k=0;i< conceptsList.length;j++)"+
-                                       "{var conceptToReceive=conceptsList[k].concept;"+
-                                        "proj.setOnReceiveConcept(compositeName,conceptToReceive);"+
-                                        "}"+
-                                "}"+
-                            "}};\n\n\n";
+            } catch (IOException e) {
+                Log.e("read Projecction file in", "error reading file: " + e.getMessage());
+                return null;
+            }
+        }
 
 
-        preProssesing(script);
-        return script;
 
-
-    }
 
 
 }

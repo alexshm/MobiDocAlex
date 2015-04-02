@@ -47,6 +47,7 @@ public abstract class projection extends BroadcastReceiver {
     //concept is the primary key
     protected Hashtable<String, compositeAction> conceptsActionMap;
 
+    protected String Id;
     protected String currentCompositeAction;
     protected MonitorAction condAction;
     protected boolean hasAlarm;
@@ -63,9 +64,10 @@ public abstract class projection extends BroadcastReceiver {
         Second, Minute, Hour, Day, Week, Month, None
     }
 
-    public projection(ProjectionType type,String _ProjectionName,Context _context)
+    public projection(ProjectionType type,String _ProjectionName,String id,Context _context)
     {
         Type=type;
+        Id=id;
         ProjectionName=_ProjectionName;
         context =_context;
         action=new compositeAction(context, Utils.ExecuteMode.Sequential);
@@ -123,6 +125,10 @@ public abstract class projection extends BroadcastReceiver {
         return ProjectionName;
     }
 
+    public  String getProjectionId()
+    {
+        return Id;
+    }
     public  ProjectionType getType()
     {
         return Type;

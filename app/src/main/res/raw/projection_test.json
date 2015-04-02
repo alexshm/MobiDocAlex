@@ -8,3 +8,7 @@ setCondition("or [invalid_DBP,invalid_SBP]","count()>0","0 days");
 
 onTriggerEvent("[callback(5202,one abnormal value in BP was found ,system is calculating another BP schedule for you)]"
 ,"seq");
+
+
+beginProjection('cyc','Ketonuria Daily measurement','19964'):
+endProjection
