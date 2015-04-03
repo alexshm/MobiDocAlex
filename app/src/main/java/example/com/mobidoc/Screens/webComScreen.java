@@ -84,7 +84,7 @@ public class webComScreen extends Activity {
             public void onResponseReceived(String result) {
                 mProgressDialog.dismiss();
                 ans.setText(result);
-
+///d
             }
         }.execute(url);
 

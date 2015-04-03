@@ -90,18 +90,5 @@ public class ApiAuthRest {
     }
 
 
-//    public  void setUsername(String username) {
-//        ApiAuthRest.username = username;
-//    }
-//
-//
-//    public  void setPassword(String password) {
-//        ApiAuthRest.password = password;
-//    }
-//
-//
-//    public  void setURLBase(String uRLBase) {
-//        URLBase = uRLBase;
-//    }
 
 }
