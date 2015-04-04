@@ -19,6 +19,8 @@ public class HttpRecTask extends AsyncTask<HashMap<String, String>, String, Stri
         this.apiAuthRest = new ApiAuthRest(username, password, baseUrl);
     }
 
+
+
     @Override
     protected String doInBackground(HashMap<String, String>... hashMaps) {
         HashMap<String, String> hashMap = hashMaps[0];
@@ -30,6 +32,12 @@ public class HttpRecTask extends AsyncTask<HashMap<String, String>, String, Stri
         }
         return "got wrong params in the hashMap";
 
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        System.out.println("pre pre");
     }
 
 
@@ -64,4 +72,7 @@ public class HttpRecTask extends AsyncTask<HashMap<String, String>, String, Stri
         System.out.println("the ans is :" + result);
         //Do anything with response..
     }
+
+
+
 }
