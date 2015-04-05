@@ -19,6 +19,8 @@ public class HttpRecTask extends AsyncTask<HashMap<String, String>, String, Stri
         this.apiAuthRest = new ApiAuthRest(username, password, baseUrl);
     }
 
+
+
     @Override
     protected String doInBackground(HashMap<String, String>... hashMaps) {
         HashMap<String, String> hashMap = hashMaps[0];
@@ -32,13 +34,19 @@ public class HttpRecTask extends AsyncTask<HashMap<String, String>, String, Stri
 
     }
 
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        System.out.println("pre pre");
+    }
+
 
     private String sendPost(HashMap<String, String> hashMap) {
         String URLPath = hashMap.get("URLPath");
         String JSON = hashMap.get("JSON ");
         try {
             StringEntity stringEntity = new StringEntity(JSON);
-            return apiAuthRest.getRequestPost(URLPath, stringEntity).toString();
+            return apiAuthRest.post(URLPath, stringEntity).toString();
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();
         } catch (Exception e) {
@@ -50,7 +58,7 @@ public class HttpRecTask extends AsyncTask<HashMap<String, String>, String, Stri
     private String sendGet(HashMap<String, String> hashMap) {
         String URLPath = hashMap.get("URLPath");
         try {
-            String s =apiAuthRest.getRequestGet(URLPath);
+            String s =apiAuthRest.get(URLPath);
             return s;
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,4 +72,7 @@ public class HttpRecTask extends AsyncTask<HashMap<String, String>, String, Stri
         System.out.println("the ans is :" + result);
         //Do anything with response..
     }
+
+
+
 }

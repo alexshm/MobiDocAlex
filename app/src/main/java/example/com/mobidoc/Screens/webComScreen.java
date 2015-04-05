@@ -13,10 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.HashMap;
-
 import example.com.mobidoc.CommunicationLayer.HttpGetTask;
-import example.com.mobidoc.CommunicationLayer.HttpRecTask;
+import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 import example.com.mobidoc.R;
 
 /**
@@ -30,6 +28,7 @@ public class webComScreen extends Activity {
     private PowerManager.WakeLock mWakeLock;
     private String url;
     private EditText ip;
+    private OpenMrsApi openMrsApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +36,15 @@ public class webComScreen extends Activity {
         setContentView(R.layout.communicationscreen);
         ans = (TextView) findViewById(R.id.ansTxt);
         ip = (EditText) findViewById(R.id.editText4);
-
         Button send = (Button) findViewById(R.id.button3);
 
 
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 baseUrl = "http://" + ip.getText().toString() + ":8081/openmrs-standalone/ws/rest/v1/";
-//                url = baseUrl;
-                Log.i("getFromUrl", "connecting to web.. " + url);
-//                getFromUrl(url);
+                openMrsApi = new OpenMrsApi(baseUrl);
+                Log.i("getFromUrl", "connecting to web.. " + baseUrl);
                 getRecTest();
 
 
@@ -58,19 +54,8 @@ public class webComScreen extends Activity {
     }
 
     private void getRecTest() {
-        HashMap<String, String> getHash = new HashMap<String, String>();
-        getHash.put("requestType", "Get");
-        final String resultString = getHash.put("URLPath", "session");
-        System.out.println("########################");
-        System.out.println("Search the persons that have name  JOHN");
-        new HttpRecTask("admin", "Admin123", baseUrl) {
-            @Override
-            public void onPostExecute(String result) {
-//                mProgressDialog.dismiss();
-                ans.setText(result);
+        ans.setText(openMrsApi.getSession());
 
-            }
-        }.execute(getHash);
 
     }
 
@@ -84,7 +69,7 @@ public class webComScreen extends Activity {
             public void onResponseReceived(String result) {
                 mProgressDialog.dismiss();
                 ans.setText(result);
-
+///d
             }
         }.execute(url);
 
