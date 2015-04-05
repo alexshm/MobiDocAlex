@@ -59,6 +59,7 @@ public class compositeAction  {
 
 
     public compositeAction(Context c, Utils.ExecuteMode mode) {
+
         actionsCollection= new ArrayList<Action>( );
         context =new ContextWrapper(c);
         conceptsToMonitor=new Vector<String>();
@@ -125,5 +126,6 @@ public class compositeAction  {
         actionsCollection.add(action);
         this.ex.addAction(action);
         addConceptToMonitor(action.getConcept());
+
     }
 }

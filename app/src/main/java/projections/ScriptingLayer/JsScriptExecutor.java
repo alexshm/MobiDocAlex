@@ -44,7 +44,7 @@ public class JsScriptExecutor {
     {
         c=cont;
         basicScript=readbasicScript("projectionscript");
-        s=readbasicScript("p19964");
+        s=readbasicScript("p20119");
     }
 
 
@@ -83,23 +83,72 @@ public class JsScriptExecutor {
     private String preProssesing(String script) {
         String temp = script;
         final Pattern pattern = Pattern.compile(".*?var\\s([a-z|A-Z|0-9|_]+=declareActionsequance\\('seq'\\)\\{(.*?))\\};.*?");
-        final Matcher m = pattern.matcher("");
+        final Pattern varsPattern = Pattern.compile(".*?setVar\\('([a-z|A-Z|0-9|_]+','(.*?)')\\);.*?");
+        final Pattern startprojPattern = Pattern.compile(".*?start\\((.*?)\\);");
+       final Pattern monitoringPattern = Pattern.compile(".*?performMonitoringOn\\s(.*?).*?forTime.*?;");
+
+         Matcher m = pattern.matcher("");
         //eliminate spaces and new lines
         String beginstr=temp.split(":")[0];
         temp=temp.replace(beginstr+":","");
         temp = temp.replaceAll("\\r\\n|\\r|\\n|\\t", "").trim();
         String replacedScript=temp;
         m.reset(temp);
+        //
         while (m.find()) {
 
             String declareActionScript = m.group(1);
             String innerDeclareActionScript = m.group(2);
             String compositename = declareActionScript.split("=")[0];
             String compType=declareActionScript.split("'")[1];
-           String newScript= evalScipt(innerDeclareActionScript, compositename, compType);
+            String newScript= evalScipt(innerDeclareActionScript, compositename, compType);
             replacedScript = replacedScript.replace(declareActionScript+"};", newScript).trim();
+        }
 
-            int y = 0;
+        //========================================================================
+        //========================================================================
+
+        m = varsPattern.matcher("");
+        m.reset(replacedScript);
+        // search for conditions vars declarations
+        while (m.find()) {
+            String setVarScript = m.group(0);
+            String varDeclarationScript = m.group(1);
+            String[] parms = m.group(2).split("','");
+            String varName = varDeclarationScript.split("'")[0];
+            String varType=parms[1];
+            String varConcept=parms[0];
+            String newScript=  "var "+varName+"=new conditionVar('"+varName+"','"+varType+"','"+varConcept+"');";
+            replacedScript = replacedScript.replace(setVarScript, newScript).trim();
+
+
+        }
+
+        //========================================================================
+        //========================================================================
+        String monitoringCondition="";
+        m = monitoringPattern.matcher("");
+        m.reset(replacedScript);
+        // search for conditions vars declarations
+        while (m.find()) {
+            String monitoringScript = m.group(0);
+            monitoringCondition="var monitoringAns=monitoringPreProcesing('"+monitoringScript+"');"+
+                "print('the monitor condition is : '+monitoringAns[0]+' '+monitoringAns[1]+' ' +monitoringAns[2]+ ' '"+
+                        "monitoringAns[3]+' '+monitoringAns[4]+' ' +monitoringAns[5]);";
+            replacedScript = replacedScript.replace(monitoringScript,"" ).trim();
+
+
+        }
+        ///======================
+
+        m = startprojPattern.matcher("");
+        m.reset(replacedScript);
+        // search for conditions vars declarations
+        while (m.find()) {
+            String startCommand = m.group(0);
+
+            replacedScript = replacedScript.replace(startCommand, finishScript()+"\n"+startCommand+monitoringCondition).trim();
+
 
         }
 
@@ -128,8 +177,6 @@ public class JsScriptExecutor {
             return declareCompositeAction+script+addScript+"\n";
     }
 
-
-
     public   void runScript(String scriptToRun) {
 
 
@@ -152,7 +199,7 @@ public class JsScriptExecutor {
 
 
             // Execute the script
-            String evalScript=basicScript+" \n "+script+" \n "+finishScript();
+            String evalScript=basicScript+" \n "+script;
           //  System.out.println(evalScript);
             Object obj = context.evaluateString(scope,evalScript, "TestScript", 1, null);
             System.out.println("Object: " + obj);
@@ -171,8 +218,8 @@ public class JsScriptExecutor {
     }
     private  String finishScript() {
         String finishScript =
-                "insertActionToProjection();";
-
+                "insertActionToProjection();\n"+
+                "insertVarsToProjection();";
                 return finishScript;
 
     }

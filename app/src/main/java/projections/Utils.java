@@ -149,7 +149,7 @@ public  final class Utils {
 
     public static ActionType getActionType(String type) {
         switch(type) {
-            case "mesure":
+            case "measure":
                 return ActionType.Measurement;
             case "callback":
                 return ActionType.CallBack;

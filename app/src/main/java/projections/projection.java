@@ -24,6 +24,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import projections.Actions.Action;
+import projections.Actions.MeasurementReminder;
 import projections.Actions.MonitorAction;
 import projections.Actions.compositeAction;
 import projections.monitoringObjects.valueConstraint;
@@ -159,10 +160,12 @@ public abstract class projection extends BroadcastReceiver {
         }
     }
 
-    public void addNewCompositeAction(String compositeActionName)
+    public void addNewCompositeAction(String compositeActionName,String ExMode)
     {
-        compositeAction ca=new compositeAction(context);
+        Utils.ExecuteMode mode=Utils.convertToExecuteMode(ExMode);
+        compositeAction ca=new compositeAction(context,mode);
         compActionTable.put(compositeActionName,ca);
+        Log.i("addNewCompositeAction","creating new composite action in name : "+compositeActionName);
     }
 
     public void setOnReceiveConcept(String compositeActionNameToTrigger, String concept)
@@ -174,12 +177,21 @@ public abstract class projection extends BroadcastReceiver {
     }
     public void addActionToComposite(String compositeActionName,String type, String actionname, String actionConcept)
     {
+
         Utils.ActionType acType=Utils.getActionType(type);
+
         ActionParser ap=new ActionParser(acType,context);
        String[] params={actionname,actionConcept};
        Action a= ap.parse(params);
+
        compActionTable.get(compositeActionName).addAction(a);
 
+        /*TODO: add remidner action --
+        if(acType.equals(Action.ActionType.Measurement) && this.rremTime!="0") {
+            Action remider = new MeasurementReminder(reminderTxt);
+            projectionToBuild.addAction(remider);
+        }
+            */
     }
 
     public void addActionToComposite(String compositeActionName,Action a)
@@ -219,15 +231,23 @@ public abstract class projection extends BroadcastReceiver {
         return;
     }
 
-    public void defVar(String varName,String concept,var.VarType type)
+    public void setTriggerAction(String triggerActionName)
     {
-        if(this.condAction!=null)
-            this.condAction.defineVar(varName,concept, type);
+        this.actionToTrigger=compActionTable.get(triggerActionName);
     }
-    public void addValueConstraint(String varName, var.Operators op, String val)
+    public void defVar(String varName,String concept,String  type)
     {
+        var.VarType varType=Utils.getVarType(type);
+        Log.i("defVar","setting var name : "+varName+" for concept : "+concept);
         if(this.condAction!=null)
-            this.condAction.addValueConstraint(varName,op,val);
+            this.condAction.defineVar(varName,concept, varType);
+    }
+    public void addValueConstraint(String varName, String op, String val)
+    {
+        var.Operators varOp=Utils.getVarOp(op);
+
+        if(this.condAction!=null)
+            this.condAction.addValueConstraint(varName,varOp,val);
     }
 
     public void setTimeConstraint( int daysAgo)
@@ -254,9 +274,16 @@ public abstract class projection extends BroadcastReceiver {
             this.condAction.setOpBetweenVars(op);
 
     }
+    public void onStart(String compositeName)
+    {
+        this.currentCompositeAction=compositeName;
+        action=compActionTable.get(this.currentCompositeAction);
+    }
 
     public   void startProjection() {
-        this.currentCompositeAction=compActionTable.keys().nextElement();
+
+       // action=compActionTable.get(this.currentCompositeAction);
+        Log.i("startProjection","set starting from action : "+this.currentCompositeAction);
         initProjection();
         //TODO : start the compositeActin serivice
 
@@ -266,6 +293,11 @@ public abstract class projection extends BroadcastReceiver {
 
     }
 
+
+    public void initMonitorAction()
+    {
+        condAction=new MonitorAction(context);
+    }
     public  abstract void initProjection();
 
     public void InvokeAction(boolean isReminder) {

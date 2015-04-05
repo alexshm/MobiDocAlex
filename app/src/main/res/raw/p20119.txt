@@ -1,14 +1,24 @@
-buildProjection("monitor","20119","2 abnormal measurements in past week");
-setVar("abnormal_BG_fast","4985","int");
-setVar("abnormal_BG_breakfest","4986","int");
-setVar("abnormal_BG_dinner","4988","int");
-setVar("abnormal_BG_lunch","4987","int");
+beginProjection('monitor','2 abnormal measurements in past week','20119'):
 
-defineVar("abnormal_BG_fast","val>=150");
-defineVar("abnormal_BG_breakfest","val>=150");
-defineVar("abnormal_BG_dinner","val>=150");
-defineVar("abnormal_BG_lunch","val>=150");
-setCondition("or [abnormal_BG_fast,abnormal_BG_breakfest,abnormal_BG_dinner,abnormal_BG_lunch]","count()>=2","8 days");
 
-onTriggerEvent("seq","[callback(\"5112\",\"2 abnormal values in BG were found in your measurements in the past week, system is calculating another schedule for you for daily BG measurement\")]");
+   setVar('abnormal_BG_fast','4985','int');
+   setVar('abnormal_BG_breakfest','4986','int');
+   setVar('abnormal_BG_dinner','4988','int');
+   setVar('abnormal_BG_lunch','4987','int');
+
+   abnormal_BG_fast.setCond('val>=150');
+   abnormal_BG_breakfest.setCond('val>=150');
+   abnormal_BG_dinner.setCond('val>=150');
+   abnormal_BG_lunch.setCond('val>=150');
+
+
+    var monitoringAction=declareActionsequance('seq'){
+        abnormal=new Action('callback','2 abnormal values in BG were found in your measurements in the past week, system is calculating another schedule for you for daily BG measurement','5112');};
+
+
+performMonitoringOn (4985||4986||4987||4988)
+    where count()>=2
+    forTime 7 days;
+
+onTriggerEvent(monitoringAction);
 

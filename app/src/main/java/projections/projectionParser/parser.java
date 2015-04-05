@@ -163,24 +163,8 @@ public class parser {
 
 
             case "setFrequency":
-                String repetFreq = args[0];
-                int repeatAmout=Integer.parseInt(repetFreq.split(" ")[0]);
-                String repeatUnit = repetFreq.split(" ")[1];
-                String startTime=args[1];
-                String remainder=args[2];
-                int remainderAmout=Integer.parseInt(remainder.split(" ")[0]);
-                String remainderUnit = remainder.split(" ")[1];
-                // fill this parameters in the test simulation screen
-                if(this.startTimeTxt!="")
-                {
 
-                    repeatAmout=Integer.parseInt(this.freqTime);
-                    repeatUnit = this.freqUnit;
-                    startTime=this.startTimeTxt;
-                    remainderAmout=Integer.parseInt(this.remTime);
-                    remainderUnit = this.remUnit;
-                }
-                setFreq(repeatAmout,repeatUnit,startTime,remainderAmout,remainderUnit);
+               // setFreq(repeatAmout,repeatUnit,startTime,remainderAmout,remainderUnit);
 
                 break;
             case "perform":
@@ -322,7 +306,7 @@ public class parser {
     private void addVar(String varName,String concept,String type)
     {
         var.VarType varType=Utils.getVarType(type);
-        projectionToBuild.defVar(varName,concept,varType);
+        projectionToBuild.defVar(varName,concept,type);
 
     }
 
@@ -330,29 +314,16 @@ public class parser {
     {
         var.Operators varOp=Utils.getVarOp(op);
 
-        projectionToBuild.addValueConstraint(varName,varOp,val);
+       // projectionToBuild.addValueConstraint(varName,varOp,val);
     }
 
     // sets the frequency to activates the action in the cyclic projection
     // (i.e every 5 days at 8:00) and also set the hour to be triggered(8:00 is startTime)
     private void setFreq(int repeatAmout,String repeatUnit,String startTime,int remainderAmout,String remainderUnit)
     {
-        if(projectionToBuild.getType().equals(projection.ProjectionType.Cyclic))
-        {
-            projection.ProjectionTimeUnit repUnit=Utils.getTimeUnit(repeatUnit);
-            projection.ProjectionTimeUnit remUnit=Utils.getTimeUnit(remainderUnit);
 
-            ((CyclicProjectionAbstract) projectionToBuild).setStartTime(startTime);
-            //((CyclicProjectionAbstract)projectionToBuild).setReaminder(remUnit,remainderAmout);
-            //((CyclicProjectionAbstract)projectionToBuild).setFrequency(repUnit,repeatAmout);
-
-        }
 
     }
-
-
-
-
 
 
 

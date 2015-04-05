@@ -2,6 +2,7 @@ package projections.projectionParser;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import projections.Actions.Action;
 import projections.Actions.CallBackAction;
@@ -42,6 +43,7 @@ public class ActionParser {
     }
     private Action parseMeasure(String[] actionParms)
     {
+
        String name=actionParms[0];
         String conceptId=actionParms[1];
         return  new MeasurementAction(name,conceptId);

@@ -1,8 +1,10 @@
  function print(txt) 
 	{java.lang.System.out.println(txt);}  
 	
-compositeCollection=[];  
-      
+compositeCollection=[];
+varCollection=[];
+
+
 // ==action obj	  
 function Action(type,name,concept)
 {
@@ -45,6 +47,50 @@ actionSequance.prototype.addAction=function(action){
 	}
 };
 
+// ==var conditionVar
+//==========================
+function conditionVar(type,name,concept)
+{
+	this.name=name;
+	this.type=type;
+	this.concept=concept;
+	varCollection.push(this);
+};
+
+conditionVar.prototype.conditions=[];
+
+conditionVar.prototype.setCond=function(condition)
+{
+	conditionVar.prototype.__defineSetter__('setcond', function(cond)
+									{
+										conditionVar.prototype.conditions.push(cond);
+										});
+	var re = /val(>|>=|<|<=|==)([\d])/
+                var str = condition;
+                var op = str.replace(re,"$1 , $2");
+
+
+	//var newcond={operator:op,value:val};
+	//this.setcond=newcond;
+};
+
+
+function monitoringPreProcesing(monitoringScript)
+{
+
+    var monitorRegex = /performMonitoringOn\s\((.*)\).*where.*(count|avg|sum)\(\)(>|>=|<|<=|==)([\d]).*forTime\s([\d]).*(days|hours|weeks);/
+                    var str = monitoringScript;
+                   var monitorstr= str.replace(monitorRegex,"$1,$2,$3,$4,$5,$6");
+
+
+    return monitorstr.split(",");
+
+}
+
+
+//=================================================================
+
+
 function setFrequency(freqamount,freqUnit,remainderAmount,remainderUnit)
 	{
 	   proj.setFrequency(freqUnit,freqamount);
@@ -55,6 +101,27 @@ function setFrequency(freqamount,freqUnit,remainderAmount,remainderUnit)
  {
 	 proj.setStartTime(time);
 }
+
+function onTriggerEvent(triggerAction)
+{
+proj.setTriggerAction(triggerAction);
+}
+
+function start(compositeName)
+{
+    proj.onStart(compositeName);
+
+}
+function defineVar(varName,condition)
+{
+    for(var i=0;i< varCollection.length;i++)
+    	{
+    	    if(varCollection[i].name==varName)
+
+    	            varCollection[i].setCond(condition)
+    	}
+}
+
 //===========================================================
 
 //=== function  for iterate for all the actions in the compositeAction
@@ -64,6 +131,7 @@ function insertActionToProjection()
 	for(var i=0;i< compositeCollection.length;i++)
 	{
 		var compositeName=compositeCollection[i].name;
+		proj.addNewCompositeAction(compositeName,compositeCollection[i].order);
 	    var actions=compositeCollection[i].actionList;
 		for(var j=0;j< compositeCollection[i].actionList.length;j++)
 		 {
@@ -73,8 +141,33 @@ function insertActionToProjection()
 			for(var k=0;k< ActionConceptsList.length;k++)
 			   {
 				var conceptToReceive=ActionConceptsList[k].concept;
+				 print('setting on recieve for the concept : ' +conceptToReceive);
 				proj.setOnReceiveConcept(compositeName,conceptToReceive);
 				}
 		}
 	}
 };
+
+
+function insertVarsToProjection()
+{
+    if( varCollection.length>0)
+        proj.initMonitorAction();
+
+	for(var i=0;i< varCollection.length;i++)
+	{
+		var condVar=varCollection[i];
+		proj.defVar(condVar.name,condVar.concept,condVar.type);
+	    var conditionsArr=condVar[i].conditions;
+		for(var j=0;j< conditionsArr.length;j++)
+		 {
+
+			proj.addValueConstraint(condVar.name,conditionsArr[j].operator,conditionsArr[j].value);
+
+
+		}
+	}
+};
+
+
+
