@@ -54,7 +54,10 @@ public class webComScreen extends Activity {
     }
 
     private void getRecTest() {
-        ans.setText(openMrsApi.getSession());
+        String concept =  "5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+        String personID = "7014135e-7575-41a8-8832-4fb0c3b2ca5f";
+        String dateTime = "2010-03-23T00:00:00.000+0200";
+        ans.setText(openMrsApi.postObs(personID,88,dateTime,concept));
 
 
     }
