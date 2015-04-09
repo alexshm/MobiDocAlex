@@ -43,9 +43,10 @@ public class HttpRecTask extends AsyncTask<HashMap<String, String>, String, Stri
 
     private String sendPost(HashMap<String, String> hashMap) {
         String URLPath = hashMap.get("URLPath");
-        String JSON = hashMap.get("JSON ");
+        String JSON = hashMap.get("JSON");
         try {
             StringEntity stringEntity = new StringEntity(JSON);
+            stringEntity.setContentType("application/json");
             return apiAuthRest.post(URLPath, stringEntity).toString();
         } catch (UnsupportedEncodingException e) {
             return e.getMessage();
