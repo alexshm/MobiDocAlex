@@ -68,8 +68,8 @@ public class DemoActivity extends Activity {
 
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main);
-        mDisplay = (TextView) findViewById(R.id.display);
+      //  setContentView(R.layout.main);
+       // mDisplay = (TextView) findViewById(R.id.display);
 
         context = getApplicationContext();
 
@@ -215,7 +215,7 @@ public class DemoActivity extends Activity {
     // Send an upstream message.
     public void onClick(final View view) {
 
-        if (view == findViewById(R.id.send)) {
+       // if (view == findViewById(R.id.send)) {
             new AsyncTask<Void, Void, String>() {
                 @Override
                 protected String doInBackground(Void... params) {
@@ -238,10 +238,10 @@ public class DemoActivity extends Activity {
                     mDisplay.append(msg + "\n");
                 }
             }.execute(null, null, null);
-        } else if (view == findViewById(R.id.clear)) {
+      //  } else if (view == findViewById(R.id.clear)) {
             mDisplay.setText("");
         }
-    }
+    //}
 
     @Override
     protected void onDestroy() {
