@@ -89,6 +89,25 @@
             android:layout_gravity="right|center_vertical"
             android:gravity="bottom|center_horizontal" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="118dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="regID :"
+            android:id="@+id/regidTxt"
+            android:layout_gravity="left|bottom"
+            android:elegantTextHeight="false"
+            android:enabled="true"
+            android:nestedScrollingEnabled="true"
+            android:textIsSelectable="true"
+            android:textAlignment="center"
+            android:singleLine="false"
+            android:outlineProvider="paddedBounds"
+            android:visibility="visible"
+            android:ellipsize="start"
+            android:editable="true"
+            android:clickable="false" />
+
 
     </FrameLayout>
 

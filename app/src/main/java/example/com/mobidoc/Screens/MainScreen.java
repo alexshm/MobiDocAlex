@@ -9,9 +9,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import example.com.mobidoc.CommunicationLayer.PushNotification;
 import example.com.mobidoc.R;
 
 @SuppressLint("ShowToast")
@@ -21,9 +23,13 @@ public class MainScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //PushNotification p=PushNotification.getInstance();
+
         setContentView(R.layout.activity_main);
 //        t = (TextView) findViewById(R.id.textView5);
-
+        TextView regId = (TextView) findViewById(R.id.regidTxt);
+        String regid=PushNotification.getInstance(getApplicationContext()).getMobileID();
+       regId.setText(regId.getText().toString()+" "+regid);
 
     }
 
