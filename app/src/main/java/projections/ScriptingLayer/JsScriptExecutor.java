@@ -44,7 +44,7 @@ public class JsScriptExecutor {
     {
         c=cont;
         basicScript=readbasicScript("projectionscript");
-        s=readbasicScript("p20119");
+
     }
 
 
@@ -171,18 +171,18 @@ public class JsScriptExecutor {
             String action = m.group(1);
             addScript += compositeActionName + ".addAction(" + action + ");\n";
         }
-
-
-
             return declareCompositeAction+script+addScript+"\n";
     }
 
-    public   void runScript(String scriptToRun) {
 
 
-        projection p=buildProj(s);
+    public   projection runScript(String scriptToRun) {
 
-        String script=preProssesing(s);
+
+        projection projToBuild=buildProj(scriptToRun);
+        Log.i("JSSCRIPTING-runSctipt","initiazing projectoin ...with type : "+projToBuild.getType().name()+" with id : "+projToBuild.getProjectionId());
+        String script=preProssesing(scriptToRun);
+        Log.i("JSSCRIPTING","the new script after preProssesing is :"+script);
 
         Context context = Context.enter();
         context.setOptimizationLevel(-1);
@@ -194,26 +194,33 @@ public class JsScriptExecutor {
             // in later calls.
 
             Scriptable scope = context.initStandardObjects();
-            scope.put("proj", scope, p);
+            scope.put("proj", scope, projToBuild);
             // Build the script
 
 
             // Execute the script
             String evalScript=basicScript+" \n "+script;
           //  System.out.println(evalScript);
-            Object obj = context.evaluateString(scope,evalScript, "TestScript", 1, null);
-            System.out.println("Object: " + obj);
+            Object obj =context.evaluateString(scope,evalScript, "TestScript", 1, null);
+            Log.i("JsScripting- runscript" ,"finishing evaluating and executing script");
+            //System.out.println("the result is : "+((projection)Context.jsToJava(obj,projection.class)).getProjectionName());
 
+         //   projToBuild=(projection)obj;
             // Cast the result to a string
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("JsScripting- runscript" ,"error evaluating and executing script. error msg : "+e.getMessage());
+
+
+
         } finally {
             // Exit the Context. This removes the association between the Context and the current thread and is an
             // essential cleanup action. There should be a call to exit for every call to enter.
             Context.exit();
+            return projToBuild;
         }
+
 
     }
     private  String finishScript() {

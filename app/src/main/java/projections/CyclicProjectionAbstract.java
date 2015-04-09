@@ -48,6 +48,7 @@ public class CyclicProjectionAbstract extends projection {
         this.alramMng= (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         hasAlarm=true;
         StartTime="";
+        remainderTime=0;
         reminderUnit=null;
         reminder_amount=0;
         remainderCalendar=null;
@@ -60,11 +61,11 @@ public class CyclicProjectionAbstract extends projection {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.i("cyclic projection -  onReceive.", "recive data : projection name : "+this.ProjectionName);
+        Log.i("cyclicProj -onReceive", "recive data :proj name : "+this.ProjectionName);
         //get the name of the Intent
         boolean isReminder = intent.getAction().contains("_remainder");
 
-        Log.i("cyclic projection -  onReceive.", "has reminder : "+isReminder);
+        Log.i("cyclicProj -onReceive", "has reminder : "+isReminder);
         if(isReminder)
         {
             reminderTime.setTime(reminderTime.getTime()+reapetTime);
@@ -89,7 +90,7 @@ public class CyclicProjectionAbstract extends projection {
         if(isCyc||isReminder) {
             // if we dont use alarm by days -> but we use alarm every X day/hours..
             // if days!=null -> we trigger the alaram with "repeatDays_TriggerNextDay"
-            Log.i("cyclic projection -  onReceive.", "trigger action successfully");
+            Log.i("cyclicProj -onReceive", "trigger action successfully");
             if (days != null && !isReminder) {
 
                 alramMng.cancel(alarmInt);
@@ -98,7 +99,7 @@ public class CyclicProjectionAbstract extends projection {
             }
 
             if (action != null) {
-                Log.i("cyclic projection -  onReceive.", "action not null");
+                Log.i("cyclicproj("+getProjectionId()+")","onReceive - action not null");
                 action.invoke(isReminder);
 
 
@@ -239,7 +240,7 @@ public class CyclicProjectionAbstract extends projection {
         IntentFilter TriggerConditionIntentFilter = new IntentFilter(triggerName);
 
         context.registerReceiver(this, TriggerConditionIntentFilter);
-        Log.i("register to  Trigger for Condition","register  to "+triggerName);
+        Log.i("Cyclic Projection","register to  Triggering-register  to "+triggerName);
     }
 
     @Override
@@ -265,7 +266,7 @@ public class CyclicProjectionAbstract extends projection {
             //  if we have a reminder -> first set the alarm
             Date s=remainderCalendar.getTime();
             //  Log.i("projection", "the normal trigger is set to : " + cyclicCalendar.get(Calendar.HOUR_OF_DAY) + ":" + cyclicCalendar.get(Calendar.MINUTE) + ":" + cyclicCalendar.get(Calendar.SECOND));
-            Log.i("projection when startAlarm", "the remainder is set to : "+ remainderCalendar.getTime()) ;
+            Log.i("CyclicProj("+getProjectionId()+")","-startAlarm -the remainder is set to : "+ remainderCalendar.getTime()) ;
 
             alramMng.set(AlarmManager.RTC_WAKEUP, remainderCalendar.getTimeInMillis(), reaminderInt);
             reminderTime=new Date(remainderCalendar.getTimeInMillis());
@@ -291,32 +292,36 @@ public class CyclicProjectionAbstract extends projection {
     {
 
         projection.ProjectionTimeUnit remUnit=Utils.getTimeUnit(remainderUnit);
-        setCyclicReaminder(remUnit,amount);
+
+        if(amount!=0) {
+            setCyclicReaminder(remUnit, amount);
+        }
     }
 
     private  void setCyclicReaminder(ProjectionTimeUnit unit, int amount)
     {
         remainderTime=0;
 
-        switch (unit) {
+            switch (unit) {
 
-            case Second:
-                remainderTime = amount * SECOND;
-                break;
-            case Minute:
-                remainderTime = amount * MINUTE;
-                break;
-            case Hour:
-                remainderTime = amount * HOUR;
-            case Day:
-                remainderTime = DAY * amount;
-                break;
-            case None:
-                remainderTime = 0;
-                break;
+                case Second:
+                    remainderTime = amount * SECOND;
+                    break;
+                case Minute:
+                    remainderTime = amount * MINUTE;
+                    break;
+                case Hour:
+                    remainderTime = amount * HOUR;
+                case Day:
+                    remainderTime = DAY * amount;
+                    break;
+                case None:
+                    remainderTime = 0;
+                    break;
 
 
-        }
+            }
+
         reminderUnit=unit;
         reminder_amount=amount;
         if(cyclicCalendar!=null)
@@ -359,4 +364,6 @@ public class CyclicProjectionAbstract extends projection {
 
 
     }
+
+
 }

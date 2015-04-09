@@ -45,7 +45,7 @@ public class MeasurementAction extends Action {
 
         bundle.putString("value", msgToSend);
         bundle.putString("concept", this.getConcept());
-        Log.i("mesure action- build msg","build msg for : "+actionName);
+        Log.i("mesureAction(build msg)","build msg for : "+actionName);
         msg.setData(bundle);
         return msg;
     }

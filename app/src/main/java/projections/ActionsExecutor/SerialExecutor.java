@@ -67,7 +67,7 @@ public class SerialExecutor extends actionExecutor implements Executor {
 
     protected void executeActions() {
             for (Action task : this.tasks) {
-                Log.i("Sequncial exiecuter-excute", " executing the action : " + task.getActionName());
+                Log.i("SequncialEx -excute", "executing the action :" + task.getActionName());
                 Future rslt = pool.submit(task);
                 msgsrstlt.add(rslt);
                 send();
@@ -84,7 +84,7 @@ public class SerialExecutor extends actionExecutor implements Executor {
     @Override
     protected void executeReminders() {
         for (Action task : this.Reminderstasks) {
-            Log.i("Sequncial Reminders exiecuter-excute", " executing the action : " + task.getActionName());
+            Log.i("SeqEx executeReminders", "executing the action : " + task.getActionName());
             Future rslt = pool.submit(task);
             msgsrstlt.add(rslt);
             send();

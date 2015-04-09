@@ -71,12 +71,12 @@ public abstract class actionExecutor implements Executor{
     };
     public   void startService() {
         if (mIsBound) {
-            Toast.makeText(context, "action executer  allready started", Toast.LENGTH_SHORT).show();
+            Log.i("actionExecuter","action executer  allready started");
         } else {
 
             context.bindService(serviceIntent, mconnection, Context.BIND_AUTO_CREATE);
            mIsBound = true;
-            Toast.makeText(context, "action executer started", Toast.LENGTH_LONG).show();
+            Log.i("actionExecuter","action executer  started successfully for the projection");
         }
     }
 
@@ -91,10 +91,10 @@ public abstract class actionExecutor implements Executor{
             mconnection = null;
             mIsBound = false;
             context.stopService(serviceIntent);
-            Toast.makeText(context, "service succefully stopped", Toast.LENGTH_LONG).show();
+            Log.i("actionExecuter","service succefully stopped for projection");
         } else
         {
-            Toast.makeText(context, "service allready stopped", Toast.LENGTH_LONG).show();
+            Log.i("actionExecuter","service allready stopped");
         }
     }
 

@@ -31,7 +31,7 @@ import projections.monitoringObjects.valueConstraint;
 import projections.projectionParser.ActionParser;
 
 
-public abstract class projection extends BroadcastReceiver {
+public abstract class projection extends BroadcastReceiver implements Runnable{
 
 
     protected ProjectionType Type;
@@ -121,6 +121,7 @@ public abstract class projection extends BroadcastReceiver {
 
     }
 
+
     public  String getProjectionName()
     {
         return ProjectionName;
@@ -165,7 +166,7 @@ public abstract class projection extends BroadcastReceiver {
         Utils.ExecuteMode mode=Utils.convertToExecuteMode(ExMode);
         compositeAction ca=new compositeAction(context,mode);
         compActionTable.put(compositeActionName,ca);
-        Log.i("addNewCompositeAction","creating new composite action in name : "+compositeActionName);
+        Log.i("abstractProj("+getProjectionId()+")","method: addNewCompositeAction.  creating new composite action in name : "+compositeActionName);
     }
 
     public void setOnReceiveConcept(String compositeActionNameToTrigger, String concept)
@@ -183,8 +184,10 @@ public abstract class projection extends BroadcastReceiver {
         ActionParser ap=new ActionParser(acType,context);
        String[] params={actionname,actionConcept};
        Action a= ap.parse(params);
+        Log.i("abstractProj("+getProjectionId()+")","method: addActionToComposite.-add action("+a.getType().name()+","+a.getConcept()+","+a.getActionName()+")");
+        Log.i("abstractProj("+getProjectionId()+")","method: addActionToComposite.-adding the action to compositeAction :"+compositeActionName);
 
-       compActionTable.get(compositeActionName).addAction(a);
+        compActionTable.get(compositeActionName).addAction(a);
 
         /*TODO: add remidner action --
         if(acType.equals(Action.ActionType.Measurement) && this.rremTime!="0") {
@@ -278,12 +281,19 @@ public abstract class projection extends BroadcastReceiver {
     {
         this.currentCompositeAction=compositeName;
         action=compActionTable.get(this.currentCompositeAction);
+
+    }
+
+
+    @Override
+    public void run() {
+        startProjection();
     }
 
     public   void startProjection() {
 
        // action=compActionTable.get(this.currentCompositeAction);
-        Log.i("startProjection","set starting from action : "+this.currentCompositeAction);
+        Log.i("projAbstract("+getProjectionId()+")","-method : startProjection --set starting from action : "+this.currentCompositeAction);
         initProjection();
         //TODO : start the compositeActin serivice
 

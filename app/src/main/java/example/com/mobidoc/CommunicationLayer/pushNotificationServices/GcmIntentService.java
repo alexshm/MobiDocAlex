@@ -21,17 +21,31 @@ package example.com.mobidoc.CommunicationLayer.pushNotificationServices;
 import android.app.IntentService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import example.com.mobidoc.Screens.MainScreen;
+import example.com.mobidoc.projectionsCollection;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import example.com.mobidoc.R;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
+import example.com.mobidoc.R;
+import projections.ScriptingLayer.JsScriptExecutor;
+import projections.projection;
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
  * {@code GcmBroadcastReceiver} (a {@code WakefulBroadcastReceiver}) holds a
@@ -42,19 +56,26 @@ import example.com.mobidoc.R;
 public class GcmIntentService extends IntentService {
 
     public static final int NOTIFICATION_ID = 1;
+    private static final int START_PROJECTION_MSG = 7;
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
 
+
     public GcmIntentService() {
         super("GcmIntentService");
+
     }
+
     public static final String TAG = "GCM Demo";
+
 
     @Override
     protected void onHandleIntent(Intent intent) {
 
         Bundle extras = intent.getExtras();
 
+       // this.serviceIntent  = new Intent(getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
+       // startService();
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
@@ -67,9 +88,9 @@ public class GcmIntentService extends IntentService {
              * not interested in, or that you don't recognize.
              */
             if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-                sendNotification("Send error: " + extras.toString());
+                sendNotification("Send error: " , extras.toString());
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-                sendNotification("Deleted messages on server: " + extras.toString());
+                sendNotification("Deleted messages on server: " , extras.toString());
             // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 
@@ -83,9 +104,12 @@ public class GcmIntentService extends IntentService {
 
                     }
                 }
-                Log.i(TAG, "Completed work @ " + SystemClock.elapsedRealtime());
+
+                createAndRunProjectionScript(extras.getString("message"));
+                Log.i(TAG, "Completed work  in : " + SystemClock.elapsedRealtime());
                 // Post notification of received message.
-                sendNotification("Received: " + extras.getString("message"));
+                sendNotification(extras.getString("type"),extras.getString("projnumber"));
+
                 Log.i(TAG, "Received: " + extras.getString("message"));
             }
         }
@@ -96,21 +120,59 @@ public class GcmIntentService extends IntentService {
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
-    private void sendNotification(String msg) {
-
+    private void sendNotification(String projName,String projnumber ) {
+       String msgToSend ="Received projection: "+ projName+" ("+projnumber+")";
+        Log.i(TAG,msgToSend);
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, DemoActivity.class), 0);
+                new Intent(this, MainScreen.class), 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.mobidocicon2)
         .setContentTitle("GCM Notification")
         .setStyle(new NotificationCompat.BigTextStyle()
-        .bigText(msg))
-        .setContentText(msg);
+        .bigText("new projection"))
+        .setContentText(projName+" ("+projnumber+")")
+        .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+
 
         mBuilder.setContentIntent(contentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    }
+
+
+    private void createAndRunProjectionScript(String projectionScript) {
+
+        new AsyncTask<String, Void, projection>() {
+            JsScriptExecutor jsScript=new JsScriptExecutor(getApplicationContext());
+            @Override
+            protected projection doInBackground(String... params) {
+                Log.i("GCM service", " parsing the projection : "+params[0]);
+                String script = params[0];
+                projection proj=jsScript.runScript(script);
+                return proj;
+
+            }
+
+            @Override
+            protected void onPostExecute(projection proj) {
+
+                Log.i("GCM service", " finish building projection: "+proj.getProjectionName()+"("+proj.getProjectionId()+")");
+                projectionsCollection.getInstance().addProjection(proj);
+                Log.i("GCM service", "adding : "+proj.getProjectionName()+"("+proj.getProjectionId()+") to projectionCollection");
+                sendStartProjectionMsg(proj.getProjectionId());
+            }
+        }.execute(projectionScript);
+    }
+
+    private void sendStartProjectionMsg(String projectionId)
+    {
+
+        Intent brdcastIntent = new Intent("startProjection");
+        brdcastIntent.setAction("startProjection");
+        brdcastIntent.putExtra("projNum",projectionId);
+        sendBroadcast(brdcastIntent, android.Manifest.permission.VIBRATE);
+
     }
 }

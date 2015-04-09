@@ -109,7 +109,8 @@ proj.setTriggerAction(triggerAction);
 
 function start(compositeName)
 {
-    proj.onStart(compositeName);
+
+    proj.onStart(compositeName.name);
 
 }
 function defineVar(varName,condition)
@@ -135,13 +136,14 @@ function insertActionToProjection()
 	    var actions=compositeCollection[i].actionList;
 		for(var j=0;j< compositeCollection[i].actionList.length;j++)
 		 {
-		 print('adding the action : ' +actions[j].name);
+		 print('logging from JavaScript - (insertActionToProjection) :adding the action : ' +actions[j].name);
 			proj.addActionToComposite(compositeName,actions[j].type,actions[j].name,actions[j].concept);
 			var ActionConceptsList=actions[j].actionToDo;
+			 print('logging from JavaScript (insertActionToProjection) :inserting to concept List with length : ' +ActionConceptsList.length);
 			for(var k=0;k< ActionConceptsList.length;k++)
 			   {
 				var conceptToReceive=ActionConceptsList[k].concept;
-				 print('setting on recieve for the concept : ' +conceptToReceive);
+				 print('logging from JavaScript (insertActionToProjection) =setting on recieve for the concept : ' +conceptToReceive);
 				proj.setOnReceiveConcept(compositeName,conceptToReceive);
 				}
 		}

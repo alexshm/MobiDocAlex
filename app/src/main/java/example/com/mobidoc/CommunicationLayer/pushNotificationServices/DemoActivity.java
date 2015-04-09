@@ -36,7 +36,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import example.com.mobidoc.R;
 
 /**
- * Main UI for the demo app.
+ * Main UI for the push notification.
+ * i keep it just for reference
  */
 public class DemoActivity extends Activity {
 

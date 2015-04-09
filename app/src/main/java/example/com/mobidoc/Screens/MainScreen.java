@@ -5,9 +5,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,23 +19,43 @@ import android.widget.Toast;
 
 import example.com.mobidoc.CommunicationLayer.PushNotification;
 import example.com.mobidoc.R;
+import example.com.mobidoc.projectionsCollection;
 
 @SuppressLint("ShowToast")
 public class MainScreen extends Activity {
     TextView t = null;
-
+    BroadcastReceiver projectionRec;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //PushNotification p=PushNotification.getInstance();
+        //TODO: recieve notification just after login
 
         setContentView(R.layout.activity_main);
-//        t = (TextView) findViewById(R.id.textView5);
+;
+        IntentFilter intentFilter = new IntentFilter("startProjection");
+        projectionRec=new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                final String projnum=intent.getStringExtra("projNum");
+                Log.i("mainScreen-onReceive","onReceive from broadcast projectionReceiver-need to start proj# "+projnum);
+
+                projectionsCollection.getInstance().getprojection(projnum).startProjection();
+
+            }
+        };
+        //register to triggring timer events
+        Log.i("Main Screen","register to brodcastRec for recieve projections");
+
+
+
         TextView regId = (TextView) findViewById(R.id.regidTxt);
         String regid=PushNotification.getInstance(getApplicationContext()).getMobileID();
        regId.setText(regId.getText().toString()+" "+regid);
+        getApplicationContext().registerReceiver(projectionRec,intentFilter);
 
-    }
+
+        }
 
 
     private void showToastFromService(final String message) {

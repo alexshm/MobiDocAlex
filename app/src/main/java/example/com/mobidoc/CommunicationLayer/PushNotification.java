@@ -39,8 +39,6 @@ import example.com.mobidoc.Screens.LoginScreen;
 
 public  class   PushNotification extends Application{
 
-    String RegistrationRes;
-
     public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
@@ -80,12 +78,18 @@ public  class   PushNotification extends Application{
         this.onCreate();
         this.context=new ContextWrapper(c);
     }
+
+    //retrieve the regID of the device
     public  String getMobileID()
     {
         if(regid.isEmpty())
             regid = getRegistrationId(this);
         return regid;
     }
+
+    // register the device to GCM service
+    //and save the regid in local file
+    // file the device is already registered it doesnt do anything
     public void registerDevice()
     {
         if (checkPlayServices()) {
@@ -101,6 +105,8 @@ public  class   PushNotification extends Application{
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
     }
+
+
     private void registerInBackground() {
 
         new AsyncTask<Void, Void, String>() {
@@ -148,13 +154,23 @@ public  class   PushNotification extends Application{
      */
     private void storeRegistrationId(Context context, String regId) {
         final SharedPreferences prefs = getGcmPreferences(context);
-        int appVersion =1;// getAppVersion(context);
+        int appVersion =1;// TODO:getAppVersion(context);
         Log.i(TAG, "Saving regId on app version " + appVersion);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(PROPERTY_REG_ID, regId);
         editor.putInt(PROPERTY_APP_VERSION, appVersion);
         editor.commit();
     }
+
+
+    /**
+     * Gets the current registration ID for application on GCM service, if there is one.
+     * <p>
+     * If result is empty, the app needs to register.
+     *
+     * @return registration ID, or empty string if there is no existing
+     *         registration ID.
+     */
     private String getRegistrationId(Context context) {
 
         final SharedPreferences prefs = getGcmPreferences(context);
@@ -200,11 +216,14 @@ public  class   PushNotification extends Application{
         SharedPreferences s= this.context.getSharedPreferences(LoginScreen.class.getName(),Context.MODE_PRIVATE);
         return s;
     }
+
+
     /**
      * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP or CCS to send
      * messages to your app. Not needed for this demo since the device sends upstream messages
      * to a server that echoes back the message using the 'from' address in the message.
      */
+
     private void sendRegistrationIdToBackend() {
         // Your implementation here.
     }
@@ -233,6 +252,9 @@ public  class   PushNotification extends Application{
 
         return true;
     }
+
+
+
 
     @Override
     public void onCreate() {

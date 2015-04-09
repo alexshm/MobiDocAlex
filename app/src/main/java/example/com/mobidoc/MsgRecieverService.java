@@ -31,6 +31,7 @@ public class MsgRecieverService extends Service {
         private static final int NOTIFICATION_MSG = 3;
         private static final int REMINDER_MSG = 6;
         private static final int CALLBACK_MSG = 5;
+        private static final int START_PROJECTION_MSG = 7;
 
         @Override
         public void handleMessage(Message msg) {
@@ -59,6 +60,8 @@ public class MsgRecieverService extends Service {
                 case (CALLBACK_MSG):
                     handleCallBack(msg);
                     break;
+                case (START_PROJECTION_MSG):
+                    handleStartProjection(msg);
                 default:
                     super.handleMessage(msg);
             }
@@ -75,6 +78,14 @@ public class MsgRecieverService extends Service {
 
         }
 
+
+    }
+
+    private void handleStartProjection(Message msg) {
+        //starting the received projection
+        ///========================================
+        Log.i("MsgRecieverService","handleStartProjection-recieve projnumber to start :"+msg.getData().getString("projNum"));
+        projectionsCollection.getInstance().startProjection(msg.getData().getString("projNum"));
 
     }
 
