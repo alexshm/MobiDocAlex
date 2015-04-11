@@ -110,7 +110,7 @@ public class GcmIntentService extends IntentService {
                 // Post notification of received message.
                 sendNotification(extras.getString("type"),extras.getString("projnumber"));
 
-                Log.i(TAG, "Received: " + extras.getString("message"));
+              //  Log.i(TAG, "Received: " + extras.getString("message"));
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -148,7 +148,7 @@ public class GcmIntentService extends IntentService {
             JsScriptExecutor jsScript=new JsScriptExecutor(getApplicationContext());
             @Override
             protected projection doInBackground(String... params) {
-                Log.i("GCM service", " parsing the projection : "+params[0]);
+                //Log.i("GCM service", " parsing the projection : "+params[0]);
                 String script = params[0];
                 projection proj=jsScript.runScript(script);
                 return proj;

@@ -1,5 +1,11 @@
-buildProjection("cyc","20091","Routine Daily BG Fasting measurement");
+beginProjection('cyc','Routine Daily BG Fasting measurement','20091'):
 
-setFrequency("50 sec","15:36","0 minute");
+    setFrequency(50,'sec');
+    setReminder(0,'sec');
+    setStartTime('15:36');
 
-perform("seq","[mesure(\"BG Fasting\",\"4985\")]");
+    var bgroutine=declareActionsequance('seq'){
+        bgMeasure=new Action('measure','BG Fasting','4985');};
+
+
+    start(bgroutine);

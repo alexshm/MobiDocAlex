@@ -132,10 +132,10 @@ public class JsScriptExecutor {
         // search for conditions vars declarations
         while (m.find()) {
             String monitoringScript = m.group(0);
-            monitoringCondition="var monitoringAns=monitoringPreProcesing('"+monitoringScript+"');"+
-                "print('the monitor condition is : '+monitoringAns[0]+' '+monitoringAns[1]+' ' +monitoringAns[2]+ ' '"+
-                        "monitoringAns[3]+' '+monitoringAns[4]+' ' +monitoringAns[5]);";
-            replacedScript = replacedScript.replace(monitoringScript,"" ).trim();
+            monitoringCondition="var monitoringAns=monitoringPreProcesing('"+monitoringScript+"');";
+               // "print('the monitor condition is : '+monitoringAns[0]+' '+monitoringAns[1]+' ' +monitoringAns[2]+ ' '"+
+                 //       "monitoringAns[3]+' '+monitoringAns[4]+' ' +monitoringAns[5]);";
+            replacedScript = replacedScript.replace(monitoringScript,monitoringCondition ).trim();
 
 
         }
@@ -144,14 +144,16 @@ public class JsScriptExecutor {
         m = startprojPattern.matcher("");
         m.reset(replacedScript);
         // search for conditions vars declarations
-        while (m.find()) {
+        if (m.find()) {
             String startCommand = m.group(0);
 
-            replacedScript = replacedScript.replace(startCommand, finishScript()+"\n"+startCommand+monitoringCondition).trim();
-
+            replacedScript = replacedScript.replace(startCommand, finishScript()+"\n"+startCommand+monitoringCondition+"\neval(monitoringAns);monitoringAns;").trim();
+        }
+        else //not find the start command( usually when the projection is MONITOR type
+        {
+            replacedScript += finishScript()+"\n"+monitoringCondition+"\neval(monitoringAns);monitoringAns;";
 
         }
-
         return replacedScript;
     }
 

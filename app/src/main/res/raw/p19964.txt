@@ -1,6 +1,7 @@
 beginProjection('cyc','Ketonuria Daily measurement','19964'):
 
-    setFrequency(50,'sec',10,'sec');
+    setFrequency(50,'sec');
+    setReminder(10,'sec');
     setStartTime('16:00');
 
     var seq1=declareActionsequance('seq'){

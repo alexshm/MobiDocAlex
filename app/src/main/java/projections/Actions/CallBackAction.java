@@ -14,6 +14,7 @@ import android.util.Log;
 public class CallBackAction extends Action {
     public CallBackAction(String name, String concept) {
         super(ActionType.CallBack, name, concept);
+        setType(ActionType.CallBack);
     }
 
 
@@ -26,8 +27,6 @@ public class CallBackAction extends Action {
     @Override
     public Message call() throws Exception {
 
-        Log.i("start building CallBack", "start building callback");
-
         msgToSend = actionName;
         int msgType = type.ordinal() + 1;
 
@@ -38,7 +37,7 @@ public class CallBackAction extends Action {
 
         bundle.putString("concept", getConcept());
 
-        Log.i("callback action- build msg", "build msg for callback ");
+        Log.i("callback action","build msg- build msg for callback ");
 
         msg.setData(bundle);
         return msg;

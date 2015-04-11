@@ -31,7 +31,6 @@ public class MainScreen extends Activity {
         //TODO: recieve notification just after login
 
         setContentView(R.layout.activity_main);
-;
         IntentFilter intentFilter = new IntentFilter("startProjection");
         projectionRec=new BroadcastReceiver() {
 

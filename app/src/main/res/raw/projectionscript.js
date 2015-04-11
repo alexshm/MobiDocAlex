@@ -80,26 +80,53 @@ function monitoringPreProcesing(monitoringScript)
 
     var monitorRegex = /performMonitoringOn\s\((.*)\).*where.*(count|avg|sum)\(\)(>|>=|<|<=|==)([\d]).*forTime\s([\d]).*(days|hours|weeks);/
                     var str = monitoringScript;
-                   var monitorstr= str.replace(monitorRegex,"$1,$2,$3,$4,$5,$6");
 
+                   var monitorstr= monitoringScript.replace(monitorRegex,"proj.setTimeConstraint($5);\nproj.setAggregationConstraint($2,$3,$4);");
+                  //  print('the new sss is : '+monitorstr);
 
-    return monitorstr.split(",");
+    return monitorstr;
 
 }
 
+function insertTriggerCond(concept,operation,operator,operatorNum,monitoringTime,monitoringUnit)
+{
+    var monitorTrigger={c:concept,op:operation,opertor:operator,opNum:operatorNum};
+
+    for(var i=0;i<varCollection.length;i++)
+    {
+       // if(varCollection[i].concept==concept)
+
+    }
+
+}
 
 //=================================================================
 
+function setReminder(remainderAmount,remainderUnit)
+{
+   if(proj.getType().name()=="Cyclic")
+   {
 
-function setFrequency(freqamount,freqUnit,remainderAmount,remainderUnit)
+    proj.setReaminder(remainderUnit,remainderAmount);
+    }
+}
+function setFrequency(freqamount,freqUnit)
 	{
-	   proj.setFrequency(freqUnit,freqamount);
-	   proj.setReaminder(remainderUnit,remainderAmount);
+
+       if(proj.getType().name()=="Cyclic")
+       {
+            proj.setFrequency(freqUnit,freqamount);
+            proj.setReaminder(remainderUnit,remainderAmount);
+        }
 	}
 
  function setStartTime(time)
  {
-	 proj.setStartTime(time);
+    if(proj.getType().name()=="Cyclic")
+    {
+        proj.setStartTime(time);
+    }
+
 }
 
 function onTriggerEvent(triggerAction)
@@ -155,7 +182,7 @@ function insertVarsToProjection()
 {
     if( varCollection.length>0)
         proj.initMonitorAction();
-
+    print('var collection size : '+varCollection.length);
 	for(var i=0;i< varCollection.length;i++)
 	{
 		var condVar=varCollection[i];

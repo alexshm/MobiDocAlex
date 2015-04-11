@@ -1,5 +1,11 @@
-buildProjection("cyc","20092","Routine Daily BG Breakfast measurement");
+beginProjection('cyc','Routine Daily BG Breakfast measurement','20092'):
 
-setFrequency("50 sec","15:36","0 minute");
+    setFrequency(50,'sec');
+    setReminder(0,'sec');
+    setStartTime('09:00');
 
-perform("seq","[mesure(\"BG Breakfast\",\"4986\")]");
+    var bgBreakfast=declareActionsequance('seq'){
+        bgMeasure=new Action('measure','BG Breakfast','4986');};
+
+
+    start(bgBreakfast);

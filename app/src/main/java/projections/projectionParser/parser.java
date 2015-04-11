@@ -292,7 +292,7 @@ public class parser {
 
         Action.AggregationAction aggAction=Utils.getAggregationAction(aggregateAction);
 
-        projectionToBuild.setAggregationConstraint(aggAction,aggOp,aggregateVal);
+       // projectionToBuild.setAggregationConstraint(aggAction,aggOp,aggregateVal);
 
         projectionToBuild.setTimeConstraint(timeConstraint);
 

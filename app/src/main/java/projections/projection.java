@@ -115,7 +115,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
             }
 
         } catch (ParseException e) {
-            Log.e("Action", "error parsing date in onReceive");
+            Log.e("projectionAbs("+getProjectionId()+")", "error parsing date in onReceive");
         }
 
 
@@ -209,9 +209,6 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
        action.addAction(a);
     }
 
-
-
-
     public abstract  void registerToTriggring();
 
 
@@ -241,7 +238,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     public void defVar(String varName,String concept,String  type)
     {
         var.VarType varType=Utils.getVarType(type);
-        Log.i("defVar","setting var name : "+varName+" for concept : "+concept);
+        Log.i("abstractProj("+getProjectionId()+")","defVar-setting var name : "+varName+" for concept : "+concept);
         if(this.condAction!=null)
             this.condAction.defineVar(varName,concept, varType);
     }
@@ -265,10 +262,13 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
             this.condAction.setOpBetweenValueConstraints(varName,op);
 
     }
-    public void setAggregationConstraint(Action.AggregationAction action, Action.AggregationOperators op,int targetVal)
+    public void setAggregationConstraint(String operation,String operator,int targetVal)
     {
+        Action.AggregationAction oper= Utils.getAggregationAction(operation);
+        Action.AggregationOperators aggoperator=Utils.getAggregationOp(operator);
+
         if(this.condAction!=null)
-            this.condAction.setAggregationConstraint(action,op,targetVal);
+            this.condAction.setAggregationConstraint(oper,aggoperator,targetVal);
 
     }
     public void setOpBetweenVars(var.OperationBetweenConstraint op)
@@ -280,7 +280,16 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     public void onStart(String compositeName)
     {
         this.currentCompositeAction=compositeName;
-        action=compActionTable.get(this.currentCompositeAction);
+        if(getType().equals(ProjectionType.Monitor))
+        {
+
+        }
+        else
+        {
+            //when the type is Cyclic
+            action=compActionTable.get(this.currentCompositeAction);
+        }
+
 
     }
 
@@ -307,6 +316,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     public void initMonitorAction()
     {
         condAction=new MonitorAction(context);
+        Log.i("abstractProj("+getProjectionId()+")","initiazing Monitor Action ");
     }
     public  abstract void initProjection();
 
