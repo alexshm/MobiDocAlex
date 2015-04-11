@@ -12,7 +12,7 @@ import java.util.Properties;
  * class that reads the properties file
  */
 public class ConfigReader {
-
+    private String FileName;
     private Context context;
 
     private Properties properties;
@@ -22,7 +22,7 @@ public class ConfigReader {
         this.context = context;
         // new properties obj
         properties = new Properties();
-
+        FileName="config.properties";
     }
 
     /**
@@ -30,7 +30,7 @@ public class ConfigReader {
      * application's package. AssetManager Provides access to an
      * application's raw asset files;
      */
-    public Properties getProperties(String FileName) {
+    public Properties getProperties() {
 
         try {
             //* Open an asset using ACCESS_STREAMING mode. This

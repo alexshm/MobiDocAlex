@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -33,8 +34,10 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.NavigableMap;
 
+import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 import example.com.mobidoc.CommunicationLayer.PushNotification;
 import example.com.mobidoc.CommunicationLayer.pushNotificationServices.DemoActivity;
+import example.com.mobidoc.ConfigReader;
 import example.com.mobidoc.R;
 import projections.Actions.compositeAction;
 import projections.ScriptingLayer.JsScriptExecutor;
@@ -47,7 +50,8 @@ public class LoginScreen extends Activity {
     private ProgressDialog mProgressDialog;
     private EditText username;
     private EditText  pass;
-    private Boolean isAuth;
+    private Boolean withOpenMRS;
+
 
     //For registration to  Push Notification
     ////////////////////////////////////////////
@@ -79,12 +83,12 @@ public class LoginScreen extends Activity {
         setContentView(R.layout.login_screen);
         username = (EditText) findViewById(R.id.usernametxt);
         pass = (EditText) findViewById(R.id.passtext);
-
+        withOpenMRS=false;
         PushNotification p=PushNotification.getInstance(getApplicationContext());
 p.registerDevice();
 
         Button loginbtn = (Button) findViewById(R.id.loginButton);
-
+        ToggleButton mrsMode = (ToggleButton) findViewById(R.id.openMRSmode);
         //set listener for clicking the button
 
         context = getApplicationContext();
@@ -107,7 +111,15 @@ p.registerDevice();
             }
 		});
 
+        mrsMode.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              withOpenMRS=!withOpenMRS;
+            }
+        });
+
     }
+
 
     private void checkLoginInDB(String user,String password) {
 
@@ -128,7 +140,7 @@ p.registerDevice();
                 return mProgressDialog;
 
     }
-    class DownloadFileAsync extends AsyncTask<String, Boolean, Boolean> {
+    class DownloadFileAsync extends AsyncTask<String, Void, String> {
 
        @Override
         protected void onPreExecute() {
@@ -138,33 +150,30 @@ p.registerDevice();
 
         @Override
 
-        protected Boolean doInBackground(String... params) {
+        protected String doInBackground(String... params) {
             int count;
+                String ans="";
 
-            try {
-                Thread.sleep(1500);
-                Boolean ans = CheckLoginDialog(params[0], params[1]);
+                if(withOpenMRS) {
+                    String BaseUrl= new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
+                    OpenMrsApi mrsApi = new OpenMrsApi(BaseUrl);
+                     ans = mrsApi.logIn(params[0], params[1]);
+                }
+                else
+                {
+                    if(username.getText().toString().equals("admin")&&pass.getText().toString().equals("12345"))
+                        ans="ok";
+
+
+                }
                 return ans;
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return false;
-            }
+
         }
 
-        // Class that creates the ProgressDialog
-
-        private boolean CheckLoginDialog(String user, String pass) {
-            //System.out.println("user name : "+user);
-
-            if (user.equals("admin") && pass.equals("12345"))
-                return true;
-
-            return false;
-        }
-
-        private void continueLogin(final Boolean result) {
-            if (result) {
+        private void continueLogin(final String result) {
+            boolean ok=result.equals("ok");
+            if (ok) {
                 Intent mainScreen = new Intent(LoginScreen.this, MainScreen.class);
 
                 startActivity(mainScreen);
@@ -188,7 +197,7 @@ p.registerDevice();
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(String result) {
             mProgressDialog.dismiss();
             continueLogin(result);
 

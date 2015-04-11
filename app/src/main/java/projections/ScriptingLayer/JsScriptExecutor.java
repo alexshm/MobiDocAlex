@@ -239,7 +239,6 @@ public class JsScriptExecutor {
 
                 //=================================
                 // read file   data from raw resources
-                // TODO: read data from input streamer that was recived from the web(server) and not from the raw resorces
                 //==========================
 
                 InputStream iS;
