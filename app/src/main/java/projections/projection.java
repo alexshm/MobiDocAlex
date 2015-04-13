@@ -87,7 +87,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
         String concept = intent.getStringExtra("concept");
         String val = String.valueOf(intent.getStringExtra("value"));
-        Log.i("geting value ", "get value of : " + val);
+        Log.i("abstractProj("+getProjectionId()+")","receiveData:(concept:"+ concept+"value:"+val+")");
         String time = String.valueOf(intent.getStringExtra("time"));
 
         try {
@@ -245,7 +245,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     public void addValueConstraint(String varName, String op, String val)
     {
         var.Operators varOp=Utils.getVarOp(op);
-
+        Log.i("abstProj","adding val constraint");
         if(this.condAction!=null)
             this.condAction.addValueConstraint(varName,varOp,val);
     }
@@ -265,10 +265,13 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     public void setAggregationConstraint(String operation,String operator,int targetVal)
     {
         Action.AggregationAction oper= Utils.getAggregationAction(operation);
+        Log.i("setAggregationConstrai","setting the aggaction for:"+oper.name().toString());
         Action.AggregationOperators aggoperator=Utils.getAggregationOp(operator);
-
-        if(this.condAction!=null)
-            this.condAction.setAggregationConstraint(oper,aggoperator,targetVal);
+        Log.i("setAggregationConstrain","setting the AggregationOperators for:"+aggoperator.name().toString());
+        if(this.condAction!=null) {
+            Log.i("setAggregationConstrain","eterrrr");
+            this.condAction.setAggregationConstraint(oper, aggoperator, targetVal);
+        }
 
     }
     public void setOpBetweenVars(var.OperationBetweenConstraint op)

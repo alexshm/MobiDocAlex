@@ -53,7 +53,7 @@ public class MainScreen extends Activity {
        regId.setText(regId.getText().toString()+" "+regid);
         getApplicationContext().registerReceiver(projectionRec,intentFilter);
 
-
+        Log.i("MainScreen","app ID: "+regId.getText().toString());
         }
 
 

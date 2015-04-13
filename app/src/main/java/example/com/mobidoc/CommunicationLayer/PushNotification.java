@@ -34,6 +34,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import example.com.mobidoc.DB;
 import example.com.mobidoc.R;
 import example.com.mobidoc.Screens.LoginScreen;
 
@@ -59,6 +60,7 @@ public  class   PushNotification extends Application{
     GoogleCloudMessaging gcm;
     AtomicInteger msgId = new AtomicInteger();
     Context context;
+    DB db;
 
     String regid;
 
@@ -76,14 +78,15 @@ public  class   PushNotification extends Application{
     private  PushNotification (Context c){
 
         this.onCreate();
-        this.context=new ContextWrapper(c);
+        this.context=c;
+        this.db=DB.getInstance(c);
     }
 
     //retrieve the regID of the device
     public  String getMobileID()
     {
         if(regid.isEmpty())
-            regid = getRegistrationId(this);
+            regid = db.getRegID();
         return regid;
     }
 
@@ -95,7 +98,8 @@ public  class   PushNotification extends Application{
         if (checkPlayServices()) {
 
             gcm = GoogleCloudMessaging.getInstance(context);
-            regid = getRegistrationId(this);
+
+            regid =getRegistrationId();
           // System.out.println("the key from register aplication context is : "+regid);
             if (regid.isEmpty()) {
                 registerInBackground();
@@ -129,7 +133,7 @@ public  class   PushNotification extends Application{
                     // 'from' address in the message.
 
                     // Persist the regID - no need to register again.
-                    storeRegistrationId(context, regid);
+                    storeRegistrationId(regid);
                 } catch (IOException ex) {
                     msg = "Error :" + ex.getMessage();
                     // If there is an error, don't just keep trying to register.
@@ -149,17 +153,16 @@ public  class   PushNotification extends Application{
      * Stores the registration ID and the app versionCode in the application's
      * {@code SharedPreferences}.
      *
-     * @param context application's context.
-     * @param regId registration ID
+
+     * @param regid registration ID
      */
-    private void storeRegistrationId(Context context, String regId) {
-        final SharedPreferences prefs = getGcmPreferences(context);
-        int appVersion =1;// TODO:getAppVersion(context);
+    private void storeRegistrationId(String regid) {
+
+        int appVersion =getAppVersion(context);
+
         Log.i(TAG, "Saving regId on app version " + appVersion);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(PROPERTY_REG_ID, regId);
-        editor.putInt(PROPERTY_APP_VERSION, appVersion);
-        editor.commit();
+        db.insertRegID(regid,appVersion);
+
     }
 
 
@@ -171,21 +174,21 @@ public  class   PushNotification extends Application{
      * @return registration ID, or empty string if there is no existing
      *         registration ID.
      */
-    private String getRegistrationId(Context context) {
+    private String getRegistrationId() {
 
-        final SharedPreferences prefs = getGcmPreferences(context);
-
-        String registrationId = prefs.getString(PROPERTY_REG_ID, "");
+        String settings =db.getAppSetting();
+        String registrationId=settings.split("#")[0];
 
         if (registrationId.isEmpty()) {
-            Log.i(TAG, "Registration not found.");
+            Log.i(TAG, "Registration key not found.");
             return "";
         }
+
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing regID is not guaranteed to work with the new
         // app version.
-        int registeredVersion = prefs.getInt(PROPERTY_APP_VERSION, Integer.MIN_VALUE);
-        int currentVersion =1;//getAppVersion(context);
+        int registeredVersion=Integer.parseInt(settings.split("#")[1]);
+        int currentVersion =getAppVersion(context);
         if (registeredVersion != currentVersion) {
             Log.i(TAG, "App version changed.");
             return "";
@@ -207,15 +210,7 @@ public  class   PushNotification extends Application{
         }
     }
 
-    /**
-     * @return Application's {@code SharedPreferences}.
-     */
-    private SharedPreferences getGcmPreferences(Context context) {
-        // This sample app persists the registration ID in shared preferences, but
-        // how you store the regID in your app is up to you.
-        SharedPreferences s= this.context.getSharedPreferences(LoginScreen.class.getName(),Context.MODE_PRIVATE);
-        return s;
-    }
+
 
 
     /**
@@ -225,7 +220,7 @@ public  class   PushNotification extends Application{
      */
 
     private void sendRegistrationIdToBackend() {
-        // Your implementation here.
+        // TODO: Your implementation here.
     }
 
     /**

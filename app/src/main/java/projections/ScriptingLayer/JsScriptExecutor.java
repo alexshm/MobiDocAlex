@@ -132,10 +132,10 @@ public class JsScriptExecutor {
         // search for conditions vars declarations
         while (m.find()) {
             String monitoringScript = m.group(0);
-            monitoringCondition="var monitoringAns=monitoringPreProcesing('"+monitoringScript+"');";
+            monitoringCondition="eval(monitoringPreProcesing('"+monitoringScript+"'));";
                // "print('the monitor condition is : '+monitoringAns[0]+' '+monitoringAns[1]+' ' +monitoringAns[2]+ ' '"+
                  //       "monitoringAns[3]+' '+monitoringAns[4]+' ' +monitoringAns[5]);";
-            replacedScript = replacedScript.replace(monitoringScript,monitoringCondition ).trim();
+            replacedScript = replacedScript.replace(monitoringScript,"" ).trim();
 
 
         }
@@ -151,7 +151,7 @@ public class JsScriptExecutor {
         }
         else //not find the start command( usually when the projection is MONITOR type
         {
-            replacedScript += finishScript()+"\n"+monitoringCondition+"\neval(monitoringAns);monitoringAns;";
+            replacedScript += finishScript()+"\n"+monitoringCondition;//+"\neval(monitoringAns);";
 
         }
         return replacedScript;

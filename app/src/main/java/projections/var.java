@@ -1,5 +1,7 @@
 package projections;
 
+import android.util.Log;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
@@ -99,6 +101,7 @@ public class var<T> {
         else {
             boolean ans = false;
             for (valueConstraint constraint : valConstraints) {
+
                 ans = ans || constraint.isSatisfyConstraint(val);
             }
             return ans;

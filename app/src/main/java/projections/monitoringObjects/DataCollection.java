@@ -115,10 +115,11 @@ public class DataCollection {
         //add to the collecction only if the concept need to be monitored
 
         if(conceptsToMonitor.contains(concept)) {
+            Log.i("DataCollection","the concept : "+concept+"exists in the concepts to monitoring");
             DataItem item = new DataItem(concept, val, dateNow);
 
             data.add(item);
-
+            Log.i("DataCollection","removing old items");
             removeOldItems(new Date());
         }
     }
@@ -156,8 +157,10 @@ public class DataCollection {
                 boolean dateMatch=checkDate(item.getItemDate(),TimeDaysago);
 
                 //if the item is less then now-daysToRemembers-> we will remove it from the collection
-                if(!dateMatch)
+                if(!dateMatch) {
                     data.remove(i);
+                    Log.i("DataCollection","remove item:("+item.getConcept()+","+item.getVal()+","+item.getItemDate().toString());
+                }
 
             } catch (ParseException e) {
                 Log.e("DataCollection-","error parsing date");

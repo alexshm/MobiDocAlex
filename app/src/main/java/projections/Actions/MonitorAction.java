@@ -53,6 +53,7 @@ public class MonitorAction extends  Action {
 
     public MonitorAction(Context _context) {
         super(ActionType.Trigger, "", "", _context);
+        setType(ActionType.Trigger);
         count = 0;
 
         ansVal = "";
@@ -69,7 +70,7 @@ public class MonitorAction extends  Action {
 
         //===========================
 
-
+        Log.i("MonitorAction","creating monitoring ");
     }
     @Override
     public  void setOnReceiveConcept(String compositeActionName, String concept)
@@ -114,7 +115,7 @@ public class MonitorAction extends  Action {
         vars.add(v);
 
 
-        //TODO: SUBSCRIBE in the projection for this concept
+        Log.i("MonitorAction","adding var to monitor(concept:"+concept+")");
         //add the concept to the monitoring comcepts
         addConceptToMonitor(concept);
     }
@@ -130,6 +131,7 @@ public class MonitorAction extends  Action {
     }
     public void insertData(String concept,String val,Date dateNow)
     {
+        Log.i("monitorAction","inserting dataItem : (concept:"+concept+",value:"+val+",time:"+dateNow.toString());
         data.insertItem(concept, val, dateNow);
     }
     public var getVar(String name) {
@@ -154,17 +156,22 @@ public class MonitorAction extends  Action {
     }
 
     public boolean isSatisfyVarsConditions(String val) {
+
         if (betweenVars.equals(var.OperationBetweenConstraint.And)) {
+
             boolean ans = true;
             for (var v : vars) {
                 ans = ans && v.isSatisfyVar(val);
             }
+
             return ans;
         } else {
+
             boolean ans = false;
             for (var v : vars) {
                 ans = ans || v.isSatisfyVar(val);
             }
+
             return ans;
         }
 
@@ -179,6 +186,7 @@ public class MonitorAction extends  Action {
     }
 
     public int AggregationFunc(Iterable data) {
+
         switch (aggregationAction) {
             case Sum:
                 return sum(data).intValue();
@@ -196,6 +204,7 @@ public class MonitorAction extends  Action {
 
     public boolean isNeedToTrigger() {
         boolean ans = false;
+        Log.i("MonitoringAction","isNeedToTrigger()-the monitor has "+vars.size()+" vars to monitoring");
         if (vars.size() > 0 || data.hasValueConstraints()) {
             Iterable it = data.getDataValues();
 

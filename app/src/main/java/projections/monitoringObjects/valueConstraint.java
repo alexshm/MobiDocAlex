@@ -3,6 +3,8 @@ package projections.monitoringObjects;
 
 import projections.var;
 import android.text.TextUtils;
+import android.util.Log;
+
 /*===============================================
    represent a Constraint that check the value to monitor like : concept #1234 need to be  >= from 90 .
   *constraintVal - is the value to be checked( in te upper example the value is 90)
@@ -32,15 +34,21 @@ public class valueConstraint {
         operator=op;
 
     }
-
+    public String getName()
+    {
+        return TriggerName;
+    }
     public boolean isSatisfyConstraint(String val)
     {
         boolean isConstraintInt=android.text.TextUtils.isDigitsOnly(constraintVal);
         boolean ans=false;
+        Log.i("VALUe constraint("+TriggerName+")","enterIsSatisfy-is only digit:"+isConstraintInt+" the target val is : "+constraintVal);
+
         if(isConstraintInt) {
 
             int valToCheck = Integer.parseInt(val);
             int targerVal = Integer.parseInt(constraintVal);
+            Log.i("VALUe constraint("+TriggerName+")","isSatisfyConstraint- targrtval= "+targerVal+" valto check: "+valToCheck+" op: "+operator.name().toString());
             switch (operator) {
                 case GreaterThen:
                     ans = valToCheck > targerVal;
@@ -61,6 +69,8 @@ public class valueConstraint {
         }
         else
         {
+            Log.i("VALUe constraint("+TriggerName+")","EVALUTE STRING -ERRORR");
+
             //the constraint is string value
             ans=constraintVal.equals(val);
         }

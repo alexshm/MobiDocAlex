@@ -116,7 +116,7 @@ public  abstract class Action  implements Callable<Message> {
         type = _type;
         actionConcept = concept;
 
-        context = new ContextWrapper(_context);
+        context = _context;
 
         isReminder=false;
         //===========================

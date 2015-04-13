@@ -84,14 +84,15 @@ public class LoginScreen extends Activity {
         username = (EditText) findViewById(R.id.usernametxt);
         pass = (EditText) findViewById(R.id.passtext);
         withOpenMRS=false;
-        PushNotification p=PushNotification.getInstance(getApplicationContext());
-p.registerDevice();
+        context = getApplicationContext();
+
+//p.registerDevice();
 
         Button loginbtn = (Button) findViewById(R.id.loginButton);
         ToggleButton mrsMode = (ToggleButton) findViewById(R.id.openMRSmode);
         //set listener for clicking the button
 
-        context = getApplicationContext();
+
 
         // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
 
@@ -118,6 +119,10 @@ p.registerDevice();
             }
         });
 
+
+
+        PushNotification p=PushNotification.getInstance(this);
+        p.registerDevice();
     }
 
 
@@ -156,8 +161,10 @@ p.registerDevice();
 
                 if(withOpenMRS) {
                     String BaseUrl= new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
+                    Log.i("Login Screen","the url to connect is :"+BaseUrl);
                     OpenMrsApi mrsApi = new OpenMrsApi(BaseUrl);
                      ans = mrsApi.logIn(params[0], params[1]);
+                    Log.i("Login Screen","the answer from OPEN MRS IS :"+ans);
                 }
                 else
                 {

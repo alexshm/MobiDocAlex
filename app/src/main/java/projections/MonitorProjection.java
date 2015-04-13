@@ -24,7 +24,7 @@ public class MonitorProjection extends  projection{
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Log.i("monitoring projections.","Receive data "+ProjectionName);
+        Log.i("monitoring projection("+getProjectionId()+")","Receive data");
         //get the name of the Intent
         boolean isMonitorTriggerHappened=intent.getAction().equals(this.ProjectionName+"_conditionTrigger");
         receiveData(intent);

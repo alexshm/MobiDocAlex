@@ -16,12 +16,21 @@ import java.util.Date;
 public class DB  {
 
     private static final String TABLE_NAME = "dataitems";
+    private static final String APP_TABLE_NAME = "AppSettings";
     protected SQLiteDatabase writeableDatabase;
     protected SQLiteDatabase readableDatabase;
     private DataBaseHelper dbHelper;
     private Context mContext;
 
-    public DB(Context context) {
+    private static DB DBInstance;
+
+    public static DB getInstance(Context c) {
+
+        if (DBInstance == null)
+            return new DB(c);
+        return DBInstance;
+    }
+    private DB(Context context) {
         this.mContext = context;
         dbHelper = DataBaseHelper.getHelper(mContext);
 
@@ -35,7 +44,69 @@ public class DB  {
         readableDatabase=dbHelper.getReadableDatabase();
     }
 
-    public synchronized void  insertToDB(String concept,String value,Date time) {
+    public synchronized String getRegID() {
+
+        open();
+        String selectQuery = "SELECT Appkey FROM "+APP_TABLE_NAME;
+        String[] params=new String[]{""};
+        Cursor c = readableDatabase.rawQuery(selectQuery, null);
+        String newval="";
+        if(c.moveToFirst()){
+            do{
+                //assing values
+                 newval = c.getString(c.getColumnIndex("Appkey"));
+                System.out.println("new val: "+newval);
+                //Do something Here with values
+
+            }while(c.moveToNext());
+        }
+
+        c.close();
+        readableDatabase.close();
+        return newval;
+    }
+    public synchronized String getAppSetting() {
+
+        open();
+        String selectQuery = "SELECT * FROM "+APP_TABLE_NAME;
+        String[] params=new String[]{""};
+        Cursor c = readableDatabase.rawQuery(selectQuery, null);
+        String newval="";
+        if(c.moveToFirst()){
+            do{
+                //assing values
+                newval += c.getString(c.getColumnIndex("Appkey"));
+                newval +="#"+ c.getInt(c.getColumnIndex("version"));
+
+                //Do something Here with values
+
+            }while(c.moveToNext());
+        }
+
+        c.close();
+        readableDatabase.close();
+        return newval;
+    }
+    public synchronized void  insertRegID(String key,int ver) {
+        open();
+
+        ContentValues values = new ContentValues();
+        values.put("Appkey", key);
+        values.put("version", ver);
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId;
+
+
+        newRowId = writeableDatabase.insert(
+                APP_TABLE_NAME, "null", values);
+
+        Log.i("inserting to DB", "inserting successfully : key :" + key );
+        writeableDatabase.close();
+
+    }
+
+    public synchronized void  insertMesureToDB(String concept,String value,Date time) {
         open();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS.SSS");
 
@@ -59,9 +130,9 @@ public class DB  {
     {
         open();
 
-        long count = writeableDatabase.delete(TABLE_NAME,"1", null);
-
-        Log.i("clearDB", "DB is clean .  deleted rows: "+count);
+       // long count = writeableDatabase.delete(TABLE_NAME,"1", null);
+        writeableDatabase.delete(APP_TABLE_NAME,"1", null);
+     //   Log.i("clearDB", "DB is clean .  deleted rows: "+count);
         writeableDatabase.close();
     }
     public synchronized void select()

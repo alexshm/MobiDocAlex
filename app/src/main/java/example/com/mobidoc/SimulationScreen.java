@@ -28,7 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -65,7 +67,7 @@ public class SimulationScreen extends Activity {
 
     // Intent used for binding to LoggingService
     private Intent serviceIntent;
-    private ProjectionBuilder pb ;
+    private ProjectionBuilder pb;
     private Messenger mMessengerToLoggingService;
     private boolean mIsBound;
 
@@ -91,39 +93,10 @@ public class SimulationScreen extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simulation_screen);
         serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
-        //   Toast.makeText(getApplicationContext(), "welcome to MobiDoc", Toast.LENGTH_LONG);
-        pb =new ProjectionBuilder(this.getApplicationContext());
+
+        pb = new ProjectionBuilder(this.getApplicationContext());
         final Button startbtn = (Button) findViewById(R.id.startSimulation);
         final Button handlerSender = (Button) findViewById(R.id.button2);
-
-        t = (EditText) findViewById(R.id.editText);
-        everyXtxt = (EditText) findViewById(R.id.editText);
-        remaindertxt = (EditText) findViewById(R.id.editText2);
-        startTimetxt = (EditText) findViewById(R.id.editText3);
-
-        final Button con = (Button) findViewById(R.id.button);
-
-        //===================
-        spinner = (Spinner) findViewById(R.id.spinner);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.elements, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-        //===============
-        // spiner for the remainder combo box
-        //===================
-        reminder_spinner = (Spinner) findViewById(R.id.spinner2);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapterReminder = ArrayAdapter.createFromResource(this,
-                R.array.reminder_elements, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapterReminder.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        reminder_spinner.setAdapter(adapterReminder);
-        //===============
 
         // projections spinner
         ////===========
@@ -147,27 +120,6 @@ public class SimulationScreen extends Activity {
                 selectedProjection = parentView.getItemAtPosition(position).toString();
                 projectionId = projectionVals.getItem(position).toString();
 
-                if (selectedProjection.contains("Monitor")) {
-                    //visible all the start time+frequncy settings for cyclic
-                    everyXtxt.setVisibility(View.INVISIBLE);
-                    findViewById(R.id.textView2).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.textView3).setVisibility(View.INVISIBLE);
-                    findViewById(R.id.textView4).setVisibility(View.INVISIBLE);
-                    remaindertxt.setVisibility(View.INVISIBLE);
-                    reminder_spinner.setVisibility(View.INVISIBLE);
-                    startTimetxt.setVisibility(View.INVISIBLE);
-                    spinner.setVisibility(View.INVISIBLE);
-                } else {
-                    everyXtxt.setVisibility(View.VISIBLE);
-                    findViewById(R.id.textView2).setVisibility(View.VISIBLE);
-                    findViewById(R.id.textView3).setVisibility(View.VISIBLE);
-                    findViewById(R.id.textView4).setVisibility(View.VISIBLE);
-                    remaindertxt.setVisibility(View.VISIBLE);
-                    reminder_spinner.setVisibility(View.VISIBLE);
-                    startTimetxt.setVisibility(View.VISIBLE);
-                    spinner.setVisibility(View.VISIBLE);
-
-                }
             }
 
             @Override
@@ -194,39 +146,19 @@ public class SimulationScreen extends Activity {
             @Override
             public void onClick(View v) {
 
-                if (selectedProjection.contains("Monitor") || (!selectedProjection.contains("Monitor") && everyXtxt.getText().toString() != "" && Integer.parseInt(everyXtxt.getText().toString()) > 0))
-                    SimulateProjections(v);
-                else
-                    Toast.makeText(v.getContext(), "You enter in valid number. please enter again", Toast.LENGTH_LONG).show();
+                SimulateProjections(v);
 
             }
         });
 
-        con.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //register to remainder event
-                count++;
 
-                Intent i = new Intent("4985");
-                i.putExtra("concept", "4985");
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
-                Date dateNow = new Date();
-                String now = sdf.format(dateNow);
-                i.putExtra("time", now);
-
-                i.putExtra("value", "150");
-                sendBroadcast(i, android.Manifest.permission.VIBRATE);
-
-            }
-        });
     }
 
     private void SendActionToHandler() {
 //        Action a = new MeasurementAction("ss", "5088", getApplicationContext());
 //        Action a = new NotificationAction("Dont forget your pills" ,"5088",Action.Actor.Patient,getApplicationContext());
 //        Action a = new QuestionAction("what is your name?" ,"5088",getApplicationContext());
-        Action a = new MeasurementAction("what is your name?" ,"5088");
+        Action a = new MeasurementAction("what is your name?", "5088");
 
         try {
             Message msg = a.call();
@@ -243,34 +175,57 @@ public class SimulationScreen extends Activity {
 
 
     private void SimulateProjections(View v) {
-         String jsonString=readProjectionTxt(projectionId);
 
-        if (!selectedProjection.contains("Monitor")) {
-            String starttime = startTimetxt.getText().toString();
-            String remamount =remaindertxt.getText().toString();
-            String remunit = "sec";
-            String freqamount = everyXtxt.getText().toString();
-            String frequnit = "sec";
-
-            pb.setProjectionParamsTest(starttime,remamount,remunit,freqamount,frequnit);
-        }
-
-        else
-        {
-            pb.clearParams();
-        }
-
-        projection p =pb.build(jsonString);
-
-        if (p != null) {
-            Log.i("start projection", "starting projection : " + projectionId);
-            p.startProjection();
+        switch (projectionId) {
+            case "20119":
+                Simulate2abnormalWeek();
+                break;
+            case "19965":
+                Simulate2positiveKetInAWeek();
+                break;
 
         }
+    }
+
+    private void Simulate2abnormalWeek() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
+        Calendar c=Calendar.getInstance();
+        c.set(2014,2,1,8,0);
+        insertingMeasure("4985", "160", c.getTime());
+       // try {
+       //     Thread.sleep(1000);
+     //    c.set(2014,2,4,8,0);
+        //    insertingMeasure("4985","170",c.getTime());
+      //  }
+       // catch (Exception e)
+      //  {
+
+     //   }
+
+
+
+
 
 
     }
 
+    private void Simulate2positiveKetInAWeek() {
+
+
+    }
+
+    private void insertingMeasure(String concept, String value,Date time) {
+    //simulate insertion
+       Intent i = new Intent(concept);
+       i.putExtra("concept", concept);
+       SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
+       String timeStr = sdf.format(time);
+
+       i.putExtra("time", timeStr);
+       i.putExtra("value",value);
+       sendBroadcast(i, android.Manifest.permission.VIBRATE);
+
+    }
     private String readProjectionTxt(String projId) {
         try {
             //=================================
@@ -299,93 +254,9 @@ public class SimulationScreen extends Activity {
             return oS.toString();
 
         } catch (IOException e) {
-            Log.e("read Projecction file in", "error reading file: " + projId);
+            Log.e("Simulation screen", "error reading file: " + projId);
             return null;
         }
-    }
-
-    private void loadAndInvokeJar() {
-
-        Class<?>[] params = new Class[]{BlockingQueue.class};
-        try {
-           // final String libPath = Environment.getExternalStorageDirectory() + "/makejar.jar";
-            final String libPath="";
-            final File tmpDir = getDir("dex", 0);
-
-            final DexClassLoader classloader = new DexClassLoader(libPath, tmpDir.getAbsolutePath(), null, this.getClass().getClassLoader());
-            final Class<Object> classToLoad = (Class<Object>) classloader.loadClass("projections.ScriptingLayer");
-
-
-            final Object myInstance = classToLoad.newInstance();
-            Method initmeth = classToLoad.getMethod("init", params);
-            initmeth.setAccessible(true);
-            // final  Thread pp=new Thread((Runnable) myInstance);
-            String res = (String) initmeth.invoke(myInstance, new Object[]{q1});
-            //Toast.makeText(this.getApplicationContext(),"start the projections.projection Test", 1).show();
-            //t.setText("before executing  : "+res);
-            Method start = classToLoad.getMethod("start");
-
-            // showToastFromBackground("");
-            start.invoke(myInstance);
-
-
-            // final Method doSomething = classToLoad.getMethod("beepForAnHour");
-
-            //doSomething.invoke(myInstance);
-
-        } catch (Exception e) {
-            Toast.makeText(this.getApplicationContext(), "error consumer main : " + e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-
-
-        }
-    }
-
-
-    private void generateDynamicallyDexFileTest() {
-        final File tmpDir = getDir("dex", 0);
-
-        final ClassPool cp = ClassPool.getDefault();
-        //create class using dexMakerJava assist
-        //==============================
-        boolean IsToGenerate = false;
-
-        if (IsToGenerate) {
-            generateDynamicClass(GENERATE_JAVA_ASSIST);
-        }
-        //=======================================
-        // final String libPath = Environment.getExternalStorageDirectory() + "/HelloDex.dex";
-        final String libPath = "";
-        final DexClassLoader classloader = new DexClassLoader(libPath, tmpDir.getAbsolutePath(), null, this.getClass().getClassLoader());
-        System.out.println("before loading class");
-
-        //Class<CyclicProjection> classToLoad = null;
-        try {
-            final Class<?> classToLoadw = classloader.loadClass("TestClass1");
-            final Object myInstance = classToLoadw.newInstance();
-            // Method initmeth = classToLoadw.getMethod("init", params);
-
-
-            Method start = classToLoadw.getMethod("printTest");
-            start.setAccessible(true);
-            // showToastFromBackground("");
-            int res = (int) start.invoke(myInstance);
-            System.out.println("the ans from dynamicaly generated is : " + res);
-            int d = 9;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-
-        //  DexMaker dexMaker = new DexMaker();
-
-
     }
 
 
@@ -408,20 +279,6 @@ public class SimulationScreen extends Activity {
             unbindService(mConnection);
 
         super.onPause();
-    }
-
-
-    private void generateDynamicClass(int generator) {
-        ClassGenerator cg = new ClassGenerator();
-
-        if (generator == GENERATE_WITH_DEXMAKER) {
-
-            cg.generateDex();
-
-        } else {
-            ClassPool pool = new ClassPool(true);
-            cg.javaAssistGenerator("testfile", this, pool);
-        }
     }
 
 

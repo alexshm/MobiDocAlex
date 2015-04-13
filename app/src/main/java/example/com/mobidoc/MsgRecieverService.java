@@ -149,7 +149,7 @@ public class MsgRecieverService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                    db.insertToDB(concept,val,date);
+                    db.insertMesureToDB(concept,val,date);
 
                 }
 
@@ -162,7 +162,7 @@ public class MsgRecieverService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        db=new DB(getApplicationContext());
+        db=DB.getInstance(getApplicationContext());
         return mMessenger.getBinder();
     }
 }

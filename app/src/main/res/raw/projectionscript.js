@@ -49,29 +49,32 @@ actionSequance.prototype.addAction=function(action){
 
 // ==var conditionVar
 //==========================
-function conditionVar(type,name,concept)
+function conditionVar(name,type,concept)
 {
 	this.name=name;
 	this.type=type;
 	this.concept=concept;
 	varCollection.push(this);
-};
-
-conditionVar.prototype.conditions=[];
-
+	this.conditions=[];
+}
 conditionVar.prototype.setCond=function(condition)
 {
-	conditionVar.prototype.__defineSetter__('setcond', function(cond)
+
+	conditionVar.prototype.__defineSetter__('setcondition', function(splittedCond)
 									{
-										conditionVar.prototype.conditions.push(cond);
+									        var splitted=splittedCond.split(",");
+
+                                       var c={op:splitted[0],value:splitted[1]};
+                                            print('first '+splitted[0]+' second : '+ splitted[1]);
+										this.conditions.push(c);
 										});
-	var re = /val(>|>=|<|<=|==)([\d])/
-                var str = condition;
-                var op = str.replace(re,"$1 , $2");
+            var re = /val(>|>=|<|<=|==)([\d])/
+
+               var str = condition.replace(re,"$1,$2");
 
 
-	//var newcond={operator:op,value:val};
-	//this.setcond=newcond;
+	this.setcondition=str;
+
 };
 
 
@@ -81,22 +84,10 @@ function monitoringPreProcesing(monitoringScript)
     var monitorRegex = /performMonitoringOn\s\((.*)\).*where.*(count|avg|sum)\(\)(>|>=|<|<=|==)([\d]).*forTime\s([\d]).*(days|hours|weeks);/
                     var str = monitoringScript;
 
-                   var monitorstr= monitoringScript.replace(monitorRegex,"proj.setTimeConstraint($5);\nproj.setAggregationConstraint($2,$3,$4);");
-                  //  print('the new sss is : '+monitorstr);
+                   var monitorstr= monitoringScript.replace(monitorRegex,"proj.setTimeConstraint($5);proj.setAggregationConstraint(\'$2\',\'$3\',\'$4\');");
+                   //eval(monitorstr);
 
     return monitorstr;
-
-}
-
-function insertTriggerCond(concept,operation,operator,operatorNum,monitoringTime,monitoringUnit)
-{
-    var monitorTrigger={c:concept,op:operation,opertor:operator,opNum:operatorNum};
-
-    for(var i=0;i<varCollection.length;i++)
-    {
-       // if(varCollection[i].concept==concept)
-
-    }
 
 }
 
@@ -116,8 +107,7 @@ function setFrequency(freqamount,freqUnit)
        if(proj.getType().name()=="Cyclic")
        {
             proj.setFrequency(freqUnit,freqamount);
-            proj.setReaminder(remainderUnit,remainderAmount);
-        }
+       }
 	}
 
  function setStartTime(time)
@@ -140,15 +130,7 @@ function start(compositeName)
     proj.onStart(compositeName.name);
 
 }
-function defineVar(varName,condition)
-{
-    for(var i=0;i< varCollection.length;i++)
-    	{
-    	    if(varCollection[i].name==varName)
 
-    	            varCollection[i].setCond(condition)
-    	}
-}
 
 //===========================================================
 
@@ -182,16 +164,17 @@ function insertVarsToProjection()
 {
     if( varCollection.length>0)
         proj.initMonitorAction();
-    print('var collection size : '+varCollection.length);
+
 	for(var i=0;i< varCollection.length;i++)
 	{
 		var condVar=varCollection[i];
 		proj.defVar(condVar.name,condVar.concept,condVar.type);
-	    var conditionsArr=condVar[i].conditions;
+	    var conditionsArr=condVar.conditions;
+
 		for(var j=0;j< conditionsArr.length;j++)
 		 {
 
-			proj.addValueConstraint(condVar.name,conditionsArr[j].operator,conditionsArr[j].value);
+			proj.addValueConstraint(condVar.name,conditionsArr[j].op,conditionsArr[j].value);
 
 
 		}

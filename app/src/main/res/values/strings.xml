@@ -17,33 +17,17 @@
 
 
     <string-array name="projections">
-        <item>Ketonuria Daily</item>
-        <item>Routine Daily BG lunch</item>
-       <item>Routine Daily BG Breakfast</item>
-        <item>Routine Daily BG Fasting</item>
-        <item>Monitor 2 abnormal measurements in past week</item>
+        <item>Monitoring 2 abnormal measurements in past week</item>
+
         <!--<item>Monitor 2 positive ketonuria in one week</item>
         <item>Measure BP twice a week</item>-->
 
     </string-array>
 
     <string-array name="projectionsVals">
-    <item>19964</item>
-    <item>20093</item>
-    <item>20092</item>
-    <item>20091</item>
     <item>20119</item>
-    <item>20026</item>
-    <item>20010</item>
-    <item>19991</item>
-    <item>19965</item>
-    <item>20147</item>
-    <item>20146</item>
-    <item>20144</item>
-    <item>20140</item>
-    <item>20133</item>
-    <item>20130</item>
-        </string-array>
+
+   </string-array>
 
     <string-array name="reminder_elements">
         <item>None</item>
