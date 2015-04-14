@@ -125,7 +125,7 @@ public class MonitorAction extends  Action {
     }
 
     public void setAggregationAction(AggregationAction action, AggregationOperators op, int targetVal) {
-        aggregationAction = action;
+       aggregationAction = action;
         aggregationOperator = op;
         aggregationTargetVal = targetVal;
     }
@@ -180,7 +180,7 @@ public class MonitorAction extends  Action {
     public boolean isSatisfyAggregationConstraint(Iterable data) {
 
         int ans = AggregationFunc(data);
-        System.out.println("the func  is : " + ans);
+        Log.i("Monitor action","the result of the  AggregationConstraint is : " + ans);
         return (ans >= aggregationTargetVal);
 
     }
@@ -204,7 +204,7 @@ public class MonitorAction extends  Action {
 
     public boolean isNeedToTrigger() {
         boolean ans = false;
-        Log.i("MonitoringAction","isNeedToTrigger()-the monitor has "+vars.size()+" vars to monitoring");
+
         if (vars.size() > 0 || data.hasValueConstraints()) {
             Iterable it = data.getDataValues();
 
@@ -284,9 +284,10 @@ public class MonitorAction extends  Action {
 
     public void addConceptToMonitor( String conceptId)
     {
+        Log.i("Monitor action","need to add concept : "+"conceptId to the list of concepts : "+!conceptsToMonitor.contains(conceptId));
         if(!conceptsToMonitor.contains(conceptId))
        conceptsToMonitor.add(conceptId);
-      // SubscribeConcept(conceptId);
+      //SubscribeConcept(conceptId);
     }
 
     @Override

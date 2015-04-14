@@ -68,7 +68,7 @@ public  final class Utils {
         switch(type) {
             case "int":
                 return var.VarType.Int;
-            case "String":
+            case "string":
                 return var.VarType.String;
             case "char":
                 return var.VarType.Char;
@@ -147,18 +147,18 @@ public  final class Utils {
         return null;
     }
 
-    public static ActionType getActionType(String type) {
+    public static Action.ActionType getActionType(String type) {
         switch(type) {
             case "measure":
-                return ActionType.Measurement;
+                return Action.ActionType.Measurement;
             case "callback":
-                return ActionType.CallBack;
+                return Action.ActionType.CallBack;
             case "ask":
-                return ActionType.Question;
+                return Action.ActionType.Question;
             case "notification":
-                return ActionType.Notification;
+                return Action.ActionType.Notification;
             case "recommendation":
-                return ActionType.Recommendation;
+                return Action.ActionType.Recommendation;
         }
         return null;
     }

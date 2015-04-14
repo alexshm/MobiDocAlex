@@ -180,10 +180,11 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     public void addActionToComposite(String compositeActionName,String type, String actionname, String actionConcept)
     {
 
-        Utils.ActionType acType=Utils.getActionType(type);
+        Action.ActionType acType=Utils.getActionType(type);
 
         ActionParser ap=new ActionParser(acType,context);
        String[] params={actionname,actionConcept};
+
        Action a= ap.parse(params);
         Log.i("abstractProj("+getProjectionId()+")","method: addActionToComposite.-add action("+a.getType().name()+","+a.getConcept()+","+a.getActionName()+")");
         Log.i("abstractProj("+getProjectionId()+")","method: addActionToComposite.-adding the action to compositeAction :"+compositeActionName);
@@ -241,16 +242,24 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     public void defVar(String varName,String concept,String  type)
     {
         var.VarType varType=Utils.getVarType(type);
-        Log.i("abstractProj("+getProjectionId()+")","defVar-setting var name : "+varName+" for concept : "+concept);
+
         if(this.condAction!=null)
+        {
+            Log.i("abstractProj("+getProjectionId()+")","defVar-setting var name : "+varName+" for concept : "+concept);
             this.condAction.defineVar(varName,concept, varType);
+        }
+
     }
     public void addValueConstraint(String varName, String op, String val)
     {
         var.Operators varOp=Utils.getVarOp(op);
-        Log.i("abstProj","adding val constraint");
+
         if(this.condAction!=null)
+        {
+            Log.i("abstProj","adding val constraint ("+varName+","+varOp.name().toString()+","+val);
             this.condAction.addValueConstraint(varName,varOp,val);
+        }
+
     }
 
     public void setTimeConstraint( int daysAgo)
@@ -272,7 +281,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
         Action.AggregationOperators aggoperator=Utils.getAggregationOp(operator);
         Log.i("setAggregationConstrain","setting the AggregationOperators for:"+aggoperator.name().toString());
         if(this.condAction!=null) {
-            Log.i("setAggregationConstrain","eterrrr");
+
             this.condAction.setAggregationConstraint(oper, aggoperator, targetVal);
         }
 

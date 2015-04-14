@@ -22,8 +22,8 @@ public class QuestionAction extends Action {
     boolean isInit;
 
 
-    public QuestionAction(String txt, String concept, Context _context) {
-        super(ActionType.Question, txt, concept, _context);
+    public QuestionAction(String txt, String concept) {
+        super(ActionType.Question, txt,concept);
         _actor = Actor.Patient;
     }
 

@@ -1,21 +1,21 @@
-buildProjection("monitor","19965","Monitor 2 positive ketonuria in one week");
+beginProjection('monitor','Monitor 2 positive ketonuria in one week','19965'):
+setVar('abnormal_ketonuria','5021','string');
+abnormal_ketonuria.setCond('val==9');
+
+ var yesAction=declareActionsequance('seq'){
+        Yescallback=new Action('callback','callback eating enough','5169');};
+
+ var noAction=declareActionsequance('seq'){
+         notifyP=new Action('notification','Insist on the importance of eating the recommended amount of carbohydrates','5048');};
 
 
+ var monitoringAction=declareActionsequance('seq'){
+        carsbQ=new Action('ask','Are you eating enough carbohydrates?','5037');
+        carsbQ.setOnConceptRecive('5038',yesAction);
+        carsbQ.setOnConceptRecive('5039',noAction);};
 
-setVar("abnormal_ketonuria","5021","string");
+performMonitoringOn (5021)
+    where count()>=2
+    forTime 7 days;
 
-defineVar("abnormal_ketonuria","or val=='+' val=='++' val=='+++'");
-
-setCondition("or [abnormal_ketonuria]","count()>=2","7 days");
-
-onTriggerEvent(
-{
-
-
-    question(\"5037\",\"Valores de cetona alterados.Estas comiendo los hidratos de carbono suficientes?,
-
-
-    \")
-
-
-});
+onTriggerEvent(monitoringAction);

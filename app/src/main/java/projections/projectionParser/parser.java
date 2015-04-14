@@ -204,7 +204,7 @@ public class parser {
     private Action buildAction(String type,String actionToParse )
     {
         String[] actionParms=actionToParse.split("\",\"");
-        Utils.ActionType acType=Utils.getActionType(type);
+        Action.ActionType acType=Action.ActionType.valueOf(type);
         ActionParser ap=new ActionParser(acType,cont);
 
         return ap.parse(actionParms);

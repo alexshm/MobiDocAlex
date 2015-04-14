@@ -9,15 +9,17 @@ varCollection=[];
 function Action(type,name,concept)
 {
 	this.name=name;
-	this.type=type;this.concept=concept; 
+	this.type=type;this.concept=concept;
+	this.actionToDo=[];
 }
-Action.prototype.actionToDo=[];
+
 
 Action.prototype.setOnConceptRecive=function(c,compActionName)
 {
 	Action.prototype.__defineSetter__('setaction', function(action)
 									{
-										Action.prototype.actionToDo.push(action);
+										this.actionToDo.push(action);
+										print('inserting to :  '+this.name+' with size : '+this.actionToDo.length);
 										}); 
 	var a={compName:compActionName,concept:c};
 	this.setaction=a;
@@ -27,15 +29,15 @@ Action.prototype.setOnConceptRecive=function(c,compActionName)
 
 function actionSequance(name) { 
 	   this.name=name; 
-
+        this.actionList=[];
 		compositeCollection.push(this);
 		}
 
-actionSequance.prototype.actionList=[];
+//actionSequance.prototype.actionList=[];
 
 actionSequance.prototype.addAction=function(action){ 
 		actionSequance.prototype.__defineSetter__('addaction', function(action)
-				 { actionSequance.prototype.actionList.push(action);}); 
+				 {this.actionList.push(action);});
 				  this.addaction=action;
 		};
 
@@ -141,14 +143,16 @@ function insertActionToProjection()
 	for(var i=0;i< compositeCollection.length;i++)
 	{
 		var compositeName=compositeCollection[i].name;
+		 print('logging from JavaScript - (insertActionToProjection) :creating the compositeaction - '+compositeName);
 		proj.addNewCompositeAction(compositeName,compositeCollection[i].order);
 	    var actions=compositeCollection[i].actionList;
-		for(var j=0;j< compositeCollection[i].actionList.length;j++)
+	     print('logging from JavaScript - (insertActionToProjection) : the composite : '+compositeName +' has '+actions.length +' actions');
+		for(var j=0;j< actions.length;j++)
 		 {
-		 print('logging from JavaScript - (insertActionToProjection) :adding the action : ' +actions[j].name);
+		 print('logging from JavaScript - (insertActionToProjection) :adding the('+j+') action : ' +actions[j].name +' to composite : '+compositeName);
 			proj.addActionToComposite(compositeName,actions[j].type,actions[j].name,actions[j].concept);
 			var ActionConceptsList=actions[j].actionToDo;
-			 print('logging from JavaScript (insertActionToProjection) :inserting to concept List with length : ' +ActionConceptsList.length);
+			 print('logging from JavaScript (insertActionToProjection) :the action : '+actions[j].name +'have '+ActionConceptsList.length+' onrecieveconcepts');
 			for(var k=0;k< ActionConceptsList.length;k++)
 			   {
 				var conceptToReceive=ActionConceptsList[k].concept;

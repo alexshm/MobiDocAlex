@@ -7,6 +7,8 @@ import android.util.Log;
 import projections.Actions.Action;
 import projections.Actions.CallBackAction;
 import projections.Actions.MeasurementAction;
+import projections.Actions.NotificationAction;
+import projections.Actions.QuestionAction;
 import projections.Utils;
 
 /**
@@ -15,9 +17,9 @@ import projections.Utils;
 public class ActionParser {
 
     private  String action;
-    private Utils.ActionType type;
+    private Action.ActionType type;
     private Context context;
-     public  ActionParser(Utils.ActionType ActionType,Context c) {
+     public  ActionParser(Action.ActionType ActionType,Context c) {
         type=ActionType;
          context=c;
      }
@@ -52,8 +54,12 @@ public class ActionParser {
 
     private Action parseNotification(String[] actionParms)
     {
-        //TODO:
-        return null;
+       // Log.i("Action parser","parse Notification");
+        String notificationTxt=actionParms[0];
+        String conceptId=actionParms[1];
+       // TODO: Action.Actor ac= Action.Actor.valueOf(actionParms[2]);
+        Action.Actor ac= Action.Actor.Patient;
+        return  new NotificationAction(notificationTxt,conceptId,ac);
     }
 
     private Action parseRecommendation(String[] actionParms)
@@ -64,8 +70,10 @@ public class ActionParser {
 
     private Action parseQuestion(String[] actionParms)
     {
-        //TODO:
-        return null;
+        String QuesTxt=actionParms[0];
+        String conceptId=actionParms[1];
+        Action.Actor ac= Action.Actor.Patient;
+        return  new QuestionAction(QuesTxt,conceptId);
     }
 
     private Action parseCallBack(String[] actionParms)

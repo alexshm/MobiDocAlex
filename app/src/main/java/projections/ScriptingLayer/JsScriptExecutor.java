@@ -245,7 +245,7 @@ public class JsScriptExecutor {
 
 
 
-    private String readbasicScript(String FileName) {
+    public String readbasicScript(String FileName) {
         try {
 
                 //=================================
