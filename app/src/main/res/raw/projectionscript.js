@@ -65,7 +65,7 @@ conditionVar.prototype.setCond=function(condition)
 									        var splitted=splittedCond.split(",");
 
                                        var c={op:splitted[0],value:splitted[1]};
-                                            print('first '+splitted[0]+' second : '+ splitted[1]);
+
 										this.conditions.push(c);
 										});
             var re = /val(>|>=|<|<=|==)([\d])/
@@ -121,7 +121,7 @@ function setFrequency(freqamount,freqUnit)
 
 function onTriggerEvent(triggerAction)
 {
-proj.setTriggerAction(triggerAction);
+proj.setTriggerAction(triggerAction.name);
 }
 
 function start(compositeName)

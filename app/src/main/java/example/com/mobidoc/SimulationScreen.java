@@ -188,17 +188,25 @@ public class SimulationScreen extends Activity {
     }
 
     private void Simulate2abnormalWeek() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
-        Calendar c=Calendar.getInstance();
-        c.set(2014,2,1,8,0);
-        insertingMeasure("4985", "160", c.getTime());
-       // try {
-       //     Thread.sleep(1000);
-     //    c.set(2014,2,4,8,0);
-        //    insertingMeasure("4985","170",c.getTime());
-      //  }
-       // catch (Exception e)
-      //  {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
+                Calendar c=Calendar.getInstance();
+                c.set(2014,2,1,8,0);
+                insertingMeasure("4985", "160", c.getTime());
+                 try {
+                     Thread.sleep(2500);
+                    c.set(2014,2,1,12,0);
+                    insertingMeasure("4986","170",c.getTime());
+                  }
+                 catch (Exception e) {
+                 }
+
+            }
+        }).start();
+
+
 
      //   }
 

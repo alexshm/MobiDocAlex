@@ -78,6 +78,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
         compActionTable=new Hashtable<String, compositeAction>();
         currentCompositeAction="";
         conceptsActionMap=new Hashtable<>();
+        actionToTrigger=null;
 
     }
 
@@ -233,7 +234,9 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
 
     public void setTriggerAction(String triggerActionName)
     {
+        Log.i("abstractproj","setting trigger action to :"+triggerActionName);
         this.actionToTrigger=compActionTable.get(triggerActionName);
+        Log.i("abstractproj","the new  trigger action to size:"+actionToTrigger.actionsCollection.size());
     }
     public void defVar(String varName,String concept,String  type)
     {
@@ -327,10 +330,10 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
 
         }
     protected void triggerEvent() {
-        if(actionToTrigger!=null)
-            actionToTrigger.invoke(false);
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Log.i("projection ", "the action to trigger is null");
+        if(this.actionToTrigger!=null)
+            this.actionToTrigger.invoke(false);
+        else
+        Log.i("abstractProj("+getProjectionId()+") ", "triggerEvent-the action to trigger is null");
     }
 
 }

@@ -1,5 +1,6 @@
 package projections.monitoringObjects;
 
+import android.app.Application;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -11,6 +12,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Vector;
 
+import example.com.mobidoc.CommunicationLayer.PushNotification;
+import example.com.mobidoc.ConfigReader;
 import projections.DataItem;
 import projections.projection;
 
@@ -64,9 +67,10 @@ public class DataCollection {
 
    public void addValueConstraint(String concept,valueConstraint cons)
    {
-      if(!conceptsToMonitor.contains(concept))
-
-          constraints.put(concept,new Vector<valueConstraint>()) ;
+      if(!conceptsToMonitor.contains(concept)) {
+          constraints.put(concept, new Vector<valueConstraint>());
+          conceptsToMonitor.add(concept);
+      }
 
       constraints.get(concept).add(cons);
 
@@ -113,14 +117,17 @@ public class DataCollection {
     public void insertItem(String concept,String val,Date dateNow)
     {
         //add to the collecction only if the concept need to be monitored
-
+        Log.i("DataCollection","inserting dataItem : (concept:"+concept+",value:"+val+",time:"+dateNow.toString());
         if(conceptsToMonitor.contains(concept)) {
             Log.i("DataCollection","the concept : "+concept+"exists in the concepts to monitoring");
             DataItem item = new DataItem(concept, val, dateNow);
 
             data.add(item);
             Log.i("DataCollection","removing old items");
-            removeOldItems(new Date());
+            Calendar temp=Calendar.getInstance();
+            temp.set(2014,2,1,0,0);
+            //String  isSimulated=new ConfigReader(null).getProperties().getProperty("openMRS_URL");
+            removeOldItems(temp.getTime());
         }
     }
 

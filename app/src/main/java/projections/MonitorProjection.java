@@ -28,17 +28,7 @@ public class MonitorProjection extends  projection{
         //get the name of the Intent
         boolean isMonitorTriggerHappened=intent.getAction().equals(this.ProjectionName+"_conditionTrigger");
         receiveData(intent);
-        /*
-        if(isMonitorTriggerHappened && this.actionToTrigger!=null) {
-            Log.i("monitoring projections.","trigger action successfully");
 
-            this.triggerEvent();
-        }
-        else {
-            Log.i("projections.", "action is  nulll because....!!!");
-            Log.i("projections.", "trigger happend!! from " + this.Type.toString() + " and the name is  : " + this.ProjectionName);
-        }
-        */
     }
 
 

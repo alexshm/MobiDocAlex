@@ -86,7 +86,7 @@ public class JsScriptExecutor {
         final Pattern varsPattern = Pattern.compile(".*?setVar\\('([a-z|A-Z|0-9|_]+','(.*?)')\\);.*?");
         final Pattern startprojPattern = Pattern.compile(".*?start\\((.*?)\\);");
        final Pattern monitoringPattern = Pattern.compile(".*?performMonitoringOn\\s(.*?).*?forTime.*?;");
-
+        final Pattern triggerActionPattern = Pattern.compile(".*?onTriggerEvent\\((.*?)\\);");
          Matcher m = pattern.matcher("");
         //eliminate spaces and new lines
         String beginstr=temp.split(":")[0];
@@ -140,18 +140,27 @@ public class JsScriptExecutor {
 
         }
         ///======================
+        String triggerAction="";
+        m = triggerActionPattern.matcher("");
+        m.reset(replacedScript);
+        // search for conditions vars declarations
+        if (m.find()) {
+            triggerAction = m.group(0);
+            replacedScript = replacedScript.replace(triggerAction,"" ).trim();
 
+        }
+        ///======================
         m = startprojPattern.matcher("");
         m.reset(replacedScript);
         // search for conditions vars declarations
         if (m.find()) {
             String startCommand = m.group(0);
 
-            replacedScript = replacedScript.replace(startCommand, finishScript()+"\n"+startCommand+monitoringCondition+"\neval(monitoringAns);monitoringAns;").trim();
+            replacedScript = replacedScript.replace(startCommand, finishScript()+"\n"+startCommand+"\n"+triggerAction+"\n"+monitoringCondition).trim();
         }
         else //not find the start command( usually when the projection is MONITOR type
         {
-            replacedScript += finishScript()+"\n"+monitoringCondition;//+"\neval(monitoringAns);";
+            replacedScript += finishScript()+"\n"+triggerAction+"\n"+monitoringCondition;//+"\neval(monitoringAns);";
 
         }
         return replacedScript;

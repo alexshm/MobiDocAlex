@@ -93,6 +93,7 @@ public class MsgRecieverService extends Service {
         String ans;
         ans = msg.getData().getString("value");
         String Concept = msg.getData().getString("concept");
+        Log.i("MsgRecieverService","get CallBack msg with the values (concept: "+Concept+" txt: "+ans+")");
     }
 
     private void handleReminder(Message msg) {

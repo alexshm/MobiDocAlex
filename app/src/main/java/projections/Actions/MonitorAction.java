@@ -131,7 +131,7 @@ public class MonitorAction extends  Action {
     }
     public void insertData(String concept,String val,Date dateNow)
     {
-        Log.i("monitorAction","inserting dataItem : (concept:"+concept+",value:"+val+",time:"+dateNow.toString());
+
         data.insertItem(concept, val, dateNow);
     }
     public var getVar(String name) {
@@ -288,8 +288,6 @@ public class MonitorAction extends  Action {
        conceptsToMonitor.add(conceptId);
       // SubscribeConcept(conceptId);
     }
-    //TODO: when ok, need to triggring the projecction
-
 
     @Override
     public Message call() throws Exception {
