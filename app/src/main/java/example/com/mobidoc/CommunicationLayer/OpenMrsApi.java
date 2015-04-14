@@ -5,7 +5,8 @@ import android.os.AsyncTask;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
+import org.json.JSONObject;
+import org.json.JSONArray;
 /**
  * Created by Alex on 04/04/2015.
  */
@@ -18,7 +19,7 @@ public class OpenMrsApi {
 
     }
 
-    public String getSession(){
+    public boolean getSession(){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
@@ -31,10 +32,18 @@ public class OpenMrsApi {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return answer;
+
+        boolean aJsonBoolean = false;
+        try {
+            JSONObject jObject = new JSONObject(answer);
+            aJsonBoolean = jObject.getBoolean("authenticated");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return aJsonBoolean;
     }
 
-    public String logIn(String userName, String pass){
+    public boolean logIn(String userName, String pass){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
@@ -47,7 +56,21 @@ public class OpenMrsApi {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return answer;
+
+        boolean aJsonBoolean = false;
+        try {
+            JSONObject jObject = new JSONObject(answer);
+            aJsonBoolean = jObject.getBoolean("authenticated");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        Object objSessionJson = JSONValue.parse( ApiAuthRest.getRequestGet("session"));
+//        JSONObject jsonObjectSessionJson= (JSONObject) objSessionJson;
+//        String sessionId = (String) jsonObjectSessionJson.get("sessionId");
+//        Boolean authenticated = (Boolean) jsonObjectSessionJson.get("authenticated");
+//        System.out.println("Session:"+sessionId+" Authenticated:"+authenticated);
+        return aJsonBoolean;
     }
 
     public String getPersonUuid(String name){
