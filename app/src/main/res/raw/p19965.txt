@@ -1,6 +1,6 @@
 beginProjection('monitor','Monitor 2 positive ketonuria in one week','19965'):
 setVar('abnormal_ketonuria','5021','string');
-abnormal_ketonuria.setCond('val==9');
+abnormal_ketonuria.setCond('val==++||val==+');
 
  var yesAction=declareActionsequance('seq'){
         Yescallback=new Action('callback','callback eating enough','5169');};
@@ -15,7 +15,7 @@ abnormal_ketonuria.setCond('val==9');
         carsbQ.setOnConceptRecive('5039',noAction);};
 
 performMonitoringOn (5021)
-    where count()>=2
+    where count()>=1
     forTime 7 days;
 
 onTriggerEvent(monitoringAction);

@@ -218,7 +218,22 @@ public class SimulationScreen extends Activity {
     }
 
     private void Simulate2positiveKetInAWeek() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
+                Calendar c = Calendar.getInstance();
+                c.set(2014, 2, 1, 8, 0);
+                insertingMeasure("5021", "++", c.getTime());
+                try {
+                    Thread.sleep(3500);
+                    c.set(2014, 2, 1, 12, 0);
+                    insertingMeasure("5021", "++", c.getTime());
+                } catch (Exception e) {
+                }
 
+            }
+        }).start();
 
     }
 

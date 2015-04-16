@@ -18,15 +18,15 @@
 
     <string-array name="projections">
         <item>Monitoring 2 abnormal measurements in past week</item>
+        <item>Monitor 2 positive ketonuria in one week</item>
 
-        <!--<item>Monitor 2 positive ketonuria in one week</item>
-        <item>Measure BP twice a week</item>-->
+        <!-- <item>Measure BP twice a week</item>-->
 
     </string-array>
 
     <string-array name="projectionsVals">
     <item>20119</item>
-
+    <item>19965</item>
    </string-array>
 
     <string-array name="reminder_elements">

@@ -1,0 +1,2 @@
+beginProjection('monitor','2 abnormal measurements in past week','20106'):
+

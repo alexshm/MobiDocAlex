@@ -58,6 +58,7 @@ function conditionVar(name,type,concept)
 	this.concept=concept;
 	varCollection.push(this);
 	this.conditions=[];
+	this.condOp='Or';
 }
 conditionVar.prototype.setCond=function(condition)
 {
@@ -70,12 +71,18 @@ conditionVar.prototype.setCond=function(condition)
 
 										this.conditions.push(c);
 										});
-            var re = /val(>|>=|<|<=|==)([\d])/
+			 if(condition.indexOf("&&") > -1)
+			    this.condOp='And';
 
-               var str = condition.replace(re,"$1,$2");
+			var splittedCond=condition.split(/[\|\||&&]/);
 
+             for(var i=0;i<splittedCond.length;i=i+2)
+             {
 
-	this.setcondition=str;
+                 var re = /val(>|>=|<|<=|==)([\d|\D])/
+                 var str = splittedCond[i].replace(re,"$1,$2");
+                 this.setcondition=str;
+             }
 
 };
 

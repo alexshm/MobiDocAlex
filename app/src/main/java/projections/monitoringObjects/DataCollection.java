@@ -97,13 +97,17 @@ public class DataCollection {
 
     public Iterable getDataValues()
     {
-        List<Integer> list = new ArrayList<Integer>();
+        List<Integer> listint = new ArrayList<Integer>();
+        List<String> liststr = new ArrayList<String>();
         for (DataItem d : data) {
-
-            list.add(Integer.parseInt(d.getVal()));
+           // boolean isInt=android.text.TextUtils.isDigitsOnly(d.getVal());
+            //if(isInt)
+               // listint.add(Integer.parseInt(d.getVal()));
+           // else
+                liststr.add(d.getVal());
         }
 
-        return list;
+        return liststr;
     }
 
     /*============================================================
