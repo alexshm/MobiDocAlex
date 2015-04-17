@@ -2,11 +2,11 @@ package example.com.mobidoc.CommunicationLayer;
 
 import android.os.AsyncTask;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import org.json.JSONObject;
-import org.json.JSONArray;
 /**
  * Created by Alex on 04/04/2015.
  */
@@ -50,7 +50,7 @@ public class OpenMrsApi {
         getHash.put("URLPath", "session");
         HttpRecTask httpRecTask = new HttpRecTask(userName, pass, baseUrl );
         try {
-            answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
+            answer = httpRecTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
