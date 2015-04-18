@@ -19,6 +19,10 @@ public class OpenMrsApi {
 
     }
 
+    /**
+     * get session details
+     * @return true if the user is authenticated
+     */
     public boolean getSession(){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
@@ -43,6 +47,12 @@ public class OpenMrsApi {
         return aJsonBoolean;
     }
 
+    /**
+     * Log in to the openMRS system with user name and password
+     * @param userName
+     * @param pass
+     * @return True if the user is authenticated, false otherwise.
+     */
     public boolean logIn(String userName, String pass){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
@@ -73,6 +83,12 @@ public class OpenMrsApi {
         return aJsonBoolean;
     }
 
+
+    /**
+     * get person Uuid(the unique Id of person at the MRS) by the name of the person.
+     * @param name The person name
+     * @return All persons with that name. (Not parse!!)
+     */
     public String getPersonUuid(String name){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
@@ -89,6 +105,11 @@ public class OpenMrsApi {
         return answer;
     }
 
+    /**
+     * get concept Uuid(the unique Id(uuid) of concept at the MRS) by the name of the concept.
+     * @param name The concept name
+     * @return All concepts with that name. (Not parse!!)
+     */
     public String getConceptUuid(String name){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
@@ -105,6 +126,15 @@ public class OpenMrsApi {
         return answer;
     }
 
+
+    /**
+     * Upload one measure(observation) of the person.
+     * @param personUuid the person unique id(uuid).
+     * @param value the value of the measure
+     * @param dateTime the time when the measure was taken(Format example: 2010-03-23T00:00:00.000+0200)
+     * @param conceptUuid the concept uuid.
+     * @return succeed or failed to upload(Not parse!!).
+     */
     public String postObs(String personUuid, int value, String dateTime, String conceptUuid){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
@@ -124,6 +154,11 @@ public class OpenMrsApi {
         return answer;
     }
 
+    /**
+     * get the last 50 measures(observations) by patient id(not uuid!!).
+     * @param patientID the patient id.
+     * @return Last 50 measures of that patient. (Not parse!!)
+     */
     public String getObs(String patientID){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
@@ -140,6 +175,12 @@ public class OpenMrsApi {
         return answer;
     }
 
+
+    /**
+     * get Patient unique id(uuid) by patient id(not uuid!!)
+     * @param patientID the patient id.
+     * @return the the patient uuid. (not parse!!)
+     */
     public String getPatintUuid(String patientID){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
@@ -156,7 +197,11 @@ public class OpenMrsApi {
         return answer;
     }
 
-    //return : personUuid included!!!
+    /**
+     * get user details(personUuid and more) by user uuid.
+     * @param userUuid the user uuid
+     * @return user details(personUuid and more). (Not parse!!)
+     */
     public String getUserDetails(String userUuid){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
@@ -173,6 +218,12 @@ public class OpenMrsApi {
         return answer;
     }
 
+
+    /**
+     * get user uuid by user name.
+     * @param userName the user name
+     * @return the user uuid. (Not parse!!!)
+     */
     public String getUserUuid(String userName){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
