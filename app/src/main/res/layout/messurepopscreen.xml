@@ -7,14 +7,15 @@
     android:background="@android:color/transparent">
 
     <AbsoluteLayout
-        android:layout_width="168dp"
-        android:layout_height="169dp"
+        android:layout_width="343dp"
+        android:layout_height="437dp"
         android:orientation="vertical"
         android:layout_margin="1dp"
-        android:background="#007AB7"
+        android:background="#ff12a9e6"
         android:layout_x="101dp"
         android:layout_y="165dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:id="@+id/layout">
         >
 
         <ImageView
@@ -24,31 +25,92 @@
 
 
         <Button
-            android:id="@+id/dismiss"
-            android:layout_width="43dp"
-            android:layout_height="26dp"
+            android:id="@+id/Done"
+            android:layout_width="141dp"
+            android:layout_height="65dp"
             android:onClick="done"
-            android:background="@color/switch_thumb_normal_material_dark"
+            android:background="#ffe9e9e9"
             android:text="Done"
-            android:layout_x="121dp"
-            android:textSize="10dp"
-            android:layout_y="103dp" />
+            android:layout_x="99dp"
+            android:textSize="20dp"
+            android:layout_y="359dp" />
         <EditText
-            android:id="@+id/answer"
-            android:layout_width="117dp"
-            android:layout_height="70dp"
-            android:background="@color/switch_thumb_normal_material_dark"
+            android:id="@+id/value"
+            android:layout_width="186dp"
+            android:layout_height="wrap_content"
+            android:background="#fffffbff"
             android:inputType="textEmailAddress"
-            android:layout_x="2dp"
-            android:layout_y="83dp" />
+            android:layout_x="120dp"
+            android:layout_y="85dp"
+            android:textSize="18dp"
+            android:text="please insert value "
+            android:textIsSelectable="True"
+            android:autoText="false" />
 
         <TextView
             android:id="@+id/message"
-            android:layout_width="fill_parent"
+            android:layout_width="272dp"
+            android:layout_height="54dp"
+            android:textColor="#ff113732"
+            android:text="Message"
+            android:layout_x="56dp"
+            android:layout_y="4dp"
+            android:textSize="25dp"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/ValuetextView10"
+            android:layout_width="101dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/abc_primary_text_disable_only_material_dark"
-            android:text="It's a PopupWindow"
+            android:textColor="#ff123733"
+            android:text="Value:"
+            android:layout_x="33dp"
+            android:layout_y="81dp"
+            android:textSize="25dp"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/DatetextView10"
+            android:layout_width="101dp"
+            android:layout_height="50dp"
+            android:textColor="#ff123733"
+            android:text="Date :"
+            android:layout_x="35dp"
+            android:layout_y="157dp"
+            android:textSize="25dp"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/TimetextView10"
+            android:layout_width="101dp"
+            android:layout_height="50dp"
+            android:textColor="#ff123733"
+            android:text="Time:"
+            android:layout_x="34dp"
+            android:layout_y="118dp"
+            android:textSize="25dp"
+            android:textAlignment="center" />
+
+        <EditText
+            android:id="@+id/Timeinsert"
+            android:layout_width="188dp"
+            android:layout_height="wrap_content"
+            android:background="#fffffbff"
+            android:inputType="textEmailAddress"
+            android:layout_x="119dp"
+            android:layout_y="123dp"
+            android:textSize="18dp"
+            android:text="  "
+            android:textIsSelectable="false"
+            android:autoText="false" />
+
+        <DatePicker
+            android:layout_width="match_parent"
+            android:layout_height="152dp"
+            android:id="@+id/datePicker"
             android:layout_x="1dp"
-            android:layout_y="47dp" />
+            android:layout_y="197dp"
+            android:background="#002a90c2" />
+
     </AbsoluteLayout>
 </FrameLayout>
