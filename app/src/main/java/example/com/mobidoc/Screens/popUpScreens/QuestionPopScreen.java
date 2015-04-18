@@ -6,8 +6,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
+import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
+import example.com.mobidoc.ConfigReader;
 import example.com.mobidoc.R;
 
 /**
@@ -15,9 +18,13 @@ import example.com.mobidoc.R;
  */
 public class QuestionPopScreen extends Activity {
 
+    private OpenMrsApi openMrsApi;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String baseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
+        openMrsApi = new OpenMrsApi(baseUrl);
         setContentView(R.layout.questionpopscreen);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView questionMessage = (TextView) findViewById(R.id.questionMessage);
@@ -39,8 +46,9 @@ public class QuestionPopScreen extends Activity {
 
 
     public void answer1Clicked(View view) {
-        Button done = (Button) findViewById(R.id.answer1);
-        done.setVisibility(View.VISIBLE);
+        RadioButton answer1 = (RadioButton) findViewById(R.id.answer1);
+
+
     }
 
     public void answer2Clicked(View view) {

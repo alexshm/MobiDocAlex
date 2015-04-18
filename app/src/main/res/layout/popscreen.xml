@@ -7,8 +7,8 @@
     android:background="@android:color/transparent">
 
     <AbsoluteLayout
-        android:layout_width="168dp"
-        android:layout_height="169dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:orientation="vertical"
         android:layout_margin="1dp"
         android:background="#007AB7"
@@ -25,14 +25,14 @@
 
         <Button
             android:id="@+id/dismiss"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="49dp"
+            android:layout_height="38dp"
             android:onClick="close"
             android:background="@color/switch_thumb_normal_material_dark"
             android:text="Dismiss"
-            android:layout_x="50dp"
+            android:layout_x="73dp"
             android:textSize="10dp"
-            android:layout_y="116dp" />
+            android:layout_y="134dp" />
 
         <TextView
             android:id="@+id/popUpMessage"

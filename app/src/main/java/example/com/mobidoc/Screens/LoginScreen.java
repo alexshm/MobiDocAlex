@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
 import java.util.concurrent.ExecutionException;
 
 import example.com.mobidoc.CommunicationLayer.PushNotification;
@@ -54,7 +56,8 @@ public class LoginScreen extends Activity {
     static final String Registrationid = "";
     static String regid;
     String RegistrationRes;
-    //    GoogleCloudMessaging gcm;
+
+    GoogleCloudMessaging gcm;
     Context context;
 
     ///////////////////////////////////////

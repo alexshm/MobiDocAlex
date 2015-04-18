@@ -10,7 +10,7 @@ import android.util.Log;
 
 import java.util.Date;
 
-import example.com.mobidoc.Screens.popUpScreens.MessurePop;
+import example.com.mobidoc.Screens.popUpScreens.MeasurePop;
 import example.com.mobidoc.Screens.popUpScreens.PopScreen;
 import example.com.mobidoc.Screens.popUpScreens.QuestionPopScreen;
 
@@ -105,7 +105,7 @@ public class MsgRecieverService extends Service {
     private void handleMeasure(Message msg) {
         String txt;
         txt = msg.getData().getString("value");
-        Intent intent = new Intent(this, MessurePop.class);
+        Intent intent = new Intent(this, MeasurePop.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("msg", txt);
 

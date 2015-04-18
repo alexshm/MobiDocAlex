@@ -57,7 +57,7 @@
         </activity>
         <activity android:name=".Screens.popUpScreens.PopScreen" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity android:name=".Screens.popUpScreens.QuestionPopScreen" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".Screens.popUpScreens.MessurePop" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".Screens.popUpScreens.MeasurePop" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity
             android:name="example.com.mobidoc.SimulationScreen"

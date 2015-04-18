@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -20,29 +19,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import dalvik.system.DexClassLoader;
-import javassist.ClassPool;
 import projections.Actions.Action;
 import projections.Actions.MeasurementAction;
-import projections.Actions.NotificationAction;
-import projections.Actions.QuestionAction;
 import projections.mobiDocProjections.ProjectionBuilder;
-import projections.projection;
 
 @SuppressLint("ShowToast")
 public class SimulationScreen extends Activity {
@@ -175,12 +164,12 @@ public class SimulationScreen extends Activity {
 
 
     private void SimulateProjections(View v) {
-
-        switch (projectionId) {
-            case "20119":
+        int projectionIdint = Integer.parseInt(projectionId);
+        switch (projectionIdint) {
+            case 20119:
                 Simulate2abnormalWeek();
                 break;
-            case "19965":
+            case 19965:
                 Simulate2positiveKetInAWeek();
                 break;
 
