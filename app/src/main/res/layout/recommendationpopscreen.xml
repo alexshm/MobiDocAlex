@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:layout_centerInParent="true"
+    android:background="@android:color/transparent">
+
+
+    <AbsoluteLayout
+        android:layout_width="321dp"
+        android:layout_height="246dp"
+        android:orientation="vertical"
+        android:layout_margin="1dp"
+        android:background="#ff12a9e6"
+        android:layout_x="101dp"
+        android:layout_y="165dp"
+        android:layout_gravity="center"
+        android:id="@+id/question">
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher" />
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_margin="20dp">-->
+
+            <TextView
+                android:id="@+id/reccomendationTitle"
+                android:layout_width="256dp"
+                android:layout_height="36dp"
+                android:textSize="25dp"
+                android:textColor="#ff123733"
+                android:text="Recommendation"
+                android:layout_x="53dp"
+                android:layout_y="6dp" />
+
+        <!--</LinearLayout>-->
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_x="6dp"
+            android:layout_y="108dp">
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/buttonAccept"
+            android:layout_width="141dp"
+            android:layout_height="wrap_content"
+            android:onClick="done"
+            android:background="#ffe9e9e9"
+            android:text="@string/accept"
+            android:layout_x="16dp"
+            android:textSize="20dp"
+            android:layout_y="190dp" />
+
+        <TextView
+            android:layout_width="272dp"
+            android:layout_height="129dp"
+            android:text="new text"
+            android:id="@+id/RecommandContent"
+            android:layout_x="32dp"
+            android:layout_y="49dp"
+            android:textSize="15dp" />
+
+        <Button
+            android:id="@+id/buttonDecline"
+            android:layout_width="141dp"
+            android:layout_height="wrap_content"
+            android:onClick="done"
+            android:background="#ffe9e9e9"
+            android:text="@string/decline"
+            android:layout_x="175dp"
+            android:textSize="20dp"
+            android:layout_y="191dp" />
+
+        <!--<Button-->
+            <!--android:layout_width="152dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Thank you"-->
+            <!--android:onClick="close"-->
+            <!--android:background="@color/switch_thumb_normal_material_dark"-->
+            <!--android:textSize="15dp"-->
+            <!--android:layout_x="48dp"-->
+            <!--android:layout_y="177dp" />-->
+            <!--android:visibility="invisible"-->
+            android:id="@+id/done"
+            android:layout_x="47dp"
+            android:layout_y="190dp" />
+    </AbsoluteLayout>
+</FrameLayout>
