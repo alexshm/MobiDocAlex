@@ -116,8 +116,8 @@ public class ClassGenerator {
 
 
              // System.out.println("the source is :\n"+ccFile.getClass().newInstance().getMethod("getInteger").toString());
-         //  Class qc=cp.getAndRename("DynamicallyGenerated", "Bar")
-                  //  .toClass();
+           Class qc=cp.getAndRename("DynamicallyGenerated", "Bar")
+                    .toClass();
              //=======================================
             ///generate instance
            // Example example = (Example) (new ByteCodeGenerator()).createInstance(clasz);
