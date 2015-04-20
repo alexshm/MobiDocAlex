@@ -13,26 +13,11 @@ public   class LoginTask extends AsyncTask<String, Boolean, Boolean> {
 
     private final String BaseUrl;
     private boolean withOpenMRS;
-    private ProgressDialog mProgressDialog;
 
-    public LoginTask(String baseUrl, boolean withOpenMRS , ProgressDialog mProgressDialog) {
+
+    public LoginTask(String baseUrl, boolean withOpenMRS ){
         this.BaseUrl = baseUrl;
         this.withOpenMRS = withOpenMRS;
-        this.mProgressDialog = mProgressDialog;
-    }
-
-
-
-    private void initProgressBar() {
-        // Set Dialog message
-        mProgressDialog.setMessage("Please Wait..");
-        mProgressDialog.setTitle("Verifying login");
-        // Dialog will be displayed for an unknown amount of time
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
-
 
     }
 
@@ -52,7 +37,7 @@ public   class LoginTask extends AsyncTask<String, Boolean, Boolean> {
                 ans = true;
         }
 
-        System.out.println("finish doInBackground!!!!!!!!!!!!!!");
+
         return ans;
 
     }
@@ -60,14 +45,9 @@ public   class LoginTask extends AsyncTask<String, Boolean, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        System.out.println("finish!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-
-
-        System.out.println("after sleep");
-      // onResponseReceived(result);
 
     }
 
-    //public abstract void onResponseReceived(Boolean result);
+
 }

@@ -110,7 +110,7 @@ public class LoginScreen extends Activity {
 
 
         showDialog(0);
-        final LoginTask loginTask = new LoginTask(BaseUrl, withOpenMRS, new ProgressDialog(this));
+        final LoginTask loginTask = new LoginTask(BaseUrl, withOpenMRS);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -118,18 +118,20 @@ public class LoginScreen extends Activity {
 
                 try {
                     Boolean result = loginTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, user, password).get();
+                    mProgressDialog.dismiss();
+                    continueLogin(result);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
 
-                mProgressDialog.dismiss();
+
             }
         }).start();
     }
 
-          //  continueLogin(result);
+
 
 
     private void continueLogin(final boolean result) {
@@ -163,8 +165,8 @@ public class LoginScreen extends Activity {
 
         mProgressDialog = new ProgressDialog(this);
         // Set Dialog message
-        mProgressDialog.setMessage("moshe tes..");
-        mProgressDialog.setTitle("Verifying moshe");
+        mProgressDialog.setMessage("Please Wait..");
+        mProgressDialog.setTitle("Verifying login");
         // Dialog will be displayed for an unknown amount of time
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
