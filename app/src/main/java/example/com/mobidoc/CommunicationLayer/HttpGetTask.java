@@ -69,5 +69,5 @@ public abstract class HttpGetTask extends AsyncTask<String, String, String>  imp
     }
 
 
-    public abstract void onResponseReceived(String result);
+   // public abstract void onResponseReceived(String result);
 }

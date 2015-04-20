@@ -2,6 +2,7 @@ package example.com.mobidoc.Screens;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -70,7 +71,7 @@ public class LoginScreen extends Activity {
         withOpenMRS = false;
         context = getApplicationContext();
 
-//p.registerDevice();
+
 
         Button loginbtn = (Button) findViewById(R.id.loginButton);
         ToggleButton mrsMode = (ToggleButton) findViewById(R.id.openMRSmode);
@@ -85,8 +86,6 @@ public class LoginScreen extends Activity {
 
             @Override
             public void onClick(View v) {
-                // PushNotification p=PushNotification.getInstance();
-
 
                 checkLoginInDB(username.getText().toString(), pass.getText().toString());
 
@@ -106,18 +105,32 @@ public class LoginScreen extends Activity {
     }
 
 
-    private void checkLoginInDB(String user, String password) {
-        String BaseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
-        try {
-            LoginTask loginTask =new LoginTask(BaseUrl,withOpenMRS,new ProgressDialog(this));
-            Boolean result = loginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user, password).get();
-            continueLogin(result);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+    private void checkLoginInDB(final String user, final String password) {
+        final String BaseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
+
+
+        showDialog(0);
+        final LoginTask loginTask = new LoginTask(BaseUrl, withOpenMRS, new ProgressDialog(this));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+
+                try {
+                    Boolean result = loginTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, user, password).get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                mProgressDialog.dismiss();
+            }
+        }).start();
     }
+
+          //  continueLogin(result);
+
 
     private void continueLogin(final boolean result) {
         boolean ok = result;
@@ -142,6 +155,23 @@ public class LoginScreen extends Activity {
             });
 
         }
+    }
+
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+
+        mProgressDialog = new ProgressDialog(this);
+        // Set Dialog message
+        mProgressDialog.setMessage("moshe tes..");
+        mProgressDialog.setTitle("Verifying moshe");
+        // Dialog will be displayed for an unknown amount of time
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+        return mProgressDialog;
+
     }
 
     @Override

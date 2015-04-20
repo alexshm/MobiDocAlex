@@ -58,8 +58,10 @@ public class OpenMrsApi {
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
         getHash.put("URLPath", "session");
+
         HttpRecTask httpRecTask = new HttpRecTask(userName, pass, baseUrl );
         try {
+            Thread.sleep(2000);
             answer = httpRecTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
             e.printStackTrace();

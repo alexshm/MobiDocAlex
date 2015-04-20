@@ -66,9 +66,129 @@
         android:layout_height="wrap_content"
         android:text="send to handler"
         android:id="@+id/button2"
-        android:layout_marginBottom="63dp"
-        android:layout_above="@+id/startSimulation"
+        android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/spinner3"
         android:layout_alignEnd="@+id/spinner3" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/simPlay"
+        android:src="@drawable/player_play"
+        android:layout_above="@+id/textView3"
+        android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/simStop"
+        android:src="@drawable/player_stop"
+        android:layout_above="@+id/textView3"
+        android:layout_toLeftOf="@+id/textView"
+        android:layout_toStartOf="@+id/textView"
+        android:nestedScrollingEnabled="false"
+        android:onClick="stopSimulation" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/simPause"
+        android:src="@drawable/player_pause"
+        android:layout_alignTop="@+id/simPlay"
+        android:layout_toRightOf="@+id/textView"
+        android:onClick="pauseSimulation"
+        android:layout_toEndOf="@+id/textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Stop Simulation"
+        android:id="@+id/textView2"
+        android:textAlignment="center"
+        android:layout_above="@+id/startSimulation"
+
+        android:layout_marginBottom="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Play Simulation"
+        android:id="@+id/textView3"
+        android:textAlignment="center"
+        android:layout_alignBottom="@+id/textView2"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Pause Simulation"
+        android:id="@+id/textView4"
+        android:textAlignment="center"
+        android:layout_alignTop="@+id/textView3"
+        android:layout_alignLeft="@+id/simPause"
+        android:layout_alignStart="@+id/simPause" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="simulation Time :"
+        android:id="@+id/textView10"
+        android:layout_below="@+id/spinner3"
+        android:layout_toRightOf="@+id/radioGroup"
+        android:layout_toEndOf="@+id/radioGroup" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Value:"
+        android:id="@+id/textView11"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/radioGroup"
+        android:layout_toEndOf="@+id/radioGroup" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="concept :"
+        android:id="@+id/textView13"
+        android:layout_above="@+id/simStop"
+        android:layout_toRightOf="@+id/radioGroup"
+        android:layout_toEndOf="@+id/radioGroup"
+        android:layout_marginBottom="23dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView14"
+        android:layout_alignBottom="@+id/textView13"
+        android:layout_toRightOf="@+id/startSimulation"
+        android:layout_toEndOf="@+id/startSimulation" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView15"
+        android:layout_alignTop="@+id/textView11"
+        android:textColor="#ffff1415"
+        android:layout_toStartOf="@+id/button2"
+        android:layout_toLeftOf="@+id/button2" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textView16"
+        android:layout_alignBottom="@+id/textView10"
+        android:layout_alignLeft="@+id/textView15"
+        android:layout_alignStart="@+id/textView15"
+        android:textColor="#ffff1415" />
 
 </RelativeLayout>

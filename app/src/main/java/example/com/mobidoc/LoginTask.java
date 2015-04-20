@@ -9,7 +9,7 @@ import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 /**
  * Created by Alex on 17/04/2015.
  */
-public class LoginTask extends AsyncTask<String, Boolean, Boolean> {
+public   class LoginTask extends AsyncTask<String, Boolean, Boolean> {
 
     private final String BaseUrl;
     private boolean withOpenMRS;
@@ -21,12 +21,7 @@ public class LoginTask extends AsyncTask<String, Boolean, Boolean> {
         this.mProgressDialog = mProgressDialog;
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-        initProgressBar();
-//        showDialog(0);
-    }
+
 
     private void initProgressBar() {
         // Set Dialog message
@@ -38,11 +33,13 @@ public class LoginTask extends AsyncTask<String, Boolean, Boolean> {
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
+
     }
 
     @Override
 
     protected Boolean doInBackground(String... params) {
+
         boolean ans = false;
         if (withOpenMRS) {
             Log.i("Login Screen", "the url to connect is :" + BaseUrl);
@@ -50,9 +47,12 @@ public class LoginTask extends AsyncTask<String, Boolean, Boolean> {
             ans = mrsApi.logIn(params[0], params[1]);
             Log.i("Login Screen", "the answer from OPEN MRS IS :" + ans);
         } else {
+
             if ("admin".equals(params[0]) && "12345".equals(params[1]))
                 ans = true;
         }
+
+        System.out.println("finish doInBackground!!!!!!!!!!!!!!");
         return ans;
 
     }
@@ -60,8 +60,14 @@ public class LoginTask extends AsyncTask<String, Boolean, Boolean> {
 
     @Override
     protected void onPostExecute(Boolean result) {
-        super.onPostExecute(result);
-        mProgressDialog.dismiss();
+        System.out.println("finish!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+
+
+        System.out.println("after sleep");
+      // onResponseReceived(result);
 
     }
+
+    //public abstract void onResponseReceived(Boolean result);
 }
