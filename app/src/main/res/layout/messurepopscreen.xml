@@ -91,16 +91,15 @@
             android:textSize="25dp"
             android:textAlignment="center" />
 
-        <EditText
-            android:id="@+id/Timeinsert"
+        <TextView
+            android:id="@+id/timePickedText"
             android:layout_width="188dp"
             android:layout_height="wrap_content"
             android:background="#fffffbff"
-            android:inputType="textEmailAddress"
             android:layout_x="119dp"
             android:layout_y="123dp"
             android:textSize="18dp"
-            android:text="  "
+            android:onClick="changeTime"
             android:textIsSelectable="false"
             android:autoText="false" />
 
@@ -111,6 +110,14 @@
             android:layout_x="1dp"
             android:layout_y="197dp"
             android:background="#002a90c2" />
+
+        <TimePicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/timePicker"
+            android:layout_x="102dp"
+            android:visibility="invisible"
+            android:layout_y="150dp" />
 
     </AbsoluteLayout>
 </FrameLayout>
