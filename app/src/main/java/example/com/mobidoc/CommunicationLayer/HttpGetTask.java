@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 
-public abstract class HttpGetTask extends AsyncTask<String, String, String>  implements TaskIF{
+public abstract class HttpGetTask extends AsyncTask<String, String, String>{
 
     private String answer;
     public HttpGetTask()
@@ -65,7 +65,7 @@ public abstract class HttpGetTask extends AsyncTask<String, String, String>  imp
     @Override
     protected void onPostExecute(String result) {
         Log.i("on recieve  - httpget-","recieve the result "+result);
-        onResponseReceived(result);
+      // onResponseReceived(result);
     }
 
 

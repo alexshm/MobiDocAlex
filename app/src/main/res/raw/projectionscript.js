@@ -18,8 +18,9 @@ Action.prototype.setOnConceptRecive=function(c,compActionName)
 {
 	Action.prototype.__defineSetter__('setaction', function(action)
 									{
+
 										this.actionToDo.push(action);
-										print('inserting to :  '+this.name+' with size : '+this.actionToDo.length);
+
 										}); 
 	var a={compName:compActionName,concept:c};
 	this.setaction=a;
@@ -79,7 +80,7 @@ conditionVar.prototype.setCond=function(condition)
              for(var i=0;i<splittedCond.length;i=i+2)
              {
 
-                 var re = /val(>|>=|<|<=|==)([\d|\D])/
+                 var re = /val(>=|>|<=|<|==)([\d|\D])/
                  var str = splittedCond[i].replace(re,"$1,$2");
                  this.setcondition=str;
              }
@@ -163,8 +164,9 @@ function insertActionToProjection()
 			for(var k=0;k< ActionConceptsList.length;k++)
 			   {
 				var conceptToReceive=ActionConceptsList[k].concept;
+				var actionName=ActionConceptsList[k].compName.name;
 				 print('logging from JavaScript (insertActionToProjection) =setting on recieve for the concept : ' +conceptToReceive);
-				proj.setOnReceiveConcept(compositeName,conceptToReceive);
+				proj.setOnReceiveConcept(actionName,compositeName,conceptToReceive);
 				}
 		}
 	}

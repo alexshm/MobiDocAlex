@@ -67,15 +67,7 @@ public class webComScreen extends Activity {
 
         this.showDialog(0);
 
-        new HttpGetTask() {
 
-            @Override
-            public void onResponseReceived(String result) {
-                mProgressDialog.dismiss();
-                ans.setText(result);
-///d
-            }
-        }.execute(url);
 
 
     }

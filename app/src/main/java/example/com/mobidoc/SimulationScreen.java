@@ -21,54 +21,33 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.nio.channels.FileChannel;
-import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import dalvik.system.DexClassLoader;
-import javassist.ClassPool;
 import projections.Actions.Action;
 import projections.Actions.MeasurementAction;
-import projections.Actions.NotificationAction;
-import projections.Actions.QuestionAction;
 
-import projections.projection;
 
 @SuppressLint("ShowToast")
 public class SimulationScreen extends Activity {
-    static final int GENERATE_WITH_DEXMAKER = 1;
-    static final int GENERATE_JAVA_ASSIST = 2;
-    final BlockingQueue<String> q1 = new ArrayBlockingQueue<String>(1000);
+
     private EditText t;
-    private RadioButton katProj;
-    private RadioButton bgProj;
-    private RadioButton monitorProj;
     Messenger mMsg = null;
-    private EditText everyXtxt;
-    private EditText remaindertxt;
-    private EditText startTimetxt;
-    private Spinner spinner;
     private Spinner projections_spinner;
-    private Spinner reminder_spinner;
     private String selectedProjection;
     private ArrayAdapter<CharSequence> projectionVals;
     private String projectionId;
@@ -390,9 +369,9 @@ public class SimulationScreen extends Activity {
                 c.set(2014, 2, 1, 8, 0);
                 insertingMeasure("5021", "++", c.getTime());
                 try {
-                    Thread.sleep(3500);
+                    Thread.sleep(8500);
                     c.set(2014, 2, 1, 12, 0);
-                    insertingMeasure("5021", "++", c.getTime());
+                    insertingMeasure("5039", "yes", c.getTime());
                 } catch (Exception e) {
                 }
 

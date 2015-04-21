@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 
+import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -17,12 +19,15 @@ import android.util.Log;
 import android.util.Pair;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.Projection;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 import projections.Actions.Action;
 import projections.Actions.MeasurementReminder;
 import projections.Actions.MonitorAction;
@@ -91,36 +96,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
         Log.i("abstractProj("+getProjectionId()+")","receiveData:(concept:"+ concept+"value:"+val+")");
         String time = String.valueOf(intent.getStringExtra("time"));
 
-        try {
-            Date dateNow = sdf.parse(time);
-
-            // apply the next action to trigger when recieve concepts regarding to recommendation/qeustion
-            //if needed
-            if(this.conceptsActionMap.containsKey(concept)) {
-                Log.i("Projectionabstract(" + getProjectionId() + ")", "receive 'onReceive' concept-> need to trigger the next asction");
-                this.conceptsActionMap.get(concept).invoke(false);
-            }
-
-            if (condAction != null) {
-                boolean okToInsert = condAction.isSatisfyVarsConditions(val);
-                if (okToInsert)
-                    this.condAction.insertData(concept, val, dateNow);
-
-                //check if the value constraints+ time constraints is happening after Receiving
-                // the last data
-                if (condAction.isNeedToTrigger()) {
-                    Log.i("Action On recive", "trigger the conditin trigger ");
-                    triggerEvent();
-                }
-
-
-
-            }
-
-        } catch (ParseException e) {
-            Log.e("projectionAbs("+getProjectionId()+")", "error parsing date in onReceive");
-        }
-
+        new receiveDataTask(this).execute(concept,val,time);
 
     }
 
@@ -172,11 +148,17 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
         Log.i("abstractProj("+getProjectionId()+")","method: addNewCompositeAction.  creating new composite action in name : "+compositeActionName);
     }
 
-    public void setOnReceiveConcept(String compositeActionNameToTrigger, String concept)
+    public void setOnReceiveConcept(String compositeActionNameForTrigger , String CurrentcompositeActionName, String concept)
     {
-        compositeAction comp=compActionTable.get(compositeActionNameToTrigger);
-        comp.addConceptForOnRecieve(concept);
-        conceptsActionMap.put(concept,comp);
+
+        compositeAction curComp=compActionTable.get(CurrentcompositeActionName);
+        curComp.addConceptForOnRecieve(concept);
+        Log.i("abstractProj("+getProjectionId()+")","method: setOnReceiveConcept. register : "+CurrentcompositeActionName+"to the OnReceive concept : "+concept);
+
+        compositeAction compForTrigger=compActionTable.get(compositeActionNameForTrigger);
+        Log.i("abstractProj("+getProjectionId()+")","method: setOnReceiveConcept. set the OnReceive concept : "+concept+" for the composite action : "+compositeActionNameForTrigger);
+
+        conceptsActionMap.put(concept,compForTrigger);
 
     }
     public void addActionToComposite(String compositeActionName,String type, String actionname, String actionConcept)
@@ -341,8 +323,85 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     protected void triggerEvent() {
         if(this.actionToTrigger!=null)
             this.actionToTrigger.invoke(false);
+
         else
         Log.i("abstractProj("+getProjectionId()+") ", "triggerEvent-the action to trigger is null");
+    }
+
+    protected class receiveDataTask extends AsyncTask<String, Void, compositeAction> {
+
+        private BroadcastReceiver proj;
+        public receiveDataTask(BroadcastReceiver p)
+        {
+            proj=p;
+        }
+
+        @Override
+
+        protected compositeAction doInBackground(String... params) {
+
+            String concept = params[0];
+            String value = params[1];
+            String date = params[2];
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
+            boolean receiveConceptForQuestionOrRecomm = conceptsActionMap.containsKey(concept);
+            if (receiveConceptForQuestionOrRecomm) {
+                Log.i("Projectionabstract(" + getProjectionId() + ")", "receive 'onReceive' concept-> need to trigger the next action");
+
+                compositeAction nextActionToexecute=conceptsActionMap.get(concept);
+                Log.i("Projection("+getProjectionId()+")","receiveDataTask asyncTask- registerTo next action concepts");
+                registerToNextActionConcepts(nextActionToexecute);
+                return nextActionToexecute;
+            }
+
+            try {
+                Date dateNow = sdf.parse(date);
+                if (condAction != null) {
+                    boolean okToInsert = condAction.isSatisfyVarsConditions(value);
+                    if (okToInsert)
+                        condAction.insertData(concept, value, dateNow);
+
+                    //check if the value constraints+ time constraints is happening after Receiving
+                    // the last data
+                    if (condAction.isNeedToTrigger()) {
+                        Log.i("Projection("+getProjectionId()+")","receiveDataTask asyncTask -registerTo condition trigger action concepts");
+                        registerToNextActionConcepts(actionToTrigger);
+                        return actionToTrigger;
+                    }
+
+                }
+            } catch (ParseException e) {
+                Log.e("projectionAbs(" + getProjectionId() + ")", "error parsing date in onReceive");
+                return null;
+            }
+            return null;
+        }
+
+        private void registerToNextActionConcepts(compositeAction nextActionToExecute)
+        {
+
+            //register to remainder event
+
+            Vector<IntentFilter> registerintentes =new Vector<IntentFilter>();
+            Vector<String> conceptsToMonitor=nextActionToExecute.getAllConcepts();
+
+            for (int i=0;i<conceptsToMonitor.size();i++)
+            {
+                IntentFilter in = new IntentFilter(conceptsToMonitor.get(i));
+                Log.i("Projection("+getProjectionId()+")","registering to concept: "+conceptsToMonitor.get(i));
+                registerintentes.add(in);
+                context.registerReceiver(proj, in);
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(compositeAction result) {
+            if(result==null)
+                Log.i("abstractProj("+getProjectionId()+") ", "receiveDataTask - triggerEvent-there is no  action to be executed");
+            else
+            result.invoke(false);
+        }
     }
 
 }

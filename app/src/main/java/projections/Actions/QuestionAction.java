@@ -35,10 +35,10 @@ public class QuestionAction extends Action {
         Message msg = Message.obtain(null, msgType, 0, 0, 0);
         Bundle bundle = new Bundle();
 
-        bundle.putString("question", msgToSend);
-        bundle.putString("yesVal", "yes");
+        bundle.putString("value", msgToSend);
+        bundle.putString("yesVal", "yes");//TODO: ADD FOR YES AND NO THE YES+NO CONCEPTS
         bundle.putString("noVal", "no");
-        Log.i("question action- build msg", "build msg for : ");
+        Log.i("Questoion(build msg)","build msg for : "+actionName);
         msg.setData(bundle);
         return msg;
     }

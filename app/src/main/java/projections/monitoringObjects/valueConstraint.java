@@ -69,7 +69,7 @@ public class valueConstraint {
         }
         else
         {
-            Log.i("VALUe constraint("+TriggerName+")","EVALUTE STRING -ERRORR");
+            Log.i("VALUe constraint("+TriggerName+")","evaluate String variable");
 
             //the constraint is string value
             ans=constraintVal.equals(val);

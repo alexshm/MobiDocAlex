@@ -139,7 +139,7 @@ public class MsgRecieverService extends Service {
         intent2.putExtra("question", "are you ok?");
         intent2.putExtra("yesAns", "yesAns!!!");
         intent2.putExtra("noAns", "noAns!!!");
-        getApplicationContext().startActivity(intent2);
+      //  getApplicationContext().startActivity(intent2);
     }
 
 
