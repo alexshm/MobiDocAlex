@@ -28,10 +28,12 @@ public class MainScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO: recieve notification only after login
+
 
         setContentView(R.layout.activity_main);
         IntentFilter intentFilter = new IntentFilter("startProjection");
+
+
         projectionRec=new BroadcastReceiver() {
 
             @Override
@@ -43,18 +45,21 @@ public class MainScreen extends Activity {
 
             }
         };
+        getApplicationContext().registerReceiver(projectionRec,intentFilter);
         //register to triggring timer events
         Log.i("Main Screen","register to brodcastRec for recieve projections");
 
 
-
-        TextView regId = (TextView) findViewById(R.id.regidTxt);
-        String regid=PushNotification.getInstance(getApplicationContext()).getMobileID();
-       regId.setText(regId.getText().toString()+" "+regid);
-        getApplicationContext().registerReceiver(projectionRec,intentFilter);
-
-        Log.i("MainScreen","app ID: "+regId.getText().toString());
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //recieve notification only after login
+                PushNotification p = PushNotification.getInstance(getApplicationContext());
+                p.registerDevice();
+                Log.i("MainScreen", "app ID: " + p.getMobileID());
+            }
+        }).start();
+    }
 
 
     private void showToastFromService(final String message) {
@@ -110,6 +115,7 @@ public class MainScreen extends Activity {
         Intent webScreen = new Intent(MainScreen.this, webComScreen.class);
         startActivity(webScreen);
     }
+
     public static class BuildDialog extends DialogFragment {
 
         private static String msg;

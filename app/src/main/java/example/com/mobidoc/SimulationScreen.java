@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
@@ -19,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -35,8 +35,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
 import projections.Actions.Action;
 import projections.Actions.MeasurementAction;
@@ -80,20 +78,15 @@ public class SimulationScreen extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loadSimulationData();
-                Log.i("Simulation screen","finish loading simulation data");
-            }
-        }).start();
-        setContentView(R.layout.simulation_screen);
-        serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
 
+        setContentView(R.layout.simulation_screen);
 
         final Button startbtn = (Button) findViewById(R.id.startSimulation);
         final Button handlerSender = (Button) findViewById(R.id.button2);
         final ImageButton playsim = (ImageButton) findViewById(R.id.simPlay);
+
+       new  loadSimulationDataTask().execute();
+
         // projections spinner
         ////===========
         projections_spinner = (Spinner) findViewById(R.id.spinner3);
@@ -105,6 +98,12 @@ public class SimulationScreen extends Activity {
         // Apply the adapter to the spinner
         projections_spinner.setAdapter(adapterprojections);
         //=================================================
+
+
+        serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
+
+
+
 
         projectionVals = ArrayAdapter.createFromResource(this,
                 R.array.projectionsVals, android.R.layout.simple_spinner_item);
@@ -424,6 +423,23 @@ public class SimulationScreen extends Activity {
         }
     }
 
+    protected class loadSimulationDataTask extends AsyncTask<Void, Void, String> {
+
+
+
+        @Override
+
+        protected String doInBackground(Void... params) {
+
+            loadSimulationData();
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i("Simulation screen","finish loading simulation data");
+        }
+    }
 
     @Override
     protected void onResume() {

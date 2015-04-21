@@ -100,8 +100,7 @@ public class LoginScreen extends Activity {
         });
 
 
-        PushNotification p = PushNotification.getInstance(this);
-        p.registerDevice();
+
     }
 
 
