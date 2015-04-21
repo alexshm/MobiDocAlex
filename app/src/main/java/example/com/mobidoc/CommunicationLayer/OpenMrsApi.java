@@ -3,6 +3,7 @@ package example.com.mobidoc.CommunicationLayer;
 import android.os.AsyncTask;
 
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.concurrent.ExecutionException;
 public class OpenMrsApi {
 
     private final String baseUrl;
+    private static String username = "";
+    private static String password = "";
 
     public OpenMrsApi(String baseUrl){
         this.baseUrl = baseUrl;
@@ -28,7 +31,7 @@ public class OpenMrsApi {
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
         getHash.put("URLPath", "session");
-        HttpRecTask httpRecTask = new HttpRecTask("admin", "Admin123", baseUrl );
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
@@ -82,6 +85,11 @@ public class OpenMrsApi {
 //        String sessionId = (String) jsonObjectSessionJson.get("sessionId");
 //        Boolean authenticated = (Boolean) jsonObjectSessionJson.get("authenticated");
 //        System.out.println("Session:"+sessionId+" Authenticated:"+authenticated);
+
+        if (aJsonBoolean){
+            this.username = userName;
+            this.password = pass;
+        }
         return aJsonBoolean;
     }
 
@@ -91,12 +99,12 @@ public class OpenMrsApi {
      * @param name The person name
      * @return All persons with that name. (Not parse!!)
      */
-    public String getPersonUuid(String name){
+    public String getPersonUuidByName(String name){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
         getHash.put("URLPath", "person?q="+name);
-        HttpRecTask httpRecTask = new HttpRecTask("admin", "Admin123", baseUrl );
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
@@ -117,7 +125,7 @@ public class OpenMrsApi {
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
         getHash.put("URLPath", "concept?q="+name);
-        HttpRecTask httpRecTask = new HttpRecTask("admin", "Admin123", baseUrl );
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
@@ -125,7 +133,7 @@ public class OpenMrsApi {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return answer;
+        return jsonArray(answer,"uuid","results");
     }
 
 
@@ -145,7 +153,7 @@ public class OpenMrsApi {
         String body = "{\"person\":\""+personUuid+"\",\"obsDatetime\":\""+dateTime+"\""+
                 ",\"concept\":\""+conceptUuid+"\",\"value\":\""+value+"\",\"location\":\"8d6c993e-c2cc-11de-8d13-0010c6dffd0f\"}";
         getHash.put("JSON", body);
-        HttpRecTask httpRecTask = new HttpRecTask("admin", "Admin123", baseUrl );
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
@@ -166,7 +174,7 @@ public class OpenMrsApi {
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
         getHash.put("URLPath", "obs?q="+patientID);
-        HttpRecTask httpRecTask = new HttpRecTask("admin", "Admin123", baseUrl );
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
@@ -188,7 +196,7 @@ public class OpenMrsApi {
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
         getHash.put("URLPath", "patient?q="+patientID);
-        HttpRecTask httpRecTask = new HttpRecTask("admin", "Admin123", baseUrl );
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
@@ -200,16 +208,16 @@ public class OpenMrsApi {
     }
 
     /**
-     * get user details(personUuid and more) by user uuid.
+     * get personUuid by user uuid.
      * @param userUuid the user uuid
-     * @return user details(personUuid and more). (Not parse!!)
+     * @return personUuid
      */
-    public String getUserDetails(String userUuid){
+    public String getPersonUUIDbyUserUUID(String userUuid){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
         getHash.put("URLPath", "user/"+userUuid);
-        HttpRecTask httpRecTask = new HttpRecTask("admin", "Admin123", baseUrl );
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
@@ -217,7 +225,17 @@ public class OpenMrsApi {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return answer;
+
+        String personUUID = "";
+        try {
+            JSONObject jObject = new JSONObject(answer);
+            JSONObject  jObjectPerson = jObject.getJSONObject("person");
+            personUUID = jObjectPerson.getString("uuid");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return personUUID;
     }
 
 
@@ -231,7 +249,7 @@ public class OpenMrsApi {
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
         getHash.put("URLPath", "user?q="+userName);
-        HttpRecTask httpRecTask = new HttpRecTask("admin", "Admin123", baseUrl );
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
@@ -239,9 +257,60 @@ public class OpenMrsApi {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return answer;
+        return jsonArray(answer,"uuid","results");
     }
 
+    /**
+     * Upload one measure(observation) of the person.
+     * @param value the value of the measure
+     * @param dateTime the time when the measure was taken(Format example: 2010-03-23T00:00:00.000+0200)
+     * @param conceptName the concept name.
+     * @return succeed or failed to upload(Not parse!!).
+     */
+    public String enterMeasure(int value, String dateTime, String conceptName){
+        String userUUID = getUserUuid(username);
+        String personUuid = getPersonUUIDbyUserUUID(userUUID);
+        String conceptUuid = getConceptUuid(conceptName);
+
+        String answer="problem";
+        HashMap<String, String> getHash = new HashMap<String, String>();
+        getHash.put("requestType", "Post");
+        getHash.put("URLPath", "obs");
+        String body = "{\"person\":\""+personUuid+"\",\"obsDatetime\":\""+dateTime+"\""+
+                ",\"concept\":\""+conceptUuid+"\",\"value\":\""+value+"\",\"location\":\"8d6c993e-c2cc-11de-8d13-0010c6dffd0f\"}";
+        getHash.put("JSON", body);
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
+        try {
+            answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return answer;
+    }
+    public String getPersonUUID() {
+        String userUUID = getUserUuid(username);
+        return getPersonUUIDbyUserUUID(userUUID);
+    }
+
+    private String jsonArray(String JSON, String paramName,String arrayName) {
+        try {
+            JSONObject jObject = new JSONObject(JSON);
+            JSONArray jArray = jObject.getJSONArray(arrayName);
+
+            for (int i = 0; i < jArray.length(); i++) {
+                JSONObject oneObject = jArray.getJSONObject(i);
+                // Pulling items from the array
+                String oneObjectsItem = oneObject.getString(paramName);
+                return oneObjectsItem;
+            }
+        }  catch (Exception e) {
+        // Oops
+        }
+        return "Problem: JSON ARRAY";
+    }
 
     public List<String> getPatientList(){
         return null;
