@@ -87,7 +87,12 @@ public class compositeAction  {
     }
 
     /*
-        executed the tasks according to the executed who was defined
+        executed the tasks according to the execute order that  was defined
+        this method get as parameter a boolean 'runReminder'
+        the boolean determines if we need to ivoke the reminder
+        also in this execution or not.
+        runReminder==true => the executor invoke only the reminders
+         runReminder==true => the executor invoke  the action and NOT the reminders
      */
 
     public void invoke(boolean runReminder) {
@@ -125,7 +130,10 @@ public class compositeAction  {
 
         actionsCollection.add(action);
         this.ex.addAction(action);
-        addConceptToMonitor(action.getConcept());
+
+        //need to register to concepts only if the action is Measurement
+        if(action.getType().equals(Action.ActionType.Measurement))
+             addConceptToMonitor(action.getConcept());
 
     }
 }

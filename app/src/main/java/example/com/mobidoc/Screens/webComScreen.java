@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import example.com.mobidoc.CommunicationLayer.HttpGetTask;
 import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 import example.com.mobidoc.R;
 
@@ -57,7 +56,7 @@ public class webComScreen extends Activity {
         String concept =  "5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         String personID = "7014135e-7575-41a8-8832-4fb0c3b2ca5f";
         String dateTime = "2010-03-23T00:00:00.000+0200";
-        ans.setText(openMrsApi.enterMeasure(200,dateTime,"systolic")+"");
+        ans.setText(openMrsApi.enterMeasure(200, dateTime, "systolic")+"");
 //        ans.setText(openMrsApi.postObs(personID,88,dateTime,concept));
       //  ans.setText(openMrsApi.getPerson("israel"));
 

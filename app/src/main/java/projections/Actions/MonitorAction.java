@@ -23,7 +23,21 @@ import projections.var;
 import static ch.lambdaj.Lambda.avg;
 import static ch.lambdaj.Lambda.count;
 import static ch.lambdaj.Lambda.sum;
+/*
+  class that represent  monitoring operation.
 
+  NEED TO CONTINUE
+ ===========================================================================
+ * AggregationAction - ( Sum, Avg, Count) - actions to accoumlate if we have conditions
+                    (i.e we want to count how many abnormal BP we had)
+
+ * AggregationOperators - (Equal, GreaterThen, LessThen, GreatEqual, LessEqual)
+ *                          =, > , < , >= , <=
+     operations for the aggregation (i.e we want to trigger something only if
+     the count for abnormal BP is greaterthan(>) 4)
+
+
+  */
 public class MonitorAction extends  Action {
 
 
@@ -70,7 +84,7 @@ public class MonitorAction extends  Action {
 
         //===========================
 
-        Log.i("MonitorAction","creating monitoring ");
+        Log.i("MonitorAction","creating monitoring Action");
     }
 
 

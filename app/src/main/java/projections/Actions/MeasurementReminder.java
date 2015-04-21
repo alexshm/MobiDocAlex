@@ -34,7 +34,7 @@ public class MeasurementReminder extends Action {
 
         bundle.putString("value", msgToSend);
         bundle.putString("concept", this.getConcept());
-        Log.i("reminder action- build reminder", "build msg for : " + actionName);
+        Log.i("reminder Action", "build reminder-build msg for : " + actionName);
         msg.setData(bundle);
         return msg;
     }

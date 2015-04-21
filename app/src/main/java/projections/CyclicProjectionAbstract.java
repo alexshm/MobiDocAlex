@@ -243,11 +243,6 @@ public class CyclicProjectionAbstract extends projection {
         Log.i("Cyclic Projection","register to  Triggering-register  to "+triggerName);
     }
 
-    @Override
-    public void doAction() {
-
-    }
-
     //set the start time to start the Projection
     // and start the alarm from this time
     // in case the remaider Unit != NONE

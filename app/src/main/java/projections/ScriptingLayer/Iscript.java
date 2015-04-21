@@ -3,7 +3,7 @@ package projections.ScriptingLayer;
 import projections.projection;
 
 /**
- * intergace for Scripting languge
+ * interface for Scripting Engine
  */
 public interface Iscript {
 

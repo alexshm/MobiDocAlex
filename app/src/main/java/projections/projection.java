@@ -175,12 +175,14 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
 
         compActionTable.get(compositeActionName).addAction(a);
 
-        /*TODO: add remidner action --
-        if(acType.equals(Action.ActionType.Measurement) && this.rremTime!="0") {
-            Action remider = new MeasurementReminder(reminderTxt);
-            projectionToBuild.addAction(remider);
+
+        if(getType().equals(ProjectionType.Cyclic) && acType.equals(Action.ActionType.Measurement)&& ((CyclicProjectionAbstract)this).remainderTime!=0) {
+            Action remider = new MeasurementReminder("Reminder for "+a.getActionName());
+            compActionTable.get(compositeActionName).addAction(remider);
+            Log.i("abstractProj("+getProjectionId()+")","method: addActionToComposite.-adding the reminder for the  Measure action : "+a.getActionName());
+
         }
-            */
+
     }
 
     public void addActionToComposite(String compositeActionName,Action a)
@@ -204,7 +206,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     }
 
 	
-	public abstract void doAction();
+
 
 
     public   void StopProjection() {

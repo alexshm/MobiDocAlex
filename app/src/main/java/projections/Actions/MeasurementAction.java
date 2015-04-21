@@ -26,10 +26,9 @@ public class MeasurementAction extends Action {
     }
 
     /*
-           creating a message obj that will be sent to the msgHandler in
-           the Gui component
-        */
-
+    creating a message obj that will be sent to the msgHandler in
+    the Gui component
+    */
 
     @Override
     public Message call()  {

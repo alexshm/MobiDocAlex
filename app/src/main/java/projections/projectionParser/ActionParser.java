@@ -9,6 +9,7 @@ import projections.Actions.CallBackAction;
 import projections.Actions.MeasurementAction;
 import projections.Actions.NotificationAction;
 import projections.Actions.QuestionAction;
+import projections.Actions.RecommendationAction;
 import projections.Utils;
 
 /**
@@ -54,7 +55,7 @@ public class ActionParser {
 
     private Action parseNotification(String[] actionParms)
     {
-       // Log.i("Action parser","parse Notification");
+
         String notificationTxt=actionParms[0];
         String conceptId=actionParms[1];
        // TODO: Action.Actor ac= Action.Actor.valueOf(actionParms[2]);
@@ -64,8 +65,11 @@ public class ActionParser {
 
     private Action parseRecommendation(String[] actionParms)
     {
-        //TODO:
-        return null;
+        String RecommendationTxt=actionParms[0];
+        String conceptId=actionParms[1];
+        Action.Actor actor= Action.Actor.Patient;
+        return  new RecommendationAction(RecommendationTxt,conceptId,actor);
+
     }
 
     private Action parseQuestion(String[] actionParms)

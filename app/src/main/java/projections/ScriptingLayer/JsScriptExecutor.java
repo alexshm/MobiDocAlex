@@ -47,7 +47,12 @@ public class JsScriptExecutor {
 
     }
 
+    /*
+      create the projection according to the type
+      get the type of the projection  from the script according to the regex
+      .*?beginProjection\((.*?,.*?,*,?)\);*?
 
+    */
     private projection buildProj(String script)
     {
         String temp = script;

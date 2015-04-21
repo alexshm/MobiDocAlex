@@ -56,12 +56,6 @@ public class MonitorProjection extends  projection{
 
 
     @Override
-    public void doAction() {
-
-    }
-
-
-    @Override
     public void initProjection() {
 
         this.registerToTriggring();
