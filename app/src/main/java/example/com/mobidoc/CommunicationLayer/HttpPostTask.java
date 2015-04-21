@@ -38,10 +38,10 @@ public class HttpPostTask extends AsyncTask<String, String, String>  {
             }
         } catch (ClientProtocolException e) {
             Log.e("HttpPostTask", "error communicate Picard");
-            //TODO Handle problems..
+
         } catch (IOException e) {
             Log.e("HttpPostTask", "error communicate Picard");
-            //TODO Handle problems..
+
         }
         return responseString;
     }

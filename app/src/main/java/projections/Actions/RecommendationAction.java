@@ -32,12 +32,6 @@ public class RecommendationAction extends Action{
     }
 
 
-
-    @Override
-    public  void setOnReceiveConcept(String compositeActionName, String concept)
-    {
-
-    }
     @Override
     public Message call()  {
         Log.i("start building question","start building question");

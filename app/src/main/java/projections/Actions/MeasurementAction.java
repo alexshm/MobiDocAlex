@@ -20,7 +20,7 @@ public class MeasurementAction extends Action {
     {
         super(ActionType.Measurement,measureName, conceptId);
         setType(ActionType.Measurement);
-        //TODO:SubscribeConcept(conceptId);
+
         _actor=Actor.Patient;
 
     }
@@ -30,11 +30,7 @@ public class MeasurementAction extends Action {
            the Gui component
         */
 
-    @Override
-    public  void setOnReceiveConcept(String compositeActionName, String concept)
-    {
 
-    }
     @Override
     public Message call()  {
         msgToSend = actionName;

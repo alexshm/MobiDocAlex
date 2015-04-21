@@ -186,7 +186,6 @@ public class parser {
     {
         projection.ProjectionType projectionType=Utils.convertToProjectionType(type);
 
-        //TODO: ADD id to projection
         switch(projectionType) {
             case Cyclic:
                // projectionToBuild= new CyclicProjectionAbstract(name,cont,"");

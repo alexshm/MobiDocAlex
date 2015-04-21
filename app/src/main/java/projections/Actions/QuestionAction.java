@@ -18,30 +18,17 @@ import projections.Utils;
  */
 public class QuestionAction extends Action {
 
-
-    boolean isInit;
-
-
     public QuestionAction(String txt, String concept) {
         super(ActionType.Question, txt,concept);
         _actor = Actor.Patient;
     }
 
 
-    @Override
-    public  void setOnReceiveConcept(String compositeActionName, String concept)
-    {
 
-    }
 
     @Override
     public Message call() {
         Log.i("start building question", "start building question");
-        if (!isInit) {
-
-            isInit = true;
-
-        }
         msgToSend = actionName;
         int msgType = type.ordinal() + 1;
 

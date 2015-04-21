@@ -14,7 +14,7 @@ import dalvik.system.DexClassLoader;
 import projections.DataItem;
 import projections.MonitorProjection;
 import projections.Utils;
-import projections.mobiDocProjections.ProjectionBuilder;
+
 import projections.projection;
 import projections.CyclicProjectionAbstract;
 import projections.projection.ProjectionTimeUnit;
@@ -273,7 +273,7 @@ public class JsScriptExecutor {
                 return oS.toString();
 
             } catch (IOException e) {
-                Log.e("read Projecction file in", "error reading file: " + e.getMessage());
+                Log.e("JSexecuter", "error reading file: " + e.getMessage());
                 return null;
             }
         }

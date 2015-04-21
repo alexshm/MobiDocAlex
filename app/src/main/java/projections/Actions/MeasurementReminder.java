@@ -14,15 +14,10 @@ public class MeasurementReminder extends Action {
     {
         super(ActionType.Remainder,measureName, "Reminder");
         setType(ActionType.Remainder);
-        //TODO:SubscribeConcept(conceptId);
         _actor=Actor.Patient;
 
     }
-    @Override
-    public  void setOnReceiveConcept(String compositeActionName, String concept)
-    {
 
-    }
 
     /*
     creating a message obj that will be sent to the msgHandler in

@@ -72,11 +72,7 @@ public class MonitorAction extends  Action {
 
         Log.i("MonitorAction","creating monitoring ");
     }
-    @Override
-    public  void setOnReceiveConcept(String compositeActionName, String concept)
-    {
 
-    }
 
     protected ServiceConnection mconnection = new ServiceConnection() {
 
@@ -235,16 +231,6 @@ public class MonitorAction extends  Action {
 
 
 
-    public void startMonitoring() {
-
-        if (!mIsBound) {
-
-            context.bindService(serviceIntent, mconnection, Context.BIND_AUTO_CREATE);
-            this.mIsBound = true;
-
-        }
-    }
-
     public void setAggregationConstraint(AggregationAction action, AggregationOperators op, int targetVal) {
         if (vars.size() > 0)
             setAggregationAction(action, op, targetVal);
@@ -256,38 +242,12 @@ public class MonitorAction extends  Action {
     }
 
 
-    /*=============================================
-       //TODO: NOT SURE IF NEEDED - NO ONE CALL FOR THIS FUNCTION
-     *===========================================*/
-    public void SubscribeConcept(String concept) {
-
-        IntentFilter intentFilter = new IntentFilter(concept);
-
-       //todo: context.registerReceiver(this, intentFilter);
-        startMonitoring();
-
-
-    }
-
-    public void UnSubscribeConcept(String concept) {
-       // context.unregisterReceiver(this);
-
-        ///STOP MONITORING SERVICE
-        if (mIsBound) {
-            mconnection = null;
-            mIsBound = false;
-            context.stopService(serviceIntent);
-            Toast.makeText(context, "service succefully stopped", Toast.LENGTH_LONG).show();
-        }
-    }
-
-
     public void addConceptToMonitor( String conceptId)
     {
         Log.i("Monitor action","need to add concept : "+"conceptId to the list of concepts : "+!conceptsToMonitor.contains(conceptId));
         if(!conceptsToMonitor.contains(conceptId))
        conceptsToMonitor.add(conceptId);
-      //SubscribeConcept(conceptId);
+
     }
 
     @Override

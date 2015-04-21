@@ -50,7 +50,7 @@ import projections.Actions.Action;
 import projections.Actions.MeasurementAction;
 import projections.Actions.NotificationAction;
 import projections.Actions.QuestionAction;
-import projections.mobiDocProjections.ProjectionBuilder;
+
 import projections.projection;
 
 @SuppressLint("ShowToast")
@@ -77,7 +77,7 @@ public class SimulationScreen extends Activity {
     String SimulationData="";
     // Intent used for binding to LoggingService
     private Intent serviceIntent;
-    private ProjectionBuilder pb;
+
     private Messenger mMessengerToLoggingService;
     private boolean mIsBound;
     Thread simulationThread;
@@ -111,7 +111,7 @@ public class SimulationScreen extends Activity {
         setContentView(R.layout.simulation_screen);
         serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
 
-        pb = new ProjectionBuilder(this.getApplicationContext());
+
         final Button startbtn = (Button) findViewById(R.id.startSimulation);
         final Button handlerSender = (Button) findViewById(R.id.button2);
         final ImageButton playsim = (ImageButton) findViewById(R.id.simPlay);
@@ -417,7 +417,6 @@ public class SimulationScreen extends Activity {
         try {
             //=================================
             // read file   data from raw resources
-            // TODO: read data from input streamer that was recived from the web(server) and not from the raw resorces
             //==========================
 
             InputStream iS;

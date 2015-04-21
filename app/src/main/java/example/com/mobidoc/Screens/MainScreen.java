@@ -28,7 +28,7 @@ public class MainScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO: recieve notification just after login
+        //TODO: recieve notification only after login
 
         setContentView(R.layout.activity_main);
         IntentFilter intentFilter = new IntentFilter("startProjection");

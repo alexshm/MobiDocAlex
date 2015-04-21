@@ -96,8 +96,10 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
 
             // apply the next action to trigger when recieve concepts regarding to recommendation/qeustion
             //if needed
-            if(this.conceptsActionMap.containsKey(concept))
-                    this.conceptsActionMap.get(concept).invoke(false);
+            if(this.conceptsActionMap.containsKey(concept)) {
+                Log.i("Projectionabstract(" + getProjectionId() + ")", "receive 'onReceive' concept-> need to trigger the next asction");
+                this.conceptsActionMap.get(concept).invoke(false);
+            }
 
             if (condAction != null) {
                 boolean okToInsert = condAction.isSatisfyVarsConditions(val);
@@ -207,7 +209,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
 
     public void addAction(Action a)
     {
-        //TODO:
+
        action.addAction(a);
     }
 
@@ -319,8 +321,6 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
        // action=compActionTable.get(this.currentCompositeAction);
         Log.i("projAbstract("+getProjectionId()+")","-method : startProjection --set starting from action : "+this.currentCompositeAction);
         initProjection();
-        //TODO : start the compositeActin serivice
-
         if(hasAlarm)
             this.startAlarm();
 

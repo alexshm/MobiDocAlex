@@ -21,11 +21,7 @@ public class NotificationAction extends Action {
         _actor=actor;
     }
 
-    @Override
-    public  void setOnReceiveConcept(String compositeActionName, String concept)
-    {
 
-    }
 
     @Override
     public Message call() throws Exception {

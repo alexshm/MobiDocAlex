@@ -125,8 +125,6 @@ public  abstract class Action  implements Callable<Message> {
 
     }
 
-    public abstract void setOnReceiveConcept(String compositeActionName, String concept);
-
 
     public String getActionName() {
         return actionName;

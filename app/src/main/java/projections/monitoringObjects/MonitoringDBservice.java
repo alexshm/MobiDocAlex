@@ -79,13 +79,6 @@ public class MonitoringDBservice extends Service {
     }
 
 
-        private void saveToDB(String concept,String val,Date date)
-        {
-
-
-            //TODO: function to saave data to the DB+  to internal file in the SDCARD
-        }
-
 
 
         @Override

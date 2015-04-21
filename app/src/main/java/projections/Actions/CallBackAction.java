@@ -19,11 +19,7 @@ public class CallBackAction extends Action {
 
 
 
-    @Override
-    public  void setOnReceiveConcept(String compositeActionName, String concept)
-    {
 
-    }
     @Override
     public Message call() throws Exception {
 

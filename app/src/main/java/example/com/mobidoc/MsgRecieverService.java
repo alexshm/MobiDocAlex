@@ -67,7 +67,7 @@ public class MsgRecieverService extends Service {
             }
 
 
-            //TODO: NEED TO FIX SHOWING DIALOG *****
+
 
 //            Intent intent2 = new Intent(MsgRecieverService.this, QuestionPopScreen.class);
 //            intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
