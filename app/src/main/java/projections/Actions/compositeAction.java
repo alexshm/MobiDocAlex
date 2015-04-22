@@ -52,10 +52,7 @@ public class compositeAction  {
     // set and add concepts for the spacieal actions (recommendation/qeustion)
     // add only these two kind of actions
     //
-    public void addConceptForOnRecieve(String concept)
-    {
-      conceptsToMonitor.add(concept);
-    }
+    public void addConceptForOnRecieve(String concept) {conceptsToMonitor.add(concept); }
 
 
     public compositeAction(Context c, Utils.ExecuteMode mode) {

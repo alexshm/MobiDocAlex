@@ -67,8 +67,9 @@ public class ActionParser {
     {
         String RecommendationTxt=actionParms[0];
         String conceptId=actionParms[1];
+
         Action.Actor actor= Action.Actor.Patient;
-        return  new RecommendationAction(RecommendationTxt,conceptId,actor);
+       return new RecommendationAction(RecommendationTxt,conceptId,actor);
 
     }
 
@@ -76,8 +77,10 @@ public class ActionParser {
     {
         String QuesTxt=actionParms[0];
         String conceptId=actionParms[1];
+
         Action.Actor ac= Action.Actor.Patient;
-        return  new QuestionAction(QuesTxt,conceptId);
+        return   new QuestionAction(QuesTxt,conceptId);
+
     }
 
     private Action parseCallBack(String[] actionParms)

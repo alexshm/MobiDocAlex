@@ -14,7 +14,7 @@ function Action(type,name,concept)
 }
 
 
-Action.prototype.setOnConceptRecive=function(c,compActionName)
+Action.prototype.setOnConceptRecive=function(c,receiveOperation,compActionName)
 {
 	Action.prototype.__defineSetter__('setaction', function(action)
 									{
@@ -22,7 +22,7 @@ Action.prototype.setOnConceptRecive=function(c,compActionName)
 										this.actionToDo.push(action);
 
 										}); 
-	var a={compName:compActionName,concept:c};
+	var a={compName:compActionName,concept:c,receiveop:receiveOperation};
 	this.setaction=a;
 };
 
@@ -157,17 +157,26 @@ function insertActionToProjection()
 	     print('logging from JavaScript - (insertActionToProjection) : the composite : '+compositeName +' has '+actions.length +' actions');
 		for(var j=0;j< actions.length;j++)
 		 {
-		 print('logging from JavaScript - (insertActionToProjection) :adding the('+j+') action : ' +actions[j].name +' to composite : '+compositeName);
-			proj.addActionToComposite(compositeName,actions[j].type,actions[j].name,actions[j].concept);
 			var ActionConceptsList=actions[j].actionToDo;
-			 print('logging from JavaScript (insertActionToProjection) :the action : '+actions[j].name +'have '+ActionConceptsList.length+' onrecieveconcepts');
-			for(var k=0;k< ActionConceptsList.length;k++)
-			   {
-				var conceptToReceive=ActionConceptsList[k].concept;
-				var actionName=ActionConceptsList[k].compName.name;
-				 print('logging from JavaScript (insertActionToProjection) =setting on recieve for the concept : ' +conceptToReceive);
-				proj.setOnReceiveConcept(actionName,compositeName,conceptToReceive);
-				}
+
+			// iterate the Onrecieve concepts list and add the action to the composite action + set the Onreceive
+			// for this action. if the Onrecieve collection is empy-> just create and add the action
+
+
+			print('logging from JavaScript - (insertActionToProjection) :adding the('+j+') action : ' +actions[j].name +' to composite : '+compositeName);
+
+			proj.addActionToComposite(compositeName,actions[j].type,actions[j].name,actions[j].concept);
+
+			print('logging from JavaScript (insertActionToProjection) :the action : '+actions[j].name +'have '+ActionConceptsList.length+' onrecieve concepts');
+
+            for(var k=0;k< ActionConceptsList.length;k++)
+            {
+                var conceptToReceive=ActionConceptsList[k].concept;
+                var actionName=ActionConceptsList[k].compName.name;
+                var receiveOp=ActionConceptsList[k].receiveop;
+
+                proj.setOnReceiveConcept(actionName,compositeName,conceptToReceive,actions[j].name,receiveOp);
+            }
 		}
 	}
 };

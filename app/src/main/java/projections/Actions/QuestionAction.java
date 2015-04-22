@@ -18,17 +18,30 @@ import projections.Utils;
  */
 public class QuestionAction extends Action {
 
+    private String yesConcept;
+    private String noConcept;
     public QuestionAction(String txt, String concept) {
         super(ActionType.Question, txt,concept);
         _actor = Actor.Patient;
+        noConcept="";
+        yesConcept="";
     }
 
+    @Override
+    public void setOnReceiveConcept(String onReceiveOp,String concept)
+    {
+        Log.i("QuestionAction","set on ReceiveConcept for : "+onReceiveOp+" - "+concept);
 
+        if(onReceiveOp.contains("yes"))
+            yesConcept=concept;
+        else
+            noConcept=concept;
 
+    }
 
     @Override
     public Message call() {
-        Log.i("start building question", "start building question");
+
         msgToSend = actionName;
         int msgType = type.ordinal() + 1;
 
@@ -36,9 +49,9 @@ public class QuestionAction extends Action {
         Bundle bundle = new Bundle();
 
         bundle.putString("value", msgToSend);
-        bundle.putString("yesVal", "yes");//TODO: ADD FOR YES AND NO THE YES+NO CONCEPTS
-        bundle.putString("noVal", "no");
-        Log.i("Questoion(build msg)","build msg for : "+actionName);
+        bundle.putString("yes",yesConcept);
+        bundle.putString("no", noConcept);
+        Log.i("Questoion(build msg)","build msg for : "+actionName +"(yes:"+yesConcept+" , no: "+noConcept );
         msg.setData(bundle);
         return msg;
     }

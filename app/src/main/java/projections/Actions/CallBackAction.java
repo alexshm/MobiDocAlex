@@ -17,6 +17,9 @@ public class CallBackAction extends Action {
         setType(ActionType.CallBack);
     }
 
+    @Override
+    public void setOnReceiveConcept(String onReceiveOp,String concept) {
+    }
 
 
 

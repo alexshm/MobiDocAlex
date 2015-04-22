@@ -2,31 +2,15 @@ package projections.ScriptingLayer;
 
 import android.content.res.AssetManager;
 import android.util.Log;
-
-import com.google.dexmaker.TypeId;
-
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.*;
-
-import dalvik.system.DexClassLoader;
-import projections.DataItem;
 import projections.MonitorProjection;
 import projections.Utils;
-
 import projections.projection;
 import projections.CyclicProjectionAbstract;
-import projections.projection.ProjectionTimeUnit;
-import org.mozilla.classfile.*;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -47,12 +31,12 @@ public class JsScriptExecutor {
 
     }
 
-    /*
+    /*===========================================================
       create the projection according to the type
       get the type of the projection  from the script according to the regex
       .*?beginProjection\((.*?,.*?,*,?)\);*?
 
-    */
+    ===============================================================*/
     private projection buildProj(String script)
     {
         String temp = script;
