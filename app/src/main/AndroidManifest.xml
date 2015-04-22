@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="example.com.mobidoc.CommunicationLayer.PushNotification"
     package="example.com.mobidoc"
     android:versionCode="1"
-    android:versionName="1.0"
-    android:name="example.com.mobidoc.CommunicationLayer.PushNotification">
+    android:versionName="1.0">
+
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
@@ -11,8 +12,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <android:uses-permission android:name="android.permission.VIBRATE" />
@@ -43,21 +44,28 @@
         </activity>
 
         <activity
-        android:name=".RegisterScreen"
-        android:label="@string/app_name">
-    </activity>
+            android:name=".RegisterScreen"
+            android:label="@string/app_name"></activity>
+
+        <activity
+            android:name=".Screens.MeasuresScreen"
+            android:label="@string/app_name"></activity>
 
         <activity
             android:name="example.com.mobidoc.Screens.webComScreen"
-            android:label="@string/app_name">
-        </activity>
+            android:label="@string/app_name"></activity>
         <activity
             android:name="example.com.mobidoc.CommunicationLayer.PushNotification$notificationActivity"
-            android:label="@string/app_name">
-        </activity>
-        <activity android:name=".Screens.popUpScreens.PopScreen" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".Screens.popUpScreens.QuestionPopScreen" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity android:name=".Screens.popUpScreens.MeasurePop" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:label="@string/app_name"></activity>
+        <activity
+            android:name=".Screens.popUpScreens.PopScreen"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".Screens.popUpScreens.QuestionPopScreen"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".Screens.popUpScreens.MeasurePop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity
             android:name="example.com.mobidoc.SimulationScreen"
@@ -69,13 +77,15 @@
 
         <receiver
             android:name="example.com.mobidoc.CommunicationLayer.pushNotificationServices.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
                 <category android:name="example.com.mobidoc.CommunicationLayer.pushNotificationServices" />
             </intent-filter>
         </receiver>
+
         <service android:name=".MsgRecieverService" />
         <service android:name="example.com.mobidoc.CommunicationLayer.pushNotificationServices.GcmIntentService" />
 

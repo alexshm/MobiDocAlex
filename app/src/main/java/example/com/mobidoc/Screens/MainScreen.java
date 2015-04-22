@@ -13,7 +13,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -114,6 +113,11 @@ public class MainScreen extends Activity {
     public void goToWebTests(View view) {
         Intent webScreen = new Intent(MainScreen.this, webComScreen.class);
         startActivity(webScreen);
+    }
+
+    public void measureClick(View view) {
+        Intent measureScreen = new Intent(MainScreen.this, MeasuresScreen.class);
+        startActivity(measureScreen);
     }
 
     public static class BuildDialog extends DialogFragment {
