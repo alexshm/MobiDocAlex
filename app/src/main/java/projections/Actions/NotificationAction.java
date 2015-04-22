@@ -21,7 +21,10 @@ public class NotificationAction extends Action {
         _actor=actor;
     }
 
+    @Override
+    public void setOnReceiveConcept(String onReceiveOp,String concept) {
 
+    }
 
     @Override
     public Message call() throws Exception {

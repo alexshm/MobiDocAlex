@@ -146,6 +146,8 @@ public  abstract class Action  implements Callable<Message> {
         _actor=a;
     }
 
+    public abstract void setOnReceiveConcept(String onReceiveOp,String concept);
+
 
 
 

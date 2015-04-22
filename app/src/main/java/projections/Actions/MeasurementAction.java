@@ -24,7 +24,10 @@ public class MeasurementAction extends Action {
         _actor=Actor.Patient;
 
     }
+    @Override
+    public void setOnReceiveConcept(String onReceiveOp,String concept) {
 
+    }
     /*
     creating a message obj that will be sent to the msgHandler in
     the Gui component

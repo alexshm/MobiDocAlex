@@ -18,7 +18,10 @@ public class MeasurementReminder extends Action {
 
     }
 
+    @Override
+    public void setOnReceiveConcept(String onReceiveOp,String concept) {
 
+    }
     /*
     creating a message obj that will be sent to the msgHandler in
     the Gui component

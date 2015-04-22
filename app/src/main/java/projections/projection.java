@@ -148,7 +148,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
         Log.i("abstractProj("+getProjectionId()+")","method: addNewCompositeAction.  creating new composite action in name : "+compositeActionName);
     }
 
-    public void setOnReceiveConcept(String compositeActionNameForTrigger , String CurrentcompositeActionName, String concept)
+    public void setOnReceiveConcept(String compositeActionNameForTrigger , String CurrentcompositeActionName, String concept,String onReceiveActionName,String onReceiveopertaion)
     {
 
         compositeAction curComp=compActionTable.get(CurrentcompositeActionName);
@@ -160,6 +160,21 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
 
         conceptsActionMap.put(concept,compForTrigger);
 
+       //searching the spacific action in the composite Action
+       // i.e : if for question action with name 'askpatient' we set the onReceive cocnept for 5111 for the yes answer.s
+       // then we will search in the collecction the 'askpatient' name and set to him : askpatient.setOnReceiveConcept('yes','5111');
+
+
+        Log.i("abstractProj("+getProjectionId()+")","method: setOnReceiveConcept. update the OnReceive for : "+onReceiveActionName+". sets the : "+onReceiveopertaion+" operation to concept : "+concept);
+        if(onReceiveActionName!=""&& onReceiveopertaion!="") {
+            for (Action a : curComp.actionsCollection)
+                if (a.getActionName().equals(onReceiveActionName))
+                    a.setOnReceiveConcept(onReceiveopertaion, concept);
+        }
+
+
+
+
     }
     public void addActionToComposite(String compositeActionName,String type, String actionname, String actionConcept)
     {
@@ -168,6 +183,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
 
         ActionParser ap=new ActionParser(acType,context);
        String[] params={actionname,actionConcept};
+        Log.i("abstractProj("+getProjectionId()+")","creating a "+acType.name()+" action");
 
        Action a= ap.parse(params);
         Log.i("abstractProj("+getProjectionId()+")","method: addActionToComposite.-add action("+a.getType().name()+","+a.getConcept()+","+a.getActionName()+")");
@@ -205,9 +221,6 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
         return mIsBound;
     }
 
-	
-
-
 
     public   void StopProjection() {
 
@@ -225,6 +238,8 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
         this.actionToTrigger=compActionTable.get(triggerActionName);
         Log.i("abstractproj","the new  trigger action to size:"+actionToTrigger.actionsCollection.size());
     }
+
+
     public void defVar(String varName,String concept,String  type)
     {
         var.VarType varType=Utils.getVarType(type);
@@ -281,11 +296,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     public void onStart(String compositeName)
     {
         this.currentCompositeAction=compositeName;
-        if(getType().equals(ProjectionType.Monitor))
-        {
-
-        }
-        else
+        if(getType().equals(ProjectionType.Cyclic))
         {
             //when the type is Cyclic
             action=compActionTable.get(this.currentCompositeAction);

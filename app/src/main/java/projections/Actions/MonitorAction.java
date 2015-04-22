@@ -87,7 +87,10 @@ public class MonitorAction extends  Action {
         Log.i("MonitorAction","creating monitoring Action");
     }
 
+    @Override
+    public void setOnReceiveConcept(String onReceiveOp,String concept) {
 
+    }
     protected ServiceConnection mconnection = new ServiceConnection() {
 
         @Override

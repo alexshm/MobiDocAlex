@@ -2,21 +2,12 @@ package projections;
 
 import android.util.Log;
 
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Vector;
 
-import ch.lambdaj.Lambda;
-import ch.lambdaj.function.aggregate.Aggregator;
-import ch.lambdaj.function.argument.Argument;
-import projections.monitoringObjects.DataCollection;
 import projections.monitoringObjects.valueConstraint;
 
 
-import static ch.lambdaj.Lambda.*;
-import java.lang.Iterable;
-
-/*
+/*==================================================================================================
     define a variable for monitoring concepts.
     each var is *ONLY* for ONE concept.(meaning var per Concept)
 
@@ -39,7 +30,7 @@ import java.lang.Iterable;
 
     * Operators - are enum for defines the operator of the value then connected to him .one from : (< / > / = / <= / >=)
 
- */
+ ====================================================================================================*/
 public class var<T> {
 
     private String name;
