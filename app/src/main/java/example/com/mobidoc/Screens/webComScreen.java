@@ -36,8 +36,6 @@ public class webComScreen extends Activity {
         ans = (TextView) findViewById(R.id.ansTxt);
         ip = (EditText) findViewById(R.id.editText4);
         Button send = (Button) findViewById(R.id.button3);
-
-
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
