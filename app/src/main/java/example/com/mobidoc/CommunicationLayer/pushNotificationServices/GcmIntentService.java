@@ -41,6 +41,8 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import example.com.mobidoc.R;
@@ -104,9 +106,26 @@ public class GcmIntentService extends IntentService {
 
                     }
                 }
+                Log.i(TAG, "Complete receiving projections in : " + SystemClock.elapsedRealtime());
+                //string contains all the received projections from the server
+                String Receivedprojs=extras.getString("message");
+                String[] projectionScript=Receivedprojs.split("beginProjection");
+                Log.i(TAG, "Received : "+projectionScript.length+" projections from server");
+                ExecutorService threadPool= Executors.newFixedThreadPool(projectionScript.length);
+                for(int i=1;i<projectionScript.length;i++)
+                {
+                    final String script="beginProjection"+projectionScript[i];
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            new ProjectionScriptExecuter().execute(script);
+                        }
+                    }).start();
 
-                createAndRunProjectionScript(extras.getString("message"));
-                Log.i(TAG, "Completed work  in : " + SystemClock.elapsedRealtime());
+
+                }
+
+
                 // Post notification of received message.
                 sendNotification(extras.getString("type"),extras.getString("projnumber"));
 
@@ -130,7 +149,7 @@ public class GcmIntentService extends IntentService {
                 new Intent(this, MainScreen.class), 0);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.mobidocicon2)
-        .setContentTitle("GCM Notification")
+        .setContentTitle("Projection Notification")
         .setStyle(new NotificationCompat.BigTextStyle()
         .bigText("new projection"))
         .setContentText(projName+" ("+projnumber+")")
@@ -142,10 +161,16 @@ public class GcmIntentService extends IntentService {
     }
 
 
-    private void createAndRunProjectionScript(String projectionScript) {
+    private class ProjectionScriptExecuter extends AsyncTask<String, Void, projection> {
 
-        new AsyncTask<String, Void, projection>() {
-            JsScriptExecutor jsScript=new JsScriptExecutor(getApplicationContext());
+
+        JsScriptExecutor jsScript;
+         public ProjectionScriptExecuter()
+         {
+
+            jsScript=new JsScriptExecutor(getApplicationContext());
+         }
+
             @Override
             protected projection doInBackground(String... params) {
                 //Log.i("GCM service", " parsing the projection : "+params[0]);
@@ -163,16 +188,18 @@ public class GcmIntentService extends IntentService {
                 Log.i("GCM service", "adding : "+proj.getProjectionName()+"("+proj.getProjectionId()+") to projectionCollection");
                 sendStartProjectionMsg(proj.getProjectionId());
             }
-        }.execute(projectionScript);
+
+            private void sendStartProjectionMsg(String projectionId)
+            {
+
+                Intent brdcastIntent = new Intent("startProjection");
+                brdcastIntent.setAction("startProjection");
+                brdcastIntent.putExtra("projNum",projectionId);
+                sendBroadcast(brdcastIntent, android.Manifest.permission.VIBRATE);
+
+            }
+
     }
 
-    private void sendStartProjectionMsg(String projectionId)
-    {
 
-        Intent brdcastIntent = new Intent("startProjection");
-        brdcastIntent.setAction("startProjection");
-        brdcastIntent.putExtra("projNum",projectionId);
-        sendBroadcast(brdcastIntent, android.Manifest.permission.VIBRATE);
-
-    }
 }

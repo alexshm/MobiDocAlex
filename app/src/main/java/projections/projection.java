@@ -356,7 +356,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
             String concept = params[0];
             String value = params[1];
             String date = params[2];
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             boolean receiveConceptForQuestionOrRecomm = conceptsActionMap.containsKey(concept);
             if (receiveConceptForQuestionOrRecomm) {
                 Log.i("Projectionabstract(" + getProjectionId() + ")", "receive 'onReceive' concept-> need to trigger the next action");

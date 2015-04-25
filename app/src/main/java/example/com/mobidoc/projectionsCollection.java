@@ -55,6 +55,11 @@ public class projectionsCollection {
 
 
     }
+
+    public synchronized int getCollectionSize()
+    {
+        return projectionCollection.size();
+    }
     public synchronized Enumeration getAllProjections()
     {
         return  projectionCollection.elements();

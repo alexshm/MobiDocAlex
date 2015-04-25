@@ -36,7 +36,7 @@ public class DataCollection {
    public DataCollection()
    {
        conceptsToMonitor=new Vector<>();
-       //TODO: check what the number for _daysToRemember
+
        _daysToRemember=1;
        data=new Vector<DataItem>();
       constraints=new Hashtable<>();
