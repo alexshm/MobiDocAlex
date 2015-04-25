@@ -39,11 +39,11 @@
             android:layout_width="186dp"
             android:layout_height="wrap_content"
             android:background="#fffffbff"
-            android:inputType="textEmailAddress"
+            android:inputType="number"
             android:layout_x="120dp"
             android:layout_y="85dp"
             android:textSize="18dp"
-            android:text="please insert value "
+            android:text="number val"
             android:textIsSelectable="True"
             android:autoText="false" />
 

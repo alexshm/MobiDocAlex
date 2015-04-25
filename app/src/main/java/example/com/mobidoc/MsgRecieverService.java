@@ -108,7 +108,7 @@ public class MsgRecieverService extends Service {
         Intent intent = new Intent(this, MeasurePop.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("msg", txt);
-
+        intent.putExtra("measureType","systolic");
         getApplicationContext().startActivity(intent);
 
     }

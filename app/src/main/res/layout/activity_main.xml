@@ -58,7 +58,7 @@
             android:layout_width="186dp"
             android:layout_height="107dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Projections Test"
+            android:text="Projections\n Test"
             android:id="@+id/textView6"
             android:layout_gravity="left|top"
             android:gravity="bottom" />
@@ -107,6 +107,24 @@
             android:ellipsize="start"
             android:editable="true"
             android:clickable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/textView17"
+            android:layout_gravity="bottom|top|center" />
+
+        <ImageView
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:id="@+id/measureIMG"
+            android:onClick="measureClick"
+            android:src="@drawable/results_icon1"
+            android:layout_gravity="center_horizontal|top" />
+
+
 
 
     </FrameLayout>
