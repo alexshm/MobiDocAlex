@@ -25,6 +25,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -64,7 +66,7 @@ public class SimulationScreen extends Activity {
     private boolean isPaused;
     Thread simulationThread;
 
-     ImageButton playsim ;
+    ImageButton playsim ;
 
 
     // Object implementing Service Connection callbacks
@@ -92,9 +94,9 @@ public class SimulationScreen extends Activity {
 
         final Button startbtn = (Button) findViewById(R.id.startSimulation);
         final Button handlerSender = (Button) findViewById(R.id.button2);
-        final ImageButton playsim = (ImageButton) findViewById(R.id.simPlay);
-
-       new  loadSimulationDataTask().execute();
+        playsim = (ImageButton) findViewById(R.id.simPlay);
+        final ImageButton pauseSim = (ImageButton) findViewById(R.id.simPause);
+        new  loadSimulationDataTask().execute();
 
         // projections spinner
         ////===========
@@ -110,6 +112,8 @@ public class SimulationScreen extends Activity {
 
 
         serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
+
+
 
 
         projectionVals = ArrayAdapter.createFromResource(this,
@@ -164,29 +168,32 @@ public class SimulationScreen extends Activity {
     }
 
     private void runSimulation() {
-        simulationThread = new Thread(new Runnable() {
+        simulationThread=new Thread(new Runnable() {
             @Override
             public void run() {
                 String[] simdata = SimulationData.split("\n");
                 for (int i = 1; i < simdata.length; i++) {
                     String[] values=simdata[i].split(";");
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                     String concept=values[1];
                     String value=values[2];
                     try {
-                        Date SimTime= sdf.parse(values[0]);
-                       // Log.i("simulation screen","insert data : ("+concept+", "+value+", "+SimTime);
-                        insertingMeasure(concept, value, SimTime);
+
+                        Log.i("simulation screen","simulation - insert data : ("+concept+", "+value+", "+values[0]);
+                        insertingMeasure(concept, value, values[0]);
                         Thread.sleep(2500);
 
                     } catch (Exception e) {
-                        Log.e("Simlation Screen", "run simulation error. error msg : " + e.getMessage());
+                        Log.e("Simlation Screen","run simulation error. error msg : "+e.getMessage());
                     }
 
                 }
             }
         });
+
+
+
     }
+
 
     private String readFileFromSDCARD(File f) {
         //Read text from file
@@ -197,7 +204,7 @@ public class SimulationScreen extends Activity {
             String line;
 
             while ((line = br.readLine()) != null) {
-                if (!line.contains("//")) {
+                if(!line.contains("//")) {
                     text.append(line);
                     text.append('\n');
                 }
@@ -213,15 +220,15 @@ public class SimulationScreen extends Activity {
     private boolean copySimulationFile(String dstFolder)
 
     {
-        FileOutputStream outStream = null;
+        FileOutputStream outStream=null;
         File destFile = new File(dstFolder);
         File folder = new File(Environment.getExternalStorageDirectory() + "/MobiDoc");
         if (!folder.exists()) {
             folder.mkdir();
-            copySimulationFile(folder.getAbsolutePath() + "/simulationfile.txt");
+            copySimulationFile(folder.getAbsolutePath()+"/simulationfile.txt");
         }
 
-        if (!destFile.exists()) {
+        if(!destFile.exists()) {
             try {
                 destFile.createNewFile();
             } catch (IOException e) {
@@ -239,14 +246,64 @@ public class SimulationScreen extends Activity {
         } catch (FileNotFoundException e) {
             Log.e("Simulation Screen", "error while copying file when trying to copy from local to new folder. error msg is : " + e.getMessage());
             return false;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             Log.e("Simulation Screen", "error while copying file when trying to copy from local to new folder. error msg is : " + e.getMessage());
             return false;
         }
     }
 
+    // Class that creates the AlertDialog
+    public static class AlertDialogFragment extends DialogFragment {
+
+        public static AlertDialogFragment newInstance() {
+            return new AlertDialogFragment();
+        }
+
+        // Build AlertDialog using AlertDialog.Builder
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage("There are no active projections. please activate/start at least one projection.")
+
+                            // User cannot dismiss dialog by hitting back button
+                    .setCancelable(false)
+
+                            // Set up No Button
+                    .setNeutralButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create();
+
+
+        }
+    }
+
     private void startSimulation(View v)
     {
+        if(projectionsCollection.getInstance().getCollectionSize()==0)
+        // there is no active projections available
+        {
+            // Create a new AlertDialogFragment
+            AlertDialogFragment d=AlertDialogFragment.newInstance();
+            d.show(getFragmentManager(), "Alert");
+            return;
+        }
+
+        if(isPaused)
+        {
+            playsim.setImageResource(R.drawable.player_play);
+            pauseSimulation();
+        }
+        else
+        {
+            playsim.setVisibility(View.INVISIBLE);
+            playsim.setImageResource(R.drawable.player_pause);
+
+        }
+
         if( simulationThread!=null)
             simulationThread.start();
         else {
@@ -255,19 +312,20 @@ public class SimulationScreen extends Activity {
         }
     }
 
-    private void pauseSimulation() {
+    private void pauseSimulation()
+    {
         try {
             simulationThread.wait();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
-    private void resumeSimulation() {
+    private void resumeSimulation()
+    {
         simulationThread.notify();
     }
-
-    private void stopSimulation() {
+    private void stopSimulation()
+    {
         try {
             simulationThread.sleep(500);
             simulationThread.interrupt();
@@ -277,8 +335,7 @@ public class SimulationScreen extends Activity {
 
 
     }
-
-    private void loadSimulationData() {
+    private  void loadSimulationData() {
         //check if the file and folder is existing.
         // if not creates them and copy the simulation file to this directory
         // if the file is allready exists. reads its data
@@ -286,12 +343,12 @@ public class SimulationScreen extends Activity {
         File simulationFile = new File(Environment.getExternalStorageDirectory() + "/MobiDoc/simulationfile.txt");
         if (simulationFile.exists()) {
             SimulationData = readFileFromSDCARD(simulationFile);
-            Log.i("Simulation Screen", "finish reading the simulation data from SDCARD successfully");
+            Log.i("Simulation Screen","finish reading the simulation data from SDCARD successfully");
         } else {
             SimulationData = readLocalFile("simulationfile");
             success = copySimulationFile(simulationFile.getAbsolutePath());
             if (success) {
-                Log.i("Simulation Screen", "the simulation file created and copied successfully");
+                Log.i("Simulation Screen","the simulation file created and copied successfully");
             } else {
                 Log.e("Simulation Screen", "error creating or coping the simulation file to the SDCARD");
             }
@@ -303,7 +360,7 @@ public class SimulationScreen extends Activity {
 //        Action a = new MeasurementAction("ss", "5088", getApplicationContext());
 //        Action a = new NotificationAction("Dont forget your pills" ,"5088",Action.Actor.Patient,getApplicationContext());
 //        Action a = new QuestionAction("what is your name?" ,"5088",getApplicationContext());
-        Action a = new MeasurementAction("Enter Blood pressure:", "5088");
+        Action a = new MeasurementAction("what is your name?", "5088");
 
         try {
             Message msg = a.call();
@@ -346,18 +403,25 @@ public class SimulationScreen extends Activity {
                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
                 Calendar c=Calendar.getInstance();
                 c.set(2014,2,1,8,0);
-                insertingMeasure("4985", "160", c.getTime());
+                // insertingMeasure("4985", "160", c.getTime());
                 try {
                     Thread.sleep(2500);
                     c.set(2014,2,1,12,0);
-                    insertingMeasure("4986","170",c.getTime());
+                    // insertingMeasure("4986","170",c.getTime());
+                }
+                catch (Exception e) {
                 }
 
             }
         }).start();
 
 
+
         //   }
+
+
+
+
 
 
     }
@@ -373,7 +437,7 @@ public class SimulationScreen extends Activity {
                 try {
                     Thread.sleep(8500);
                     c.set(2014, 2, 1, 12, 0);
-                //    insertingMeasure("5039", "yes", c.getTime());
+                    //    insertingMeasure("5039", "yes", c.getTime());
                 } catch (Exception e) {
                 }
 
@@ -382,17 +446,16 @@ public class SimulationScreen extends Activity {
 
     }
 
-    private void insertingMeasure(String concept, String value,Date time) {
+    private void insertingMeasure(String concept, String value,String timeStr) {
         //simulate insertion
         Intent i = new Intent(concept);
         i.putExtra("concept", concept);
 
         i.putExtra("time", timeStr);
-        i.putExtra("value", value);
+        i.putExtra("value",value);
         sendBroadcast(i, android.Manifest.permission.VIBRATE);
 
     }
-
     private String readLocalFile(String projId) {
         try {
             //=================================
@@ -428,6 +491,7 @@ public class SimulationScreen extends Activity {
     protected class loadSimulationDataTask extends AsyncTask<Void, Void, String> {
 
 
+
         @Override
 
         protected String doInBackground(Void... params) {
@@ -438,7 +502,7 @@ public class SimulationScreen extends Activity {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.i("Simulation screen", "finish loading simulation data");
+            Log.i("Simulation screen","finish loading simulation data");
         }
     }
 
