@@ -242,7 +242,10 @@ public class MonitorAction extends  Action {
     }
 
     public void setTimeConstraint(int daysAgo) {
+        Log.i("Monitoring Action","setting the days to remmenber in the DataCollection to :"+daysAgo);
         data.setTimeConstraint(daysAgo);
+
+
 
     }
 
