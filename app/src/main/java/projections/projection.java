@@ -321,7 +321,13 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
 
 
     }
+    public   void stopProjection() {
 
+
+        Log.i("projAbstract("+getProjectionId()+")","-method : stopping projection");
+        this.abortBroadcast();
+        Thread.yield();
+    }
 
     public void initMonitorAction()
     {

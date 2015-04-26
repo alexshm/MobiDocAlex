@@ -6,17 +6,22 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Messenger;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import example.com.mobidoc.CommunicationLayer.PushNotification;
+import example.com.mobidoc.ConfigReader;
 import example.com.mobidoc.R;
 import example.com.mobidoc.projectionsCollection;
 
@@ -24,6 +29,24 @@ import example.com.mobidoc.projectionsCollection;
 public class MainScreen extends Activity {
     TextView t = null;
     BroadcastReceiver projectionRec;
+    private Messenger mMessengerToLoggingService;
+    private boolean mIsBound;
+
+    // Object implementing Service Connection callbacks
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mMessengerToLoggingService = new Messenger(service);
+            mIsBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mMessengerToLoggingService = null;
+            mIsBound = false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +61,20 @@ public class MainScreen extends Activity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 final String projnum=intent.getStringExtra("projNum");
-                Log.i("mainScreen-onReceive","onReceive from broadcast projectionReceiver-need to start proj# "+projnum);
+                if(intent.getAction().contains("start"))
+                {
+                    Log.i("mainScreen-onReceive","onReceive from broadcast projectionReceiver-need to start proj# "+projnum);
 
-                projectionsCollection.getInstance().getprojection(projnum).startProjection();
+                    projectionsCollection.getInstance().getprojection(projnum).startProjection();
+                }
+                else
+                {
+                    Log.i("mainScreen-onReceive","need to Stop proj# "+projnum);
+
+                    projectionsCollection.getInstance().stopProjection(projnum);
+                }
+
+
 
             }
         };
@@ -53,6 +87,7 @@ public class MainScreen extends Activity {
             @Override
             public void run() {
                 //recieve notification only after login
+
                 PushNotification p = PushNotification.getInstance(getApplicationContext());
                 p.registerDevice();
                 Log.i("MainScreen", "app ID: " + p.getMobileID());

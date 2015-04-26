@@ -96,36 +96,39 @@ public class GcmIntentService extends IntentService {
             // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 
-                // This loop represents the service doing some work.
-                for (int i = 0; i < 3; i++) {
-                  try{
+                                     // This loop represents the service doing some work.
+                      for (int i = 0; i < 3; i++) {
+                          try{
 
-                        Thread.sleep(300);
+                              Thread.sleep(300);
 
-                    } catch (InterruptedException e) {
+                          } catch (InterruptedException e) {
 
                     }
                 }
                 Log.i(TAG, "Complete receiving projections in : " + SystemClock.elapsedRealtime());
                 //string contains all the received projections from the server
-                String Receivedprojs=extras.getString("message");
-                String[] projectionScript=Receivedprojs.split("beginProjection");
-                Log.i(TAG, "Received : "+projectionScript.length+" projections from server");
-                ExecutorService threadPool= Executors.newFixedThreadPool(projectionScript.length);
-                for(int i=1;i<projectionScript.length;i++)
-                {
-                    final String script="beginProjection"+projectionScript[i];
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new ProjectionScriptExecuter().execute(script);
-                        }
-                    }).start();
+                String Receivedmsg=extras.getString("message");
 
+                if(Receivedmsg.contains("beginProjection"))
+                {
+                    String[] projectionScript=Receivedmsg.split("beginProjection");
+                    Log.i(TAG, "Received : "+projectionScript.length+" projections from server");
+                    ExecutorService threadPool= Executors.newFixedThreadPool(projectionScript.length);
+                    for(int i=1;i<projectionScript.length;i++)
+                    {
+                        final String script="beginProjection"+projectionScript[i];
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                new ProjectionScriptExecuter().execute(script);
+                            }
+                        }).start();
+
+
+                    }
 
                 }
-
-
                 // Post notification of received message.
                 sendNotification(extras.getString("type"),extras.getString("projnumber"));
 

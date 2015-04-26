@@ -2,20 +2,29 @@ package example.com.mobidoc;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.util.Log;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.Date;
 
+import example.com.mobidoc.CommunicationLayer.pushNotificationServices.GcmBroadcastReceiver;
 import example.com.mobidoc.Screens.popUpScreens.MeasurePop;
 import example.com.mobidoc.Screens.popUpScreens.PopScreen;
 import example.com.mobidoc.Screens.popUpScreens.QuestionPopScreen;
 
 
 public class MsgRecieverService extends Service {
+
 
     public int count = 0;
     // Messenger Object that receives Messages from connected clients
@@ -36,6 +45,7 @@ public class MsgRecieverService extends Service {
         @Override
         public void handleMessage(Message msg) {
             String ans = "";
+
 
             count++;
             switch (msg.what) {
@@ -67,8 +77,6 @@ public class MsgRecieverService extends Service {
             }
 
 
-
-
 //            Intent intent2 = new Intent(MsgRecieverService.this, QuestionPopScreen.class);
 //            intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //            intent2.putExtra("question", "are you ok?");
@@ -84,7 +92,7 @@ public class MsgRecieverService extends Service {
     private void handleStartProjection(Message msg) {
         //starting the received projection
         ///========================================
-        Log.i("MsgRecieverService","handleStartProjection-recieve projnumber to start :"+msg.getData().getString("projNum"));
+        Log.i("MsgRecieverService", "handleStartProjection-recieve projnumber to start :" + msg.getData().getString("projNum"));
         projectionsCollection.getInstance().startProjection(msg.getData().getString("projNum"));
 
     }
@@ -93,22 +101,29 @@ public class MsgRecieverService extends Service {
         String ans;
         ans = msg.getData().getString("value");
         String Concept = msg.getData().getString("concept");
-        Log.i("MsgRecieverService","get CallBack msg with the values (concept: "+Concept+" txt: "+ans+")");
+        Log.i("MsgRecieverService", "get CallBack msg with the values (concept: " + Concept + " txt: " + ans + ")");
     }
 
     private void handleReminder(Message msg) {
         String ans;
         ans = "this is a reminder msg for : " + msg.getData().getString("value");
-        Log.i("MsgRecieverService","get reminder : "+ans);
+
+        Log.i("MsgRecieverService", "get reminder : " + ans);
+        Intent intent = new Intent(this, PopScreen.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("msg", ans);
+        getApplicationContext().startActivity(intent);
     }
 
     private void handleMeasure(Message msg) {
         String txt;
         txt = msg.getData().getString("value");
+        String concept = msg.getData().getString("concept");
+
         Intent intent = new Intent(this, MeasurePop.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("msg", txt);
-        intent.putExtra("measureType","systolic");
+        intent.putExtra("measureType", concept);
         getApplicationContext().startActivity(intent);
 
     }
@@ -122,7 +137,7 @@ public class MsgRecieverService extends Service {
 
     private void handleNotification(Message msg) {
         String ans;
-        String txt =  msg.getData().getString("value");
+        String txt = msg.getData().getString("value");
         Intent intent = new Intent(this, PopScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("msg", txt);
@@ -131,29 +146,27 @@ public class MsgRecieverService extends Service {
 
     private void handleQuestion(Message msg) {
         String ans;
-        ans = "question msg " + msg.getData().getString("question");
-        String yesAns = msg.getData().getString("yesVal");
-        String noAns = msg.getData().getString("noVal");
+        ans = "question msg " + msg.getData().getString("value");
+        String yesAns = msg.getData().getString("yes");
+        String noAns = msg.getData().getString("no");
         Intent intent2 = new Intent(this, QuestionPopScreen.class);
         intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent2.putExtra("question", "are you ok?");
-        intent2.putExtra("yesAns", "yesAns!!!");
-        intent2.putExtra("noAns", "noAns!!!");
-      //  getApplicationContext().startActivity(intent2);
+        intent2.putExtra("yesAns", noAns);
+        intent2.putExtra("noAns", yesAns);
+          getApplicationContext().startActivity(intent2);
     }
 
 
-    private void saveToDB(final String concept, final String val, final Date date)
-    {
+    private void saveToDB(final String concept, final String val, final Date date) {
         //saving the data to DB/ SDCARD
         ///========================================
         new Thread(new Runnable() {
             @Override
             public void run() {
-                    db.insertMesureToDB(concept,val,date);
+                db.insertMesureToDB(concept, val, date);
 
-                }
-
+            }
 
 
         }).start();
@@ -163,7 +176,44 @@ public class MsgRecieverService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        db=DB.getInstance(getApplicationContext());
+        db = DB.getInstance(getApplicationContext());
         return mMessenger.getBinder();
     }
+
+
+
+    @Deprecated
+    public void onStart(Intent intent, int startId) {
+
+
+        if(intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
+            Log.i("MsgRecieverService", "receive new Notification msg from server ");
+            Bundle extras = intent.getExtras();
+            String Receivedmsg = extras.getString("message");
+            try {
+                JSONObject jObject = new JSONObject(Receivedmsg);
+                String txt = jObject.getString("txt");
+                int type = jObject.getInt("type");
+                String concept = jObject.getString("concept");
+                Message msg = Message.obtain(null, type, 0, 0, 0);
+                Bundle bundle = new Bundle();
+                bundle.putString("value", txt);
+                bundle.putString("concept", concept);
+
+                msg.setData(bundle);
+                GcmBroadcastReceiver.completeWakefulIntent(intent);
+                this.incomingMsgHandler.handleMessage(msg);
+
+            } catch (JSONException e) {
+                Log.e("MsgRecieverService", "error parsing the msg Json ");
+            }
+        }
+
+
+
+
+
+
+    }
+
 }

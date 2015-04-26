@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -63,12 +64,15 @@ public class SimulationScreen extends Activity {
 
     private Messenger mMessengerToLoggingService;
     private boolean mIsBound;
-    private boolean isPaused;
+    private String prevAction;
     Thread simulationThread;
 
     ImageButton playsim ;
-
-
+    ImageButton stopSim;
+    TextView playTxt;
+    TextView simTime;
+    TextView simvalue;
+    TextView simconcept;
     // Object implementing Service Connection callbacks
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -89,14 +93,19 @@ public class SimulationScreen extends Activity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isPaused=false;
+        prevAction="init";
         setContentView(R.layout.simulation_screen);
 
         final Button startbtn = (Button) findViewById(R.id.startSimulation);
         final Button handlerSender = (Button) findViewById(R.id.button2);
         playsim = (ImageButton) findViewById(R.id.simPlay);
-        final ImageButton pauseSim = (ImageButton) findViewById(R.id.simPause);
-        new  loadSimulationDataTask().execute();
+       stopSim = (ImageButton) findViewById(R.id.simStop);
+        playTxt = (TextView) findViewById(R.id.textView3);
+        simconcept = (TextView) findViewById(R.id.textView14);
+        simvalue = (TextView) findViewById(R.id.textView15);
+        simTime = (TextView) findViewById(R.id.textView16);
+        //final ImageButton pauseSim = (ImageButton) findViewById(R.id.simPause);
+
 
         // projections spinner
         ////===========
@@ -109,7 +118,7 @@ public class SimulationScreen extends Activity {
         // Apply the adapter to the spinner
         projections_spinner.setAdapter(adapterprojections);
         //=================================================
-
+        new  loadSimulationDataTask().execute();
 
         serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
 
@@ -138,6 +147,14 @@ public class SimulationScreen extends Activity {
             @Override
             public void onClick(View v) {
                 startSimulation(v);
+            }
+        });
+
+        stopSim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stopSimulation();
+                prevAction="stop";
             }
         });
         handlerSender.setOnClickListener(new View.OnClickListener() {
@@ -173,14 +190,22 @@ public class SimulationScreen extends Activity {
             public void run() {
                 String[] simdata = SimulationData.split("\n");
                 for (int i = 1; i < simdata.length; i++) {
-                    String[] values=simdata[i].split(";");
-                    String concept=values[1];
-                    String value=values[2];
+                   final  String[] values=simdata[i].split(";");
+                   final String concept=values[1];
+                    final String value=values[2];
                     try {
+                        simconcept.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                simconcept.setText(concept);
+                                simTime.setText(values[0]);
+                                simvalue.setText(value);
+                            }
+                        });
 
                         Log.i("simulation screen","simulation - insert data : ("+concept+", "+value+", "+values[0]);
                         insertingMeasure(concept, value, values[0]);
-                        Thread.sleep(2500);
+                        Thread.sleep(3500);
 
                     } catch (Exception e) {
                         Log.e("Simlation Screen","run simulation error. error msg : "+e.getMessage());
@@ -292,43 +317,139 @@ public class SimulationScreen extends Activity {
             return;
         }
 
-        if(isPaused)
-        {
-            playsim.setImageResource(R.drawable.player_play);
-            pauseSimulation();
-        }
-        else
-        {
-            playsim.setVisibility(View.INVISIBLE);
-            playsim.setImageResource(R.drawable.player_pause);
+        switch (prevAction){
 
+            case "init":
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        playsim.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                playsim.setImageResource(R.drawable.player_pause);
+                                playTxt.setText("Pause Simulation");
+
+                            }
+                        });
+                    }
+                }).start();
+                prevAction="play";
+                runSimulation();
+                simulationThread.start();
+                break;
+
+            case "stop":
+                if( simulationThread!=null) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            playsim.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    playsim.setImageResource(R.drawable.player_pause);
+                                    playTxt.setText("Pause Simulation2");
+
+                                }
+                            });
+                        }
+                    }).start();
+                    prevAction="play";
+                    simulationThread.start();
+
+                }
+                break;
+            case "play":
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        playsim.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                playsim.setImageResource(R.drawable.player_play);
+                                playTxt.setText("Resume Simulation8");
+
+                            }
+                        });
+                    }
+                }).start();
+                prevAction="Pause";
+
+                    pauseSimulation();
+
+                break;
+            case "Pause":
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        playsim.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                playsim.setImageResource(R.drawable.player_pause);
+                                playTxt.setText("Pause Simulation3");
+
+                            }
+                        });
+                    }
+                }).start();
+                prevAction="Resume";
+                resumeSimulation();
+                break;
+
+            case "Resume" :
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        playsim.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                playsim.setImageResource(R.drawable.player_play);
+                                playTxt.setText("Pause Simulation4");
+
+                            }
+                        });
+                    }
+                }).start();
+                prevAction="Resume";
+                resumeSimulation();
+                break;
         }
 
-        if( simulationThread!=null)
-            simulationThread.start();
-        else {
-            runSimulation();
-            simulationThread.start();
-        }
+
+
     }
 
     private void pauseSimulation()
     {
-        try {
-            simulationThread.wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+        synchronized (playTxt)
+        { Log.i("Simulation screen ","Simulation paused");
+            try {
+                simulationThread.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+
+
+
     }
     private void resumeSimulation()
     {
-        simulationThread.notify();
+        synchronized (playTxt)
+        {  Log.i("Simulation screen ","Simulation resumed");
+
+                simulationThread.notify();
+
+        }
+
+
     }
     private void stopSimulation()
     {
         try {
             simulationThread.sleep(500);
             simulationThread.interrupt();
+            Log.i("Simulation screen ","Simulation stopped");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

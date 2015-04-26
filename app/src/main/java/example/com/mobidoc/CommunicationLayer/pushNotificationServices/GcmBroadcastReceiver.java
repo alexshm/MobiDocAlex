@@ -19,7 +19,10 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
+
+import example.com.mobidoc.MsgRecieverService;
 
 
 /**
@@ -35,11 +38,28 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Bundle extras = intent.getExtras();
 
-        // Explicitly specify that GcmIntentService will handle the intent.
-        ComponentName comp = new ComponentName(context.getPackageName(),  GcmIntentService.class.getName());
-        // Start the service, keeping the device awake while it is launching.
+        String Receivedmsg = extras.getString("message");
+        boolean isProjectionMsg = Receivedmsg.contains("Projection");
+        ComponentName comp = null;
+        // checking if received new projections or getting recommendation/qeustion/notification msg
+        // from  the server
+        if (isProjectionMsg) {
+            // Explicitly specify that GcmIntentService will handle the intent.
+            comp = new ComponentName(context.getPackageName(), GcmIntentService.class.getName());
+            startWakefulService(context, (intent.setComponent(comp)));
+            setResultCode(Activity.RESULT_OK);
+        } else
+            // in case we receive  recommendation/qeustion/notification msg from  the server
+            // we wiil send it to the message handler
+            comp = new ComponentName(context.getPackageName(), MsgRecieverService.class.getName());
         startWakefulService(context, (intent.setComponent(comp)));
-        setResultCode(Activity.RESULT_OK);
     }
-}
+
+        // Start the service, keeping the device awake while it is launching.
+
+
+
+    }
+

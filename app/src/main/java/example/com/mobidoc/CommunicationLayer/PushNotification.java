@@ -34,6 +34,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import example.com.mobidoc.ConfigReader;
 import example.com.mobidoc.DB;
 import example.com.mobidoc.R;
 import example.com.mobidoc.Screens.LoginScreen;
@@ -49,7 +50,7 @@ public  class   PushNotification extends Application{
      * Substitute you own sender ID here. This is the project number you got
      * from the API Console, as described in "Getting Started."
      */
-    String SENDER_ID = "571408319539";
+    String SENDER_ID;
 
     /**
      * Tag used on log messages.
@@ -79,6 +80,7 @@ public  class   PushNotification extends Application{
 
         this.onCreate();
         this.context=c;
+        this.SENDER_ID=new ConfigReader(c).getProperties().getProperty("APP_ID","");
         this.db=DB.getInstance(c);
     }
 

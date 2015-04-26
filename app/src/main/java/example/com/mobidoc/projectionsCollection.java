@@ -48,6 +48,18 @@ public class projectionsCollection {
 
 
     }
+    public  void stopProjection(String projectionID)
+    {
+
+        projection p = projectionCollection.get(projectionID);
+        Log.i("projectionsCollection","stopProjection-stopping projection : "+p.getProjectionId());
+        projectionCollection.remove(p);
+        p.stopProjection();
+
+       //TODO:
+
+
+    }
     public synchronized void  addProjection(projection  p)
     {
         System.out.println("proj id : "+p.getProjectionId());

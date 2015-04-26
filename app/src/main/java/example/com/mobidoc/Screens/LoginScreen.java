@@ -139,6 +139,7 @@ public class LoginScreen extends Activity {
             Intent mainScreen = new Intent(LoginScreen.this, MainScreen.class);
 
             startActivity(mainScreen);
+            finish();
 
         } else {
 
