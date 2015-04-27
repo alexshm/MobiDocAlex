@@ -39,24 +39,24 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle extras = intent.getExtras();
-
-        String Receivedmsg = extras.getString("message");
-        boolean isProjectionMsg = Receivedmsg.contains("Projection");
-        ComponentName comp = null;
-        // checking if received new projections or getting recommendation/qeustion/notification msg
-        // from  the server
-        if (isProjectionMsg) {
-            // Explicitly specify that GcmIntentService will handle the intent.
-            comp = new ComponentName(context.getPackageName(), GcmIntentService.class.getName());
+        if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
+            String Receivedmsg = extras.getString("message");
+            boolean isProjectionMsg = Receivedmsg.contains("Projection");
+            ComponentName comp = null;
+            // checking if received new projections or getting recommendation/qeustion/notification msg
+            // from  the server
+            if (isProjectionMsg) {
+                // Explicitly specify that GcmIntentService will handle the intent.
+                comp = new ComponentName(context.getPackageName(), GcmIntentService.class.getName());
+                startWakefulService(context, (intent.setComponent(comp)));
+                setResultCode(Activity.RESULT_OK);
+            } else
+                // in case we receive  recommendation/qeustion/notification msg from  the server
+                // we wiil send it to the message handler
+                comp = new ComponentName(context.getPackageName(), MsgRecieverService.class.getName());
             startWakefulService(context, (intent.setComponent(comp)));
-            setResultCode(Activity.RESULT_OK);
-        } else
-            // in case we receive  recommendation/qeustion/notification msg from  the server
-            // we wiil send it to the message handler
-            comp = new ComponentName(context.getPackageName(), MsgRecieverService.class.getName());
-        startWakefulService(context, (intent.setComponent(comp)));
+        }
     }
-
         // Start the service, keeping the device awake while it is launching.
 
 
