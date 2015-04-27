@@ -22,15 +22,6 @@
         android:src="@drawable/mobidoc"
         android:textAlignment="center" />
 
-    <Button
-        android:id="@+id/startSimulation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Simulate projecction"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,54 +31,26 @@
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true" />
 
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/radioGroup"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/textView"
-        android:layout_alignLeft="@+id/imageView1">
-
-    </RadioGroup>
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner3"
-        android:spinnerMode="dropdown"
-        android:dropDownWidth="wrap_content"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="send to handler"
-        android:id="@+id/button2"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/spinner3"
-        android:layout_alignEnd="@+id/spinner3" />
-
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/simPlay"
         android:src="@drawable/player_play"
-        android:layout_above="@+id/textView3"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/textView14"
+        android:layout_alignRight="@+id/textView"
+        android:layout_alignEnd="@+id/textView"
+        android:layout_marginTop="40dp" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/simStop"
         android:src="@drawable/player_stop"
-        android:layout_above="@+id/textView3"
-        android:layout_toLeftOf="@+id/textView"
-        android:layout_toStartOf="@+id/textView"
         android:nestedScrollingEnabled="false"
-        android:onClick="stopSimulation" />
+        android:onClick="stopSimulation"
+        android:layout_above="@+id/textView3"
+        android:layout_toLeftOf="@+id/textView16"
+        android:layout_toStartOf="@+id/textView16" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -96,9 +59,10 @@
         android:text="Stop Simulation"
         android:id="@+id/textView2"
         android:textAlignment="center"
-        android:layout_above="@+id/startSimulation"
 
-        android:layout_marginBottom="30dp" />
+        android:layout_below="@+id/simStop"
+        android:layout_toRightOf="@+id/textView13"
+        android:layout_toEndOf="@+id/textView13" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -107,8 +71,9 @@
         android:text="Play Simulation"
         android:id="@+id/textView3"
         android:textAlignment="center"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/simPlay"
+        android:layout_alignLeft="@+id/simPlay"
+        android:layout_alignStart="@+id/simPlay" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -116,9 +81,9 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="simulation Time :"
         android:id="@+id/textView10"
-        android:layout_below="@+id/spinner3"
-        android:layout_toRightOf="@+id/radioGroup"
-        android:layout_toEndOf="@+id/radioGroup" />
+        android:layout_above="@+id/textView16"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -127,8 +92,7 @@
         android:text="Value:"
         android:id="@+id/textView11"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/radioGroup"
-        android:layout_toEndOf="@+id/radioGroup" />
+        android:layout_alignLeft="@+id/imageView1" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -136,21 +100,22 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="concept :"
         android:id="@+id/textView13"
-        android:layout_above="@+id/simStop"
-        android:layout_toRightOf="@+id/radioGroup"
-        android:layout_toEndOf="@+id/radioGroup"
-        android:layout_marginBottom="23dp" />
+        android:layout_below="@+id/textView11"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="45dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/textView14"
-        android:layout_alignBottom="@+id/textView13"
-        android:layout_toRightOf="@+id/startSimulation"
         android:textColor="#ffff1415"
-        android:layout_alignRight="@+id/textView16"
-        android:layout_alignEnd="@+id/textView16" />
+        android:layout_alignTop="@+id/textView13"
+        android:layout_alignLeft="@+id/simPlay"
+        android:layout_alignStart="@+id/simPlay"
+        android:layout_alignRight="@+id/textView15"
+        android:layout_alignEnd="@+id/textView15" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -159,8 +124,11 @@
         android:id="@+id/textView15"
         android:layout_alignTop="@+id/textView11"
         android:textColor="#ffff1415"
-        android:layout_toStartOf="@+id/button2"
-        android:layout_toLeftOf="@+id/button2" />
+        android:layout_above="@+id/textView13"
+        android:layout_alignRight="@+id/textView3"
+        android:layout_alignEnd="@+id/textView3"
+        android:layout_toRightOf="@+id/textView2"
+        android:layout_toEndOf="@+id/textView2" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -168,11 +136,11 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/textView16"
         android:textColor="#ffff1415"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/textView10"
-        android:layout_toRightOf="@+id/textView10"
         android:textStyle="normal"
-        android:layout_above="@+id/textView15" />
+        android:layout_above="@+id/textView15"
+        android:layout_alignRight="@+id/imageView1"
+        android:layout_alignEnd="@+id/imageView1"
+        android:layout_alignLeft="@+id/textView15"
+        android:layout_alignStart="@+id/textView15" />
 
 </RelativeLayout>

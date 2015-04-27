@@ -97,8 +97,7 @@ public class SimulationScreen extends Activity {
         prevAction="init";
         setContentView(R.layout.simulation_screen);
         isPasued=false;
-        final Button startbtn = (Button) findViewById(R.id.startSimulation);
-        final Button handlerSender = (Button) findViewById(R.id.button2);
+
         playsim = (ImageButton) findViewById(R.id.simPlay);
        stopSim = (ImageButton) findViewById(R.id.simStop);
         playTxt = (TextView) findViewById(R.id.textView3);
@@ -108,17 +107,7 @@ public class SimulationScreen extends Activity {
         //final ImageButton pauseSim = (ImageButton) findViewById(R.id.simPause);
 
 
-        // projections spinner
-        ////===========
-        projections_spinner = (Spinner) findViewById(R.id.spinner3);
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapterprojections = ArrayAdapter.createFromResource(this,
-                R.array.projections, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapterprojections.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        projections_spinner.setAdapter(adapterprojections);
-        //=================================================
+
         new  loadSimulationDataTask().execute();
 
         serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
@@ -130,20 +119,6 @@ public class SimulationScreen extends Activity {
                 R.array.projectionsVals, android.R.layout.simple_spinner_item);
 
 
-        projections_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                selectedProjection = parentView.getItemAtPosition(position).toString();
-                projectionId = projectionVals.getItem(position).toString();
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-
-        });
         playsim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,30 +133,8 @@ public class SimulationScreen extends Activity {
                 prevAction="stop";
             }
         });
-        handlerSender.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mIsBound) {
-
-                    // Send Message to the Logging Service
-                    SendActionToHandler();
-
-                }
-
-            }
-        });
-
-        startbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
 
-                SimulateProjections(v);
-
-
-            }
-        });
 
 
     }
@@ -465,13 +418,21 @@ public class SimulationScreen extends Activity {
     }
     private void stopSimulation()
     {
-        try {
-            simulationThread.sleep(500);
-            simulationThread.interrupt();
-            Log.i("Simulation screen ","Simulation stopped");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+       if(simulationThread!=null) {
+           try {
+               simulationThread.sleep(500);
+               simulationThread.interrupt();
+               Log.i("Simulation screen ", "Simulation stopped");
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           }
+       }else
+
+       {
+           AlertDialogFragment d=AlertDialogFragment.newInstance();
+           d.show(getFragmentManager(), "Alert");
+           return;
+       }
 
 
     }
