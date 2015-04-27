@@ -7,7 +7,7 @@ import android.os.Message;
 import android.util.Log;
 
 /**
- *  remiander obj
+ *  remiander obj for Measurement
  */
 public class MeasurementReminder extends Action {
     public MeasurementReminder(String measureName)

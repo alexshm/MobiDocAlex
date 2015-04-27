@@ -26,12 +26,22 @@ import projections.ActionsExecutor.*;
 
 import projections.Utils;
 
-/**
+/**============================================================================================
  * holds many actions to be preformed
  *  the actions can be executed in  parallel / sequential order .
  *  this can be done in the actionExecutor class that determine the
  *  execute order for the actions.
- */
+ *
+ *  * conceptsToMonitor - a collection of concepts . this collection holds all the spacial
+ *                      concepts that we need to register for.
+ *                      the projection class used in that collection . this is how it knows to
+ *                      which concepts to register.
+ *                      we can add a   concept to the collection when :
+ *                      a) every time we add an  action to the composite action we check if we need
+ *                      to add its concept to this  collection.
+ *                      b) by the method 'addConceptToMonitor'
+ *
+ =================================================================================================*/
 public class compositeAction  {
 
     private String name;
@@ -103,7 +113,7 @@ public class compositeAction  {
     }
 
     /*
-        add the concept to the concepts list
+        add the concept to the concepts collection who need to be registered and monitored
      */
     private void addConceptToMonitor( String conceptId)
     {

@@ -28,7 +28,7 @@ import projections.monitoringObjects.valueConstraint;
        in the case of this example :
        (concept 4985 can be >= 90 and <=150  =>  he multiple values to check are  [90,150])
 
-    * Operators - are enum for defines the operator of the value then connected to him .one from : (< / > / = / <= / >=)
+    * Operators - are enum for defines the operator of the value that connected to him .one from : (< / > / = / <= / >=)
 
  ====================================================================================================*/
 public class var<T> {
@@ -81,7 +81,10 @@ public class var<T> {
     }
 
 
-
+    /*=======================================
+    Adds a new ValueConstraint  to var.
+    by add it to the collection
+    ==========================================*/
     public void addValueConstraint(String concept, Operators op, String val)
     {
         valueConstraint valc=new valueConstraint(concept,op,val);
@@ -108,7 +111,15 @@ public class var<T> {
         return name;
     }
 
-
+/*===========================================================================
+    check if the var is satisfyed (its conditions becomes true)
+    loop for all the value condition collection , and according to the the
+    operator between the constraints check the total outcome.
+    if the operation between constraints is AND  : make AND between all the outcome  of the
+                                                    constraints
+    if the operation between constraints is OR  : make OR between all the outcome  of the
+                                                    constraints
+ ============================================================================*/
     public boolean isSatisfyVar(String val)
     {
 
@@ -118,6 +129,7 @@ public class var<T> {
             for(valueConstraint constraint:valConstraints) {
                 ans = ans && constraint.isSatisfyConstraint(val);
             }
+            Log.i("var("+name+")","the result for (And) isSatisfyVar : "+ans);
             return  ans;
         }
         else {
@@ -126,6 +138,8 @@ public class var<T> {
 
                 ans = ans || constraint.isSatisfyConstraint(val);
             }
+            Log.i("var("+name+")","the result for (Or) isSatisfyVar : "+ans);
+
             return ans;
         }
 

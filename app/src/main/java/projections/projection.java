@@ -35,7 +35,52 @@ import projections.Actions.compositeAction;
 import projections.monitoringObjects.valueConstraint;
 import projections.projectionParser.ActionParser;
 
+/*=======================================================================
 
+    represent a projection object.
+    the projection is an abstract class . each type (cyclical /monitor) inherit from this class
+    and implements few methods according to their logic.
+
+    all the projection are extended BroadcastReceiver.
+    each projection register to the BroadcastReceiver with the concepts he need for execution.
+    when the GUI inserting a measurement value / answering question / accept reommendation etc..
+    the projection class received the data and do its logic in  OnReceive  method . we override  the OnReceive method
+    in  each projection type.
+    in that way we can subscribe the projection for concepts and also can guaranty that a specific concept will be received
+    in all the subscribed projections.
+
+    the main process for incoming data is the following :
+    ----------------------------------------------------
+    when the projection created it subscribe for the needed concepts->  Gui inserted data-> Gui send the
+    data with the required concept with SendBroadcast -> all the projection that registerd to that concept
+     received tha data in OnReceive method ->  the data saved in the DataCollection -> check if need
+     to trigger next action -> if yes-> search the next composite action  and trigger it.-> register to the
+     new concepts of the next composite action -> send the actions to the GUI
+
+
+    * compActionTable -each projection have a map of composite actions. this is helping us to execute
+      any composite action we want.(i.e after receiving yes for question -> we need to invoke the composite action XXX)
+      so to do that we just need to search in that map and invoke the execute method.
+
+    *conceptsActionMap - saving the onReceive concepts. meaning the concepts we need to register for
+     recommendation/ question action.if we have concepts in this list . we need to register to them when the projection
+      initializing. moreover, these concepts are used for knowing wich action to invoke when recieved each concept .
+      (i.e : if we add a recommnedation that the accept concept is 1234 and the decline concept is 3456. then with the
+      help of this collection we know that if we recieved 1234 we need to invoke the action spacifed for the accept.
+      moreover in that way we know to register the BroadcastReceiver  to 1234 and for 3456.
+
+    *
+    * condAction - an object that saved the conditions and vars . mainly used for monitor projection   or
+                        for projection that need to check some values.
+    *
+    * action -  the current composite action that have been executed.
+    *
+    * actionToTrigger- the composite action to executed after the monitor is happend
+    Main functions :
+    -----------------
+
+
+ ==========================================================================*/
 public abstract class projection extends BroadcastReceiver implements Runnable{
 
 
@@ -115,6 +160,9 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
         return Type;
     }
 
+    /*
+
+    */
 
     public void  setExectuionMode(Utils.ExecuteMode executeMode)
     {
@@ -231,6 +279,10 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
     {
         return;
     }
+
+    /*
+
+    */
 
     public void setTriggerAction(String triggerActionName)
     {
