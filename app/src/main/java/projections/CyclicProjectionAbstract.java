@@ -55,6 +55,8 @@ public class CyclicProjectionAbstract extends projection {
         cyclicCalendar=Calendar.getInstance();
         days=null;
         onSpacificCount=0;
+        cycTime=new Date();
+        reminderTime=new Date();
 
     }
 
@@ -122,7 +124,8 @@ public class CyclicProjectionAbstract extends projection {
         int minute=Integer.parseInt(startTime.split(":")[1]);
         this.cyclicCalendar.set(Calendar.HOUR_OF_DAY, hour);
         this.cyclicCalendar.set(Calendar.MINUTE,minute);
-        this.cycTime=cyclicCalendar.getTime();
+
+        this.cycTime=new Date(cyclicCalendar.getTime().getTime());
         Log.i("cyclic projection", "the normal calander is set to : " + cyclicCalendar.get(Calendar.HOUR_OF_DAY) + ":" + cyclicCalendar.get(Calendar.MINUTE) + ":" + cyclicCalendar.get(Calendar.SECOND));
 
 

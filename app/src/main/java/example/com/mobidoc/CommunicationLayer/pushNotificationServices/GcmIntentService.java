@@ -113,8 +113,8 @@ public class GcmIntentService extends IntentService {
                 if(Receivedmsg.contains("beginProjection"))
                 {
                     String[] projectionScript=Receivedmsg.split("beginProjection");
-                    Log.i(TAG, "Received : "+projectionScript.length+" projections from server");
-                    ExecutorService threadPool= Executors.newFixedThreadPool(projectionScript.length);
+                    Log.i(TAG, "Received : "+(projectionScript.length-1)+" projections from server");
+                    ExecutorService threadPool= Executors.newFixedThreadPool((projectionScript.length-1));
                     for(int i=1;i<projectionScript.length;i++)
                     {
                         final String script="beginProjection"+projectionScript[i];
