@@ -107,17 +107,4 @@
         android:layout_below="@+id/imageView1"
         android:layout_centerHorizontal="true" />
 
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Open MRS Mode"
-        android:id="@+id/openMRSmode"
-        android:clickable="false"
-        android:enabled="true"
-        android:textOff="Open MRS OFF"
-        android:textOn="Open MRS On"
-        android:layout_above="@+id/errorlable"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
 </RelativeLayout>

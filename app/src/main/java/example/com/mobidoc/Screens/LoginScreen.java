@@ -34,32 +34,6 @@ public class LoginScreen extends Activity {
     private ProgressDialog mProgressDialog;
     private EditText username;
     private EditText pass;
-    private Boolean withOpenMRS;
-
-
-    //For registration to  Push Notification
-    ////////////////////////////////////////////
-    public static final String EXTRA_MESSAGE = "message";
-    public static final String PROPERTY_REG_ID = "registration_id";
-    private static final String PROPERTY_APP_VERSION = "appVersion";
-    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
-    /**
-     * Substitute you own sender ID here. This is the project number you got
-     * from the API Console, as described in "Getting Started."
-     */
-    String SENDER_ID = "571408319539";
-
-    /**
-     * Tag used on log messages.
-     */
-    static final String TAG = "GCM Demo";
-    static final String Registrationid = "";
-    static String regid;
-    String RegistrationRes;
-
-    GoogleCloudMessaging gcm;
-    Context context;
 
     ///////////////////////////////////////
     @Override
@@ -68,17 +42,8 @@ public class LoginScreen extends Activity {
         setContentView(R.layout.login_screen);
         username = (EditText) findViewById(R.id.usernametxt);
         pass = (EditText) findViewById(R.id.passtext);
-        withOpenMRS = false;
-        context = getApplicationContext();
-
-
 
         Button loginbtn = (Button) findViewById(R.id.loginButton);
-        ToggleButton mrsMode = (ToggleButton) findViewById(R.id.openMRSmode);
-        //set listener for clicking the button
-
-
-        // Check device for Play Services APK. If check succeeds, proceed with GCM registration.
 
 
         loginbtn.setOnClickListener(new OnClickListener() {
@@ -91,16 +56,6 @@ public class LoginScreen extends Activity {
 
             }
         });
-
-        mrsMode.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                withOpenMRS = !withOpenMRS;
-            }
-        });
-
-
-
     }
 
 
@@ -109,7 +64,7 @@ public class LoginScreen extends Activity {
 
 
         showDialog(0);
-        final LoginTask loginTask = new LoginTask(BaseUrl, withOpenMRS);
+        final LoginTask loginTask = new LoginTask(BaseUrl);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -129,9 +84,6 @@ public class LoginScreen extends Activity {
             }
         }).start();
     }
-
-
-
 
     private void continueLogin(final boolean result) {
         boolean ok = result;

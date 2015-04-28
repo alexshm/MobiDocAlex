@@ -12,12 +12,12 @@ import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 public   class LoginTask extends AsyncTask<String, Boolean, Boolean> {
 
     private final String BaseUrl;
-    private boolean withOpenMRS;
 
 
-    public LoginTask(String baseUrl, boolean withOpenMRS ){
+
+    public LoginTask(String baseUrl ){
         this.BaseUrl = baseUrl;
-        this.withOpenMRS = withOpenMRS;
+
 
     }
 
@@ -26,16 +26,12 @@ public   class LoginTask extends AsyncTask<String, Boolean, Boolean> {
     protected Boolean doInBackground(String... params) {
 
         boolean ans = false;
-        if (withOpenMRS) {
+
             Log.i("Login Screen", "the url to connect is :" + BaseUrl);
             OpenMrsApi mrsApi = new OpenMrsApi(BaseUrl);
             ans = mrsApi.logIn(params[0], params[1]);
             Log.i("Login Screen", "the answer from OPEN MRS IS :" + ans);
-        } else {
 
-            if ("admin".equals(params[0]) && "12345".equals(params[1]))
-                ans = true;
-        }
 
 
         return ans;
