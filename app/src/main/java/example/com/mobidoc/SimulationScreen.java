@@ -2,6 +2,7 @@ package example.com.mobidoc;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -38,9 +39,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 
 
 import projections.Actions.Action;
@@ -74,6 +77,7 @@ public class SimulationScreen extends Activity {
     TextView simTime;
     TextView simvalue;
     TextView simconcept;
+    AlarmManager am;
     // Object implementing Service Connection callbacks
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -107,8 +111,13 @@ public class SimulationScreen extends Activity {
         //final ImageButton pauseSim = (ImageButton) findViewById(R.id.simPause);
 
 
+        try {
+            new  loadSimulationDataTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR).get();
+        } catch (InterruptedException e) {
 
-        new  loadSimulationDataTask().execute();
+        } catch (ExecutionException e) {
+
+        }
 
         serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
 
@@ -151,7 +160,7 @@ public class SimulationScreen extends Activity {
 
             @Override
             public void run() {
-
+                    Calendar c=Calendar.getInstance();
                     String[] simdata = SimulationData.split("\n");
                     for (int i = 1; i < simdata.length; i++) {
                         final String[] values = simdata[i].split(";");
@@ -161,9 +170,17 @@ public class SimulationScreen extends Activity {
                             simconcept.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    simconcept.setText(concept);
-                                    simTime.setText(values[0]);
-                                    simvalue.setText(value);
+
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+                                      //  am.setTime(sdf.parse(values[0]).getTime());
+                                        simconcept.setText(concept);
+                                        simTime.setText(values[0]);
+                                        simvalue.setText(value);
+
+
+
+
                                 }
                             });
 

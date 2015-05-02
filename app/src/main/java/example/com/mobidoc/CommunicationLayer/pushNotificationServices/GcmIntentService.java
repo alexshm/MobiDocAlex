@@ -47,6 +47,7 @@ import java.util.concurrent.Future;
 
 import example.com.mobidoc.R;
 import projections.ScriptingLayer.JsScriptExecutor;
+import projections.Utils;
 import projections.projection;
 /**
  * This {@code IntentService} does the actual handling of the GCM message.
@@ -109,10 +110,10 @@ public class GcmIntentService extends IntentService {
                 Log.i(TAG, "Complete receiving projections in : " + SystemClock.elapsedRealtime());
                 //string contains all the received projections from the server
                 String Receivedmsg=extras.getString("message");
-
-                if(Receivedmsg.contains("beginProjection"))
+                  String parsedMsg= Utils.ConvertHexToString(Receivedmsg);
+                if(parsedMsg.contains("beginProjection"))
                 {
-                    String[] projectionScript=Receivedmsg.split("beginProjection");
+                    String[] projectionScript=parsedMsg.split("beginProjection");
                     Log.i(TAG, "Received : "+(projectionScript.length-1)+" projections from server");
                     ExecutorService threadPool= Executors.newFixedThreadPool((projectionScript.length-1));
                     for(int i=1;i<projectionScript.length;i++)

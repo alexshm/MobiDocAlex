@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Messenger;
@@ -20,8 +22,14 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Date;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
 import example.com.mobidoc.CommunicationLayer.PushNotification;
+import example.com.mobidoc.CommunicationLayer.ServicesToBeDSS.PicardCommunicationLayer;
 import example.com.mobidoc.ConfigReader;
+import example.com.mobidoc.LoginTask;
 import example.com.mobidoc.R;
 import example.com.mobidoc.projectionsCollection;
 
@@ -29,24 +37,7 @@ import example.com.mobidoc.projectionsCollection;
 public class MainScreen extends Activity {
     TextView t = null;
     BroadcastReceiver projectionRec;
-    private Messenger mMessengerToLoggingService;
-    private boolean mIsBound;
-
-    // Object implementing Service Connection callbacks
-    private ServiceConnection mConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mMessengerToLoggingService = new Messenger(service);
-            mIsBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mMessengerToLoggingService = null;
-            mIsBound = false;
-        }
-    };
-
+    ProgressDialog startGLDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +45,8 @@ public class MainScreen extends Activity {
 
         setContentView(R.layout.activity_main);
         IntentFilter intentFilter = new IntentFilter("startProjection");
+
+
 
 
         projectionRec=new BroadcastReceiver() {
@@ -73,26 +66,33 @@ public class MainScreen extends Activity {
 
                     projectionsCollection.getInstance().stopProjection(projnum);
                 }
-
-
-
             }
         };
         getApplicationContext().registerReceiver(projectionRec,intentFilter);
-        //register to triggring timer events
         Log.i("Main Screen","register to brodcastRec for recieve projections");
 
+        //register the Device to the GCM service
+        new registerDeviceAsyncTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //recieve notification only after login
 
-                PushNotification p = PushNotification.getInstance(getApplicationContext());
-                p.registerDevice();
-                Log.i("MainScreen", "app ID: " + p.getMobileID());
-            }
-        }).start();
+    }
+
+    private class registerDeviceAsyncTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+
+        protected String doInBackground(Void... params) {
+
+            PushNotification p = PushNotification.getInstance(getApplicationContext());
+            p.registerDevice();
+            Log.i("MainScreen", "app ID: " + p.getMobileID());
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Log.i("MainScreen","finish register Mobile");
+        }
     }
 
 
@@ -141,8 +141,39 @@ public class MainScreen extends Activity {
         startActivity(SimulationScreen);
     }
 
-    public void goToSettings(View view) {
+    public void startGuideLine(View view) {
+        Properties prop = new ConfigReader(getApplicationContext()).getProperties();
+        final String url = prop.getProperty("Picard_WCF_URL");
+        final String glid = prop.getProperty("Guide_Line_ID_To_Run");
 
+        final String patientID = "moparasdll123";
+        final String startTime = "20-05-2015 08:00:00";
+
+        showDialog(0);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String regid=PushNotification.getInstance(getApplicationContext()).getMobileID();
+                boolean result = PicardCommunicationLayer.StartGuideLine(patientID, startTime, glid,regid, url);
+                Log.i("Main Screen", "get the result from starting guide line " + result);
+
+                startGLDialog.dismiss();
+                if (!result) {
+                    String alertMsg = "Error starting Guide Line. Try Again or check Internet Connection";
+                    AlertDialogFragment d = AlertDialogFragment.newInstance(alertMsg);
+                    d.show(getFragmentManager(), "Alert");
+                    return;
+                }
+            }
+        }).start();
+    }
+
+    public void goToSettings(View view) {
+        String alertMsg="This option is not yet available.";
+        AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
+        d.show(getFragmentManager(), "Alert");
+        return;
     }
 
     public void goToWebTests(View view) {
@@ -155,6 +186,55 @@ public class MainScreen extends Activity {
         startActivity(measureScreen);
     }
 
+
+
+    // Class that creates the AlertDialog
+    public static class AlertDialogFragment extends DialogFragment {
+        private static String msg;
+
+
+        public static AlertDialogFragment newInstance(String _msg) {
+           msg=_msg;
+            return new AlertDialogFragment();
+        }
+
+        // Build AlertDialog using AlertDialog.Builder
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage(msg)
+
+                            // User cannot dismiss dialog by hitting back button
+                    .setCancelable(false)
+
+                            // Set up No Button
+                    .setNeutralButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create();
+
+
+        }
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+
+        startGLDialog = new ProgressDialog(this);
+        // Set Dialog message
+        startGLDialog.setMessage("Please Wait to receive Projections..");
+        startGLDialog.setTitle("Starting Guide Line at the BE-DSS...");
+
+        // Dialog will be displayed for an unknown amount of time
+        startGLDialog.setIndeterminate(true);
+        startGLDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        startGLDialog.setCancelable(false);
+        startGLDialog.show();
+        return startGLDialog;
+
+    }
     public static class BuildDialog extends DialogFragment {
 
         private static String msg;

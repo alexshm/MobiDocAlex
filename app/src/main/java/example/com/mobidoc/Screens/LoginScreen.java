@@ -20,9 +20,12 @@ import android.widget.ToggleButton;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import example.com.mobidoc.CommunicationLayer.PushNotification;
+import example.com.mobidoc.CommunicationLayer.ServicesToBeDSS.PicardCommunicationLayer;
+import example.com.mobidoc.CommunicationLayer.ServicesToBeDSS.StartGLTask;
 import example.com.mobidoc.ConfigReader;
 import example.com.mobidoc.LoginTask;
 import example.com.mobidoc.R;
@@ -56,6 +59,8 @@ public class LoginScreen extends Activity {
 
             }
         });
+
+
     }
 
 
@@ -71,6 +76,9 @@ public class LoginScreen extends Activity {
 
 
                 try {
+
+                    //String user="admin";
+                    //String pass="Admin123";
                     Boolean result = loginTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, user, password).get();
                     mProgressDialog.dismiss();
                     continueLogin(result);

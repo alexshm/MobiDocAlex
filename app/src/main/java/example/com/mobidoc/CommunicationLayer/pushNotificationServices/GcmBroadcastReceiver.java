@@ -21,6 +21,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.WakefulBroadcastReceiver;
+import android.util.Log;
+import android.util.Xml;
 
 import example.com.mobidoc.MsgRecieverService;
 
@@ -39,9 +41,11 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle extras = intent.getExtras();
+
+
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
-            String Receivedmsg = extras.getString("message");
-            boolean isProjectionMsg = Receivedmsg.contains("Projection");
+            String ReceivedMsgType = extras.getString("type");
+            boolean isProjectionMsg = ReceivedMsgType.contains("project");
             ComponentName comp = null;
             // checking if received new projections or getting recommendation/qeustion/notification msg
             // from  the server
@@ -57,9 +61,12 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
             startWakefulService(context, (intent.setComponent(comp)));
         }
     }
-        // Start the service, keeping the device awake while it is launching.
+
+    // Start the service, keeping the device awake while it is launching.
+
+
+}
 
 
 
-    }
 

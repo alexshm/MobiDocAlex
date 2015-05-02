@@ -1,6 +1,8 @@
 package projections;
 
 
+import android.util.Log;
+
 import java.util.Properties;
 
 import example.com.mobidoc.ConfigReader;
@@ -78,6 +80,21 @@ public  final class Utils {
         }
         return null;
 
+    }
+
+    public static String ConvertHexToString(String hexInput) {
+        Log.i("Utils","receive the hexa msg from server : "+hexInput.toString());
+
+        StringBuilder output = new StringBuilder("");
+        for (int i = 0; i < hexInput.length(); i += 2)
+        {
+            String str = hexInput.substring(i, i + 2);
+            output.append((char) Integer.parseInt(str, 16));
+        }
+        String ans= output.toString();
+        Log.i("Utils","the parsed string is  : "+ans);
+
+        return ans;
     }
 
     public  static Action.AggregationOperators getAggregationOp(String op)

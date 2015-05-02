@@ -56,7 +56,7 @@ public class projectionsCollection {
         projectionCollection.remove(p);
         p.stopProjection();
 
-       //TODO:
+       //TODO: check the stop projection ..
 
 
     }

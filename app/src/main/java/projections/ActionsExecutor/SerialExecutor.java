@@ -15,13 +15,14 @@ import java.util.concurrent.Future;
 
 import projections.Actions.Action;
 
-/*
+/*=======================================================================
     This class define running the Actions in sequential order
 
     it has a list of tasks to be executed and a list of msgs to send to the
     MsgHandler defined in the GUI componenet.
 
     * the process for sending a msg is :
+    ---------------------------------------
     when the execute Method invoked, it takes each task from  the tasks list to be executed
     and  after each task it put it in the msg queue and clear the list after the msg  has
     been sent.
@@ -29,7 +30,7 @@ import projections.Actions.Action;
     * the  startService() method defined in the super class 'actionExecuter'.
     this Method binding the Service for sending the msgs to the GUI.
 
- */
+ ================================================================================================*/
 public class SerialExecutor extends actionExecutor implements Executor {
 
 

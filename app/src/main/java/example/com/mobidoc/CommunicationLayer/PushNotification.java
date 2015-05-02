@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.io.ByteArrayOutputStream;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -30,6 +31,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -102,6 +111,7 @@ public  class   PushNotification extends Application{
             gcm = GoogleCloudMessaging.getInstance(context);
 
             regid =getRegistrationId();
+
           // System.out.println("the key from register aplication context is : "+regid);
             if (regid.isEmpty()) {
                 registerInBackground();
@@ -222,8 +232,9 @@ public  class   PushNotification extends Application{
      */
 
     private void sendRegistrationIdToBackend() {
-        // TODO: Your implementation here.
-    }
+
+   }
+
 
     /**
      * Check the device to make sure it has the Google Play Services APK. If
