@@ -7,13 +7,10 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
 import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.util.Date;
 
@@ -21,6 +18,7 @@ import example.com.mobidoc.CommunicationLayer.pushNotificationServices.GcmBroadc
 import example.com.mobidoc.Screens.popUpScreens.MeasurePop;
 import example.com.mobidoc.Screens.popUpScreens.PopScreen;
 import example.com.mobidoc.Screens.popUpScreens.QuestionPopScreen;
+import example.com.mobidoc.Screens.popUpScreens.YesNoQuestion;
 
 
 public class MsgRecieverService extends Service {
@@ -57,11 +55,9 @@ public class MsgRecieverService extends Service {
                     break;
                 case (RECOMMENDATION_MSG):
                     handleRecomendation(msg);
-
                     break;
                 case (MEASURE_MSG):
                     handleMeasure(msg);
-
                     break;
                 case (REMINDER_MSG):
                     handleReminder(msg);
@@ -75,14 +71,6 @@ public class MsgRecieverService extends Service {
                 default:
                     super.handleMessage(msg);
             }
-
-
-//            Intent intent2 = new Intent(MsgRecieverService.this, QuestionPopScreen.class);
-//            intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            intent2.putExtra("question", "are you ok?");
-//            intent2.putExtra("yesAns", "yesAns!!!");
-//            intent2.putExtra("noAns", "noAns!!!");
-//            getApplicationContext().startActivity(intent2);
 
         }
 
@@ -107,7 +95,6 @@ public class MsgRecieverService extends Service {
     private void handleReminder(Message msg) {
         String ans;
         ans = "this is a reminder msg for : " + msg.getData().getString("value");
-
         Log.i("MsgRecieverService", "get reminder : " + ans);
         Intent intent = new Intent(this, PopScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -119,7 +106,6 @@ public class MsgRecieverService extends Service {
         String txt;
         txt = msg.getData().getString("value");
         String concept = msg.getData().getString("concept");
-
         Intent intent = new Intent(this, MeasurePop.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("msg", txt);
@@ -133,6 +119,13 @@ public class MsgRecieverService extends Service {
         ans = "reccomendation msg " + msg.getData().getString("value");
         String acceptConcept = msg.getData().getString("accept");
         String declineConcept = msg.getData().getString("decline");
+        Intent intent = new Intent(this, YesNoQuestion.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("acceptConcept", acceptConcept);
+        intent.putExtra("declineConcept", declineConcept);
+        intent.putExtra("ADpopUp","somthing");
+        getApplicationContext().startActivity(intent);
+
     }
 
     private void handleNotification(Message msg) {
@@ -145,16 +138,16 @@ public class MsgRecieverService extends Service {
     }
 
     private void handleQuestion(Message msg) {
-        String ans;
-        ans = "question msg " + msg.getData().getString("value");
+        String qustion;
+        qustion = "question msg " + msg.getData().getString("value");
         String yesAns = msg.getData().getString("yes");
         String noAns = msg.getData().getString("no");
         Intent intent2 = new Intent(this, QuestionPopScreen.class);
         intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent2.putExtra("question", "are you ok?");
+        intent2.putExtra("question", qustion);
         intent2.putExtra("yesAns", noAns);
         intent2.putExtra("noAns", yesAns);
-          getApplicationContext().startActivity(intent2);
+        getApplicationContext().startActivity(intent2);
     }
 
 
@@ -181,12 +174,11 @@ public class MsgRecieverService extends Service {
     }
 
 
-
     @Deprecated
     public void onStart(Intent intent, int startId) {
 
 
-        if(intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
+        if (intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
             Log.i("MsgRecieverService", "receive new Notification msg from server ");
             Bundle extras = intent.getExtras();
             String Receivedmsg = extras.getString("message");
@@ -208,10 +200,6 @@ public class MsgRecieverService extends Service {
                 Log.e("MsgRecieverService", "error parsing the msg Json ");
             }
         }
-
-
-
-
 
 
     }
