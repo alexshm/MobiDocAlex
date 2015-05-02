@@ -21,7 +21,6 @@ import example.com.mobidoc.CommunicationLayer.pushNotificationServices.GcmBroadc
 import example.com.mobidoc.Screens.popUpScreens.MeasurePop;
 import example.com.mobidoc.Screens.popUpScreens.PopScreen;
 import example.com.mobidoc.Screens.popUpScreens.QuestionPopScreen;
-import projections.Utils;
 
 
 public class MsgRecieverService extends Service {
@@ -191,10 +190,8 @@ public class MsgRecieverService extends Service {
             Log.i("MsgRecieverService", "receive new Notification msg from server ");
             Bundle extras = intent.getExtras();
             String Receivedmsg = extras.getString("message");
-            String parsedMsg= Utils.ConvertHexToString(Receivedmsg);
-            Log.i("MsgRecieverService", "received the msg : "+parsedMsg);
             try {
-                JSONObject jObject = new JSONObject(parsedMsg);
+                JSONObject jObject = new JSONObject(Receivedmsg);
                 String txt = jObject.getString("txt");
                 int type = jObject.getInt("type");
                 String concept = jObject.getString("concept");

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 import example.com.mobidoc.ConfigReader;
@@ -34,7 +36,8 @@ public class MeasurePop extends Activity {
     private int minute;
     private TextView displayTime;
     private EditText value;
-    private String measureType;
+    private String concept;
+    HashMap<String,String> conceptHash= new HashMap<String,String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,11 +45,12 @@ public class MeasurePop extends Activity {
         setContentView(R.layout.messurepopscreen);
         String baseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
         openMrsApi = new OpenMrsApi(baseUrl);
+        initHash();
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView t = (TextView) findViewById(R.id.message);
         Bundle extras = getIntent().getExtras();
         String msg = extras.getString("msg");
-        measureType = extras.getString("measureType");
+        concept = extras.getString("concept");
         t.setText(msg);
         setCurrentTimeOnView();
         value = (EditText) findViewById(R.id.value);
@@ -66,6 +70,10 @@ public class MeasurePop extends Activity {
 
     }
 
+    private void initHash() {
+        this.conceptHash.put("5021","systolic");
+    }
+
     public void done(View view) {
         String time = displayTime.getText().toString();
         DatePicker datePcker = (DatePicker) findViewById(R.id.datePicker);
@@ -83,7 +91,10 @@ public class MeasurePop extends Activity {
             ;
         };
         String dateString = dateFormat.format(date);
-        String ans = openMrsApi.enterMeasure(intValue, dateString, measureType);
+        String ans = openMrsApi.enterMeasure(intValue, dateString, this.conceptHash.get(concept));
+        String val = ""+intValue;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+        insertingMeasure(concept,val,timeStamp);
         finish();
     }
 
@@ -147,4 +158,16 @@ public class MeasurePop extends Activity {
 
                 }
             };
+
+    private void insertingMeasure(String concept, String value,String timeStr) {
+        //simulate insertion
+        Intent i = new Intent(concept);
+        i.putExtra("concept", concept);
+
+        i.putExtra("time", timeStr);
+        i.putExtra("value",value);
+        sendBroadcast(i, android.Manifest.permission.VIBRATE);
+    }
 }
+
+

@@ -165,11 +165,12 @@ public class OpenMrsApi {
     }
 
     /**
-     * get the last 50 measures(observations) by patient id(not uuid!!).
-     * @param patientID the patient id.
-     * @return Last 50 measures of that patient. (Not parse!!)
+     * get the last 50 measures(observations).
+     * @return Last 50 measures of that patient.
      */
-    public String getObs(String patientID){
+    public String[] getObs(){
+        String patientID = getPatientID(username);
+        patientID = patientID.substring(0,patientID.lastIndexOf(" - "));
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
@@ -182,7 +183,15 @@ public class OpenMrsApi {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return answer;
+
+        String[] UUidArray = jsonArray2(answer,"uuid","results");
+        String[] arrayObs = new String[UUidArray.length];
+        for (int i= 0;i<UUidArray.length;i++){
+            arrayObs[i] = getOneObs(UUidArray[i]);
+        }
+
+
+        return arrayObs;
     }
 
 
@@ -261,6 +270,27 @@ public class OpenMrsApi {
     }
 
     /**
+     * get user uuid by user name.
+     * @param userName the user name
+     * @return the user uuid. (Not parse!!!)
+     */
+    public String getPatientID(String userName){
+        String answer="problem";
+        HashMap<String, String> getHash = new HashMap<String, String>();
+        getHash.put("requestType", "Get");
+        getHash.put("URLPath", "patient?q="+userName);
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
+        try {
+            answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        return jsonArray(answer,"display","results");
+    }
+
+    /**
      * Upload one measure(observation) of the person.
      * @param value the value of the measure
      * @param dateTime the time when the measure was taken(Format example: 2010-03-23T00:00:00.000+0200)
@@ -310,6 +340,50 @@ public class OpenMrsApi {
         // Oops
         }
         return "Problem: JSON ARRAY";
+    }
+
+    private String[] jsonArray2(String JSON, String paramName,String arrayName) {
+        String[] obsUUIDs = null;
+        try {
+            JSONObject jObject = new JSONObject(JSON);
+            JSONArray jArray = jObject.getJSONArray(arrayName);
+            obsUUIDs = new String[jArray.length()];
+            for (int i = 0; i < jArray.length(); i++) {
+                JSONObject oneObject = jArray.getJSONObject(i);
+                // Pulling items from the array
+                obsUUIDs[i] = oneObject.getString(paramName);
+            }
+            return obsUUIDs;
+        }  catch (Exception e) {
+            // Oops
+        }
+        return obsUUIDs;
+    }
+
+    public String getOneObs(String obsUUID){
+        String answer="problem";
+        HashMap<String, String> getHash = new HashMap<String, String>();
+        getHash.put("requestType", "Get");
+        getHash.put("URLPath", "obs/"+obsUUID);
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
+        try {
+            answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        String obsData = "";
+        try {
+            JSONObject jObject = new JSONObject(answer);
+            obsData += jObject.getString("display") + ": ";
+            obsData += jObject.getString("obsDatetime");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return obsData;
     }
 
     public List<String> getPatientList(){

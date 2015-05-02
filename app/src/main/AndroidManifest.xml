@@ -48,6 +48,10 @@
             android:label="@string/app_name"></activity>
 
         <activity
+            android:name=".Screens.popUpScreens.YesNoQuestion"
+            android:label="@string/app_name"></activity>
+
+        <activity
             android:name=".Screens.MeasuresScreen"
             android:label="@string/app_name"></activity>
 
