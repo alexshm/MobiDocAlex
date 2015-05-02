@@ -34,12 +34,12 @@ public class YesNoQuestion extends Activity {
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView t = (TextView) findViewById(R.id.questionMessage1);
         Bundle extras = getIntent().getExtras();
-        String newString = extras.getString("msg");
-        t.setText(newString);
+        String question = extras.getString("question");
+        t.setText(question);
         if (extras.containsKey("ADpopUp")){
             Button yesButton = (Button) findViewById(R.id.yesButton);
             yesButton.setText("Accept");
-            Button noButton = (Button) findViewById(R.id.yesButton);
+            Button noButton = (Button) findViewById(R.id.noButton);
             noButton.setText("Decline");
         }
         this.accept = extras.getString("acceptConcept");
@@ -49,11 +49,13 @@ public class YesNoQuestion extends Activity {
     public void noPressed(View view) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
         insertingMeasure(this.decline,"yes",timeStamp);
+        finish();
     }
 
     public void yesPressed(View view) {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
         insertingMeasure(this.accept,"yes",timeStamp);
+        finish();
     }
 
     private void insertingMeasure(String concept, String value,String timeStr) {
@@ -64,6 +66,5 @@ public class YesNoQuestion extends Activity {
         i.putExtra("time", timeStr);
         i.putExtra("value",value);
         sendBroadcast(i, android.Manifest.permission.VIBRATE);
-
     }
 }

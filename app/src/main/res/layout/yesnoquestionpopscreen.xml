@@ -23,11 +23,6 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_launcher" />
 
-        <!--<LinearLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="vertical"-->
-        <!--android:layout_margin="20dp">-->
 
         <TextView
             android:id="@+id/questionMessage1"
@@ -72,8 +67,5 @@
             android:textSize="20dp"
             android:layout_y="134dp" />
 
-        android:id="@+id/done"
-        android:layout_x="47dp"
-        android:layout_y="190dp" />
     </AbsoluteLayout>
 </FrameLayout>

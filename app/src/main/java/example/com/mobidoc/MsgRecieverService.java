@@ -17,7 +17,6 @@ import java.util.Date;
 import example.com.mobidoc.CommunicationLayer.pushNotificationServices.GcmBroadcastReceiver;
 import example.com.mobidoc.Screens.popUpScreens.MeasurePop;
 import example.com.mobidoc.Screens.popUpScreens.PopScreen;
-import example.com.mobidoc.Screens.popUpScreens.QuestionPopScreen;
 import example.com.mobidoc.Screens.popUpScreens.YesNoQuestion;
 
 
@@ -109,7 +108,7 @@ public class MsgRecieverService extends Service {
         Intent intent = new Intent(this, MeasurePop.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("msg", txt);
-        intent.putExtra("measureType", concept);
+        intent.putExtra("concept", concept);
         getApplicationContext().startActivity(intent);
 
     }
@@ -138,16 +137,37 @@ public class MsgRecieverService extends Service {
     }
 
     private void handleQuestion(Message msg) {
+//        String qustion;
+//        qustion = "question msg " + msg.getData().getString("value");
+//        String yesAns = msg.getData().getString("yes");
+//        String noAns = msg.getData().getString("no");
+//        Intent intent2 = new Intent(this, QuestionPopScreen.class);
+//        intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent2.putExtra("question", qustion);
+//        intent2.putExtra("yesAns", noAns);
+//        intent2.putExtra("noAns", yesAns);
+//        getApplicationContext().startActivity(intent2);
         String qustion;
-        qustion = "question msg " + msg.getData().getString("value");
-        String yesAns = msg.getData().getString("yes");
-        String noAns = msg.getData().getString("no");
-        Intent intent2 = new Intent(this, QuestionPopScreen.class);
-        intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent2.putExtra("question", qustion);
-        intent2.putExtra("yesAns", noAns);
-        intent2.putExtra("noAns", yesAns);
-        getApplicationContext().startActivity(intent2);
+        qustion = "reccomendation msg " + msg.getData().getString("value");
+        String acceptConcept = msg.getData().getString("yes");
+        String declineConcept = msg.getData().getString("no");
+        Intent intent = new Intent(this, YesNoQuestion.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if(acceptConcept !=null && declineConcept !=null) {
+            intent.putExtra("acceptConcept", acceptConcept);
+            intent.putExtra("declineConcept", declineConcept);
+            intent.putExtra("question", qustion);
+            try {
+                getApplicationContext().startActivity(intent);
+            }
+            catch (Exception e){
+                Log.i("MsgRecieverService",e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        else{
+            Log.i("MsgRecieverService","got null values ");
+        }
     }
 
 
