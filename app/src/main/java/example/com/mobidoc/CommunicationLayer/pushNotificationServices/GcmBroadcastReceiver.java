@@ -44,8 +44,8 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
 
 
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
-            String ReceivedMsgType = extras.getString("type");
-            boolean isProjectionMsg = ReceivedMsgType.contains("project");
+            String Receivedmsg = extras.getString("message");
+            boolean isProjectionMsg = Receivedmsg.contains("Projection");
             ComponentName comp = null;
             // checking if received new projections or getting recommendation/qeustion/notification msg
             // from  the server
