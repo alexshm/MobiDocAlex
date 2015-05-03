@@ -46,6 +46,7 @@ import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 
+import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 import projections.Actions.Action;
 import projections.Actions.MeasurementAction;
 
@@ -59,8 +60,8 @@ public class SimulationScreen extends Activity {
     private String selectedProjection;
     private ArrayAdapter<CharSequence> projectionVals;
     private String projectionId;
-    private int count = 1;
 
+    int count=0;
     String SimulationData="";
     // Intent used for binding to LoggingService
     private Intent serviceIntent;
@@ -77,6 +78,7 @@ public class SimulationScreen extends Activity {
     TextView simTime;
     TextView simvalue;
     TextView simconcept;
+    OpenMrsApi mrs;
     AlarmManager am;
     // Object implementing Service Connection callbacks
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -111,23 +113,16 @@ public class SimulationScreen extends Activity {
         //final ImageButton pauseSim = (ImageButton) findViewById(R.id.simPause);
 
 
-        try {
-            new  loadSimulationDataTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR).get();
-        } catch (InterruptedException e) {
-
-        } catch (ExecutionException e) {
-
-        }
 
         serviceIntent = new Intent(this.getApplicationContext(), example.com.mobidoc.MsgRecieverService.class);
 
-
-
+        String url=new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
+        mrs=new OpenMrsApi(url);
 
         projectionVals = ArrayAdapter.createFromResource(this,
                 R.array.projectionsVals, android.R.layout.simple_spinner_item);
 
-
+        new  loadSimulationDataTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         playsim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,7 +166,7 @@ public class SimulationScreen extends Activity {
                                 @Override
                                 public void run() {
 
-                                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
                                       //  am.setTime(sdf.parse(values[0]).getTime());
                                         simconcept.setText(concept);
@@ -186,7 +181,7 @@ public class SimulationScreen extends Activity {
 
                             Log.i("simulation screen", "simulation - insert data : (" + concept + ", " + value + ", " + values[0]);
                             insertingMeasure(concept, value, values[0]);
-                            Thread.sleep(3500);
+                            Thread.sleep(10500);
                             synchronized (this) {
                                 while (isPasued) {
                                     try {
@@ -437,7 +432,7 @@ public class SimulationScreen extends Activity {
     {
        if(simulationThread!=null) {
            try {
-               simulationThread.sleep(500);
+               simulationThread.sleep(200);
                simulationThread.interrupt();
                Log.i("Simulation screen ", "Simulation stopped");
            } catch (InterruptedException e) {
@@ -503,74 +498,24 @@ public class SimulationScreen extends Activity {
             d.show(getFragmentManager(), "Alert");
             return;
         }
-        switch (projectionId) {
-            case "20119":
-                Simulate2abnormalWeek();
-                break;
-            case "19965":
-                Simulate2positiveKetInAWeek();
-                break;
-
-        }
-    }
-
-    private void Simulate2abnormalWeek() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
-                Calendar c=Calendar.getInstance();
-                c.set(2014,2,1,8,0);
-                // insertingMeasure("4985", "160", c.getTime());
-                try {
-                    Thread.sleep(2500);
-                    c.set(2014,2,1,12,0);
-                    // insertingMeasure("4986","170",c.getTime());
-                }
-                catch (Exception e) {
-                }
-
-            }
-        }).start();
-
-
-
-        //   }
-
-
-
-
 
 
     }
 
-    private void Simulate2positiveKetInAWeek() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
-                Calendar c = Calendar.getInstance();
-                c.set(2014, 2, 1, 8, 0);
-                //insertingMeasure("5021", "+", c.getTime());
-                try {
-                    Thread.sleep(8500);
-                    c.set(2014, 2, 1, 12, 0);
-                    //    insertingMeasure("5039", "yes", c.getTime());
-                } catch (Exception e) {
-                }
-
-            }
-        }).start();
-
-    }
 
     private void insertingMeasure(String concept, String value,String timeStr) {
         //simulate insertion
         Intent i = new Intent(concept);
         i.putExtra("concept", concept);
-
+        count+=2;
+       // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
         i.putExtra("time", timeStr);
         i.putExtra("value",value);
+
+
+
+      mrs.enterMeasure(70+count,"2015-03-01T12:43:30.000+0200","systolic");
+
         sendBroadcast(i, android.Manifest.permission.VIBRATE);
 
     }

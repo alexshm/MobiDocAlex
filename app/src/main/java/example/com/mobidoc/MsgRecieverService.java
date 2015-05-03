@@ -162,7 +162,7 @@ public class MsgRecieverService extends Service {
 //        intent2.putExtra("noAns", yesAns);
 //        getApplicationContext().startActivity(intent2);
         String qustion;
-        qustion = "reccomendation msg " + msg.getData().getString("value");
+        qustion = msg.getData().getString("value");
         String acceptConcept = msg.getData().getString("yes");
         String declineConcept = msg.getData().getString("no");
         Intent intent = new Intent(this, YesNoQuestion.class);

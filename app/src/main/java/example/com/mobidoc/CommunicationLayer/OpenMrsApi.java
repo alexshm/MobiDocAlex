@@ -169,7 +169,7 @@ public class OpenMrsApi {
      * @return Last 50 measures of that patient.
      */
     public String[] getObs(){
-        String patientID = getPatientID(username);
+        String patientID = getPatientID();
         patientID = patientID.substring(0,patientID.lastIndexOf(" - "));
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
@@ -271,14 +271,14 @@ public class OpenMrsApi {
 
     /**
      * get user uuid by user name.
-     * @param userName the user name
+
      * @return the user uuid. (Not parse!!!)
      */
-    public String getPatientID(String userName){
+    public String getPatientID(){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "patient?q="+userName);
+        getHash.put("URLPath", "patient?q="+username);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();

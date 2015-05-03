@@ -119,12 +119,8 @@ public class GcmIntentService extends IntentService {
                     for(int i=1;i<projectionScript.length;i++)
                     {
                         final String script="beginProjection"+projectionScript[i];
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                new ProjectionScriptExecuter().execute(script);
-                            }
-                        }).start();
+
+                         new ProjectionScriptExecuter().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,script);
 
 
                     }
@@ -144,7 +140,7 @@ public class GcmIntentService extends IntentService {
     // This is just one simple example of what you might choose to do with
     // a GCM message.
     private void sendNotification(String projName,String projnumber ) {
-       String msgToSend ="Received projection: "+ projName+" ("+projnumber+")";
+       String msgToSend ="Received new projections";
         Log.i(TAG,msgToSend);
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -155,7 +151,7 @@ public class GcmIntentService extends IntentService {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.mobidocicon2)
         .setContentTitle("Projection Notification")
         .setStyle(new NotificationCompat.BigTextStyle()
-        .bigText("new projection"))
+        .bigText("new projection Received"))
         .setContentText(projName+" ("+projnumber+")")
         .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
 

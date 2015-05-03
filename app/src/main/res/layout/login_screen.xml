@@ -71,8 +71,9 @@
        android:layout_height="wrap_content"
        android:onClick="checkLogin"
        android:text="Login"
-       android:layout_alignTop="@+id/register"
-       android:layout_centerHorizontal="true" />
+       android:layout_above="@+id/errorlable"
+       android:layout_alignRight="@+id/LoginTitle"
+       android:layout_alignEnd="@+id/LoginTitle" />
 
    <TextView
        android:id="@+id/errorlable"
@@ -84,16 +85,6 @@
        android:layout_alignParentStart="true"
        android:layout_alignRight="@+id/passtext"
        android:layout_alignEnd="@+id/passtext" />
-
-    <Button
-        android:id="@+id/register"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="registerClick"
-        android:text="Register"
-        android:layout_above="@+id/errorlable"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"

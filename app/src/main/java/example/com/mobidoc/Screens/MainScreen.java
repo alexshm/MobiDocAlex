@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
+import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 import example.com.mobidoc.CommunicationLayer.PushNotification;
 import example.com.mobidoc.CommunicationLayer.ServicesToBeDSS.PicardCommunicationLayer;
 import example.com.mobidoc.ConfigReader;
@@ -38,6 +39,7 @@ public class MainScreen extends Activity {
     TextView t = null;
     BroadcastReceiver projectionRec;
     ProgressDialog startGLDialog;
+    OpenMrsApi mrs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,10 +47,9 @@ public class MainScreen extends Activity {
 
         setContentView(R.layout.activity_main);
         IntentFilter intentFilter = new IntentFilter("startProjection");
-
-
-
-
+        final String BaseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
+        mrs=new OpenMrsApi(BaseUrl);
+        new registerDeviceAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         projectionRec=new BroadcastReceiver() {
 
             @Override
@@ -72,7 +73,7 @@ public class MainScreen extends Activity {
         Log.i("Main Screen","register to brodcastRec for recieve projections");
 
         //register the Device to the GCM service
-        new registerDeviceAsyncTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+
 
 
     }
@@ -96,7 +97,7 @@ public class MainScreen extends Activity {
     }
 
 
-    private void showToastFromService(final String message) {
+    private void registerDeviceToGCM() {
         new Thread(new Runnable() {
 
             @Override
@@ -107,7 +108,7 @@ public class MainScreen extends Activity {
                     @Override
                     public void run() {
 
-                        Toast.makeText(MainScreen.this.getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
                     }
 
 
@@ -146,7 +147,7 @@ public class MainScreen extends Activity {
         final String url = prop.getProperty("Picard_WCF_URL");
         final String glid = prop.getProperty("Guide_Line_ID_To_Run");
 
-        final String patientID = "moparasdll123";
+
         final String startTime = "20-05-2015 08:00:00";
 
         showDialog(0);
@@ -154,6 +155,8 @@ public class MainScreen extends Activity {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                String patientID = "patientTest78";
+              //  patientID=mrs.getPatientID().replaceAll("-","").trim();
                 String regid=PushNotification.getInstance(getApplicationContext()).getMobileID();
                 boolean result = PicardCommunicationLayer.StartGuideLine(patientID, startTime, glid,regid, url);
                 Log.i("Main Screen", "get the result from starting guide line " + result);
@@ -182,8 +185,13 @@ public class MainScreen extends Activity {
     }
 
     public void measureClick(View view) {
-        Intent measureScreen = new Intent(MainScreen.this, MeasuresScreen.class);
-        startActivity(measureScreen);
+        String alertMsg="This option is not yet available.";
+        AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
+        d.show(getFragmentManager(), "Alert");
+        return;
+        //TODO: measures screen
+        // Intent measureScreen = new Intent(MainScreen.this, MeasuresScreen.class);
+        //startActivity(measureScreen);
     }
 
 
