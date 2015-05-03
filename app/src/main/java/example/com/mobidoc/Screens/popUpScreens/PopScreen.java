@@ -26,8 +26,6 @@ public class PopScreen extends Activity {
         Bundle extras = getIntent().getExtras();
         String newString = extras.getString("msg");
         t.setText(newString);
-
-
     }
 
     public void close(View view) {
