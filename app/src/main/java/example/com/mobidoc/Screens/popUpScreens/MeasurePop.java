@@ -91,7 +91,7 @@ public class MeasurePop extends Activity {
             ;
         };
         String dateString = dateFormat.format(date);
-        String ans = openMrsApi.enterMeasure(intValue, dateString, this.conceptHash.get(concept));
+        String ans = openMrsApi.enterMeasure(""+intValue, dateString, this.conceptHash.get(concept));
         String val = ""+intValue;
         String timeStamp = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").format(Calendar.getInstance().getTime());
         insertingMeasure(concept,val,timeStamp);
