@@ -197,10 +197,10 @@ public class OpenMrsApi {
 
     /**
      * get Patient unique id(uuid) by patient id(not uuid!!)
-     * @param patientID the patient id.
-     * @return the the patient uuid. (not parse!!)
+     * @return the the patient uuid.
      */
-    public String getPatintUuid(String patientID){
+    public String getPatintUuid(){
+        String patientID = getPatientID();
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
@@ -213,7 +213,7 @@ public class OpenMrsApi {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return answer;
+        return jsonArray(answer,"uuid","results");
     }
 
     /**
@@ -250,14 +250,13 @@ public class OpenMrsApi {
 
     /**
      * get user uuid by user name.
-     * @param userName the user name
-     * @return the user uuid. (Not parse!!!)
+     * @return the user uuid.
      */
-    public String getUserUuid(String userName){
+    public String getUserUuid(){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "user?q="+userName);
+        getHash.put("URLPath", "user?q="+username);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
@@ -287,7 +286,10 @@ public class OpenMrsApi {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        return jsonArray(answer,"display","results");
+        String displayId = jsonArray(answer,"display","results");
+        if (displayId.split(" - ").length > 0)
+            answer = displayId.split(" - ")[0];
+        return answer;
     }
 
     /**
@@ -297,8 +299,8 @@ public class OpenMrsApi {
      * @param conceptName the concept name.
      * @return succeed or failed to upload(Not parse!!).
      */
-    public String enterMeasure(int value, String dateTime, String conceptName){
-        String userUUID = getUserUuid(username);
+    public String enterMeasure(String value, String dateTime, String conceptName){
+        String userUUID = getUserUuid();
         String personUuid = getPersonUUIDbyUserUUID(userUUID);
         String conceptUuid = getConceptUuid(conceptName);
 
@@ -321,7 +323,7 @@ public class OpenMrsApi {
         return answer;
     }
     public String getPersonUUID() {
-        String userUUID = getUserUuid(username);
+        String userUUID = getUserUuid();
         return getPersonUUIDbyUserUUID(userUUID);
     }
 
@@ -386,9 +388,9 @@ public class OpenMrsApi {
         return obsData;
     }
 
-    public List<String> getPatientList(){
-        return null;
-    }
+//    public List<String> getPatientList(){
+//        return null;
+//    }
 
 
 }

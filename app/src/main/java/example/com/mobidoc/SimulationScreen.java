@@ -514,7 +514,7 @@ public class SimulationScreen extends Activity {
 
 
 
-      mrs.enterMeasure(70+count,"2015-03-01T12:43:30.000+0200","systolic");
+      mrs.enterMeasure(""+(70+count),"2015-03-01T12:43:30.000+0200","systolic");
 
         sendBroadcast(i, android.Manifest.permission.VIBRATE);
 
