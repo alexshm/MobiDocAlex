@@ -83,7 +83,7 @@ public  final class Utils {
     }
 
     public static String ConvertHexToString(String hexInput) {
-        Log.i("Utils","receive the hexa msg from server : "+hexInput.toString());
+
 
         StringBuilder output = new StringBuilder("");
         for (int i = 0; i < hexInput.length(); i += 2)

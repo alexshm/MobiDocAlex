@@ -142,7 +142,6 @@ public class StartGLTask  extends AsyncTask<String, Void, JSONObject> {
                 // Transform the String into a JSONObject
              JSONObject jsonObjRecv = new JSONObject(resultString);
                 // Raw DEBUG output of our received JSON object:
-                Log.i("StartGL", "the return answer from BE-DSS : <JSONObject>\n" + jsonObjRecv.toString() + "\n</JSONObject>");
 
                 return jsonObjRecv;
             }

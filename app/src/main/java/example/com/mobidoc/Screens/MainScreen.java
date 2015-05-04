@@ -49,7 +49,7 @@ public class MainScreen extends Activity {
         IntentFilter intentFilter = new IntentFilter("startProjection");
         final String BaseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
         mrs=new OpenMrsApi(BaseUrl);
-        new registerDeviceAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         projectionRec=new BroadcastReceiver() {
 
             @Override
@@ -71,7 +71,7 @@ public class MainScreen extends Activity {
         };
         getApplicationContext().registerReceiver(projectionRec,intentFilter);
         Log.i("Main Screen","register to brodcastRec for recieve projections");
-
+        new registerDeviceAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         //register the Device to the GCM service
 
 
@@ -96,26 +96,6 @@ public class MainScreen extends Activity {
         }
     }
 
-
-    private void registerDeviceToGCM() {
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-
-                t.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-
-                    }
-
-
-                });
-            }
-        }).start();
-    }
 
     public void showDialogFromService(final String message) {
         new Thread(new Runnable() {
@@ -146,7 +126,7 @@ public class MainScreen extends Activity {
         Properties prop = new ConfigReader(getApplicationContext()).getProperties();
         final String url = prop.getProperty("Picard_WCF_URL");
         final String glid = prop.getProperty("Guide_Line_ID_To_Run");
-
+        final String regid=PushNotification.getInstance(getApplicationContext()).getMobileID();
 
         final String startTime = "20-05-2015 08:00:00";
 
@@ -156,8 +136,6 @@ public class MainScreen extends Activity {
             @Override
             public void run() {
                 String patientID = "patientTest78";
-              //  patientID=mrs.getPatientID().replaceAll("-","").trim();
-                String regid=PushNotification.getInstance(getApplicationContext()).getMobileID();
                 boolean result = PicardCommunicationLayer.StartGuideLine(patientID, startTime, glid,regid, url);
                 Log.i("Main Screen", "get the result from starting guide line " + result);
 
@@ -185,13 +163,13 @@ public class MainScreen extends Activity {
     }
 
     public void measureClick(View view) {
-        String alertMsg="This option is not yet available.";
-        AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
-        d.show(getFragmentManager(), "Alert");
-        return;
+        //String alertMsg="This option is not yet available.";
+        //AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
+        //d.show(getFragmentManager(), "Alert");
+        //return;
         //TODO: measures screen
-        // Intent measureScreen = new Intent(MainScreen.this, MeasuresScreen.class);
-        //startActivity(measureScreen);
+        Intent measureScreen = new Intent(MainScreen.this, MeasuresScreen.class);
+        startActivity(measureScreen);
     }
 
 

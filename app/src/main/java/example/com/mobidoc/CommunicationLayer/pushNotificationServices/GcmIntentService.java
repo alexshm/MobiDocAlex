@@ -65,7 +65,7 @@ public class GcmIntentService extends IntentService {
 
 
     public GcmIntentService() {
-        super("GcmIntentService");
+       super("GcmIntentService");
 
     }
 
@@ -115,7 +115,7 @@ public class GcmIntentService extends IntentService {
                 {
                     String[] projectionScript=parsedMsg.split("beginProjection");
                     Log.i(TAG, "Received : "+(projectionScript.length-1)+" projections from server");
-                    ExecutorService threadPool= Executors.newFixedThreadPool((projectionScript.length-1));
+
                     for(int i=1;i<projectionScript.length;i++)
                     {
                         final String script="beginProjection"+projectionScript[i];
@@ -127,7 +127,7 @@ public class GcmIntentService extends IntentService {
 
                 }
                 // Post notification of received message.
-                sendNotification(extras.getString("type"),extras.getString("projnumber"));
+               sendNotification(extras.getString("type"),extras.getString("projnumber"));
 
               //  Log.i(TAG, "Received: " + extras.getString("message"));
             }

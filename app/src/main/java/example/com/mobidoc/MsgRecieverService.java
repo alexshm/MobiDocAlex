@@ -128,7 +128,8 @@ public class MsgRecieverService extends Service {
     }
 
     private void handleRecomendation(Message msg) {
-        String qustion = "reccomendation msg " + msg.getData().getString("value");
+        String ans;
+        ans = "reccomendation msg " + msg.getData().getString("value");
         String acceptConcept = msg.getData().getString("accept");
         String declineConcept = msg.getData().getString("decline");
         Intent intent = new Intent(this, YesNoQuestion.class);
@@ -136,12 +137,12 @@ public class MsgRecieverService extends Service {
         intent.putExtra("acceptConcept", acceptConcept);
         intent.putExtra("declineConcept", declineConcept);
         intent.putExtra("ADpopUp","somthing");
-        intent.putExtra("question", qustion);
         getApplicationContext().startActivity(intent);
 
     }
 
     private void handleNotification(Message msg) {
+        String ans;
         String txt = msg.getData().getString("value");
         Intent intent = new Intent(this, PopScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -161,7 +162,7 @@ public class MsgRecieverService extends Service {
 //        intent2.putExtra("noAns", yesAns);
 //        getApplicationContext().startActivity(intent2);
         String qustion;
-        qustion = msg.getData().getString("value");
+        qustion = "reccomendation msg " + msg.getData().getString("value");
         String acceptConcept = msg.getData().getString("yes");
         String declineConcept = msg.getData().getString("no");
         Intent intent = new Intent(this, YesNoQuestion.class);
