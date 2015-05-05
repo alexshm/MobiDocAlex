@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.SystemClock;
+import android.text.format.Time;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -122,8 +123,13 @@ public class CyclicProjectionAbstract extends projection {
         //===========================================
         int hour=Integer.parseInt(startTime.split(":")[0]);
         int minute=Integer.parseInt(startTime.split(":")[1]);
+       Date now=new Date();
+
         this.cyclicCalendar.set(Calendar.HOUR_OF_DAY, hour);
         this.cyclicCalendar.set(Calendar.MINUTE,minute);
+        Date target=this.cyclicCalendar.getTime();
+        if(now.after(target))
+            this.cyclicCalendar.add(Calendar.DATE,1);
 
         this.cycTime=new Date(cyclicCalendar.getTime().getTime());
         Log.i("cyclic projection", "the normal calander is set to : " + cyclicCalendar.get(Calendar.HOUR_OF_DAY) + ":" + cyclicCalendar.get(Calendar.MINUTE) + ":" + cyclicCalendar.get(Calendar.SECOND));
