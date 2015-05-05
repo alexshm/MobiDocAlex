@@ -12,6 +12,7 @@ import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 import example.com.mobidoc.ConfigReader;
@@ -29,43 +30,31 @@ public class MeasuresScreen extends Activity {
         setContentView(R.layout.measuresscreen);
         String baseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
         openMrsApi = new OpenMrsApi(baseUrl);
-        String[] obs = openMrsApi.getObs();
-//        String[] row = { "ROW1", "ROW2", "Row3", "Row4", "Row 5", "Row 6",
+        String[] obs=null;
+        try {
+             obs = openMrsApi.getObs();
+            //        String[] row = { "ROW1", "ROW2", "Row3", "Row4", "Row 5", "Row 6",
 //                "Row 7" };
-        String[] column = { "#Row","Observation"};
-        int rl=obs.length; int cl=column.length;
+            String[] column = { "#Row","Observation"};
+            int rl=obs.length; int cl=column.length;
 
 //        Log.d("--", "R-Lenght--"+rl+"   "+"C-Lenght--"+cl);
 
-        ScrollView sv = new ScrollView(this);
-        TableLayout tableLayout = createTableLayout(obs, column,rl, cl);
-        HorizontalScrollView hsv = new HorizontalScrollView(this);
-        hsv.addView(tableLayout);
-        sv.addView(hsv);
-        setContentView(sv);
+            ScrollView sv = new ScrollView(this);
+            TableLayout tableLayout = createTableLayout(obs, column,rl, cl);
+            HorizontalScrollView hsv = new HorizontalScrollView(this);
+            hsv.addView(tableLayout);
+            sv.addView(hsv);
+            setContentView(sv);
+        }
+        catch (Exception e){
+            Toast toast = Toast.makeText(this, "problem loading content",Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
 
     }
 
-    public void makeCellEmpty(TableLayout tableLayout, int rowIndex, int columnIndex) {
-        // get row from table with rowIndex
-        TableRow tableRow = (TableRow) tableLayout.getChildAt(rowIndex);
-
-        // get cell from row with columnIndex
-        TextView textView = (TextView)tableRow.getChildAt(columnIndex);
-
-        // make it black
-        textView.setBackgroundColor(Color.BLACK);
-    }
-    public void setHeaderTitle(TableLayout tableLayout, int rowIndex, int columnIndex){
-
-        // get row from table with rowIndex
-        TableRow tableRow = (TableRow) tableLayout.getChildAt(rowIndex);
-
-        // get cell from row with columnIndex
-        TextView textView = (TextView)tableRow.getChildAt(columnIndex);
-
-        textView.setText("Hello");
-    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private TableLayout createTableLayout(String [] obs, String [] cv,int rowCount, int columnCount) {
