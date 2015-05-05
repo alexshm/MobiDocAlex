@@ -170,7 +170,6 @@ public class OpenMrsApi {
      */
     public String[] getObs(){
         String patientID = getPatientID();
-        patientID = patientID.substring(0,patientID.lastIndexOf(" - "));
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
