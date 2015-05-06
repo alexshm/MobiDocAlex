@@ -129,9 +129,10 @@ public class DataCollection {
             data.add(item);
             Log.i("DataCollection","removing old items");
             Calendar temp=Calendar.getInstance();
-            temp.set(2014,2,1,0,0);
+            temp.set(2014,2,3,0,0);
             //String  isSimulated=new ConfigReader(null).getProperties().getProperty("openMRS_URL");
             removeOldItems(temp.getTime());
+
         }
     }
 

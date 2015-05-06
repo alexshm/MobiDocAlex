@@ -2,51 +2,36 @@ package example.com.mobidoc.CommunicationLayer;
 
 import android.app.Activity;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.SyncStatusObserver;
-import android.widget.TextView;
-
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import java.io.ByteArrayOutputStream;
-import java.util.concurrent.atomic.AtomicInteger;
-
-/**
- * Created by Moshe on 4/8/2015.
- */
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.google.android.gms.gcm.GoogleCloudMessaging;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+//
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import example.com.mobidoc.ConfigReader;
 import example.com.mobidoc.DB;
-import example.com.mobidoc.R;
 import example.com.mobidoc.Screens.LoginScreen;
+import example.com.mobidoc.Screens.MainScreen;
+
+/**
+ * Created by Moshe on 4/8/2015.
+ */
 
 public  class   PushNotification extends Application{
 
@@ -72,7 +57,7 @@ public  class   PushNotification extends Application{
     Context context;
     DB db;
 
-    String regid;
+    String regid="";
 
 
     //add this variable declaration:
@@ -249,7 +234,7 @@ public  class   PushNotification extends Application{
 
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
 
-                GooglePlayServicesUtil.getErrorDialog(resultCode,new Activity(), PLAY_SERVICES_RESOLUTION_REQUEST).show();
+
 
             } else {
                 Log.i(TAG, "This device is not supported.");

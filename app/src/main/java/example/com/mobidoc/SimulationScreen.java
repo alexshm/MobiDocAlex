@@ -166,7 +166,7 @@ public class SimulationScreen extends Activity {
                                 @Override
                                 public void run() {
 
-                                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+                                   // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
 
                                       //  am.setTime(sdf.parse(values[0]).getTime());
                                         simconcept.setText(concept);
@@ -506,16 +506,22 @@ public class SimulationScreen extends Activity {
     private void insertingMeasure(String concept, String value,String timeStr) {
         //simulate insertion
         Intent i = new Intent(concept);
-        i.putExtra("concept", concept);
         count+=2;
-       // SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        String val=value;
+        i.putExtra("concept", concept);
+        boolean isNumber=android.text.TextUtils.isDigitsOnly(value);
+        if(isNumber)
+        {  Log.i("sim","onnly digit");
+            int newval=Integer.valueOf(value)+count;
+            val=String.valueOf(newval);
+
+        }
+        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ss.SSSzzz");
         i.putExtra("time", timeStr);
-        i.putExtra("value",value);
-
-
-
-      mrs.enterMeasure(""+(70+count),"2015-03-01T12:43:30.000+0200","systolic");
-
+        i.putExtra("value",val);
+        //String newDate=sdf.format(new Date());
+      mrs.enterMeasure(val,"2012-03-02T10:00:00.000+0200","Catanuria");
+        Log.i("sim","enter to mrs");
         sendBroadcast(i, android.Manifest.permission.VIBRATE);
 
     }

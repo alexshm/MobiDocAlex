@@ -32,9 +32,9 @@ public class CallBackAction extends Action {
         Message msg = Message.obtain(null, msgType, 0, 0, 0);
         Bundle bundle = new Bundle();
 
-        bundle.putString("value", msgToSend);
+        bundle.putString("value",msgToSend );
 
-        bundle.putString("concept", getConcept());
+        bundle.putString("concept", getConcept() );
 
         Log.i("callback action","build msg- build msg for callback ");
 

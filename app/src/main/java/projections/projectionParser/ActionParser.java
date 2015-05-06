@@ -85,8 +85,8 @@ public class ActionParser {
 
     private Action parseCallBack(String[] actionParms)
     {
-        String name=actionParms[1];
-        String conceptId=actionParms[0];
+        String name=actionParms[0];
+        String conceptId=actionParms[1];
         return  new CallBackAction(name,conceptId);
     }
 

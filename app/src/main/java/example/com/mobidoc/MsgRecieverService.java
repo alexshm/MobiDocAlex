@@ -2,6 +2,7 @@ package example.com.mobidoc;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -9,19 +10,32 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Date;
 
+import example.com.mobidoc.CommunicationLayer.PushNotification;
+import example.com.mobidoc.CommunicationLayer.ServicesToBeDSS.PicardCommunicationLayer;
 import example.com.mobidoc.CommunicationLayer.pushNotificationServices.GcmBroadcastReceiver;
 import example.com.mobidoc.Screens.popUpScreens.MeasurePop;
 import example.com.mobidoc.Screens.popUpScreens.PopScreen;
 import example.com.mobidoc.Screens.popUpScreens.QuestionPopScreen;
 import example.com.mobidoc.Screens.popUpScreens.YesNoQuestion;
+import projections.Utils;
 
 
 public class MsgRecieverService extends Service {
@@ -101,8 +115,24 @@ public class MsgRecieverService extends Service {
     private void handleCallBack(Message msg) {
         String ans;
         ans = msg.getData().getString("value");
-        String Concept = msg.getData().getString("concept");
+        final String Concept = msg.getData().getString("concept");
         Log.i("MsgRecieverService", "get CallBack msg with the values (concept: " + Concept + " txt: " + ans + ")");
+
+        if(Concept.equals("5169")) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String url = new ConfigReader(getApplicationContext()).getProperties().getProperty("Picard_WCF_URL");
+                    String PatientID = "patientTest696";
+                    String startTime = "2014-02-01T19:42:18+02:00";
+                    String appID = PushNotification.getInstance(getApplicationContext()).getMobileID();
+                    new NotifyBe_DssTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url, PatientID, startTime, appID);
+
+                }
+            }).start();
+
+
+        }
     }
 
     private void handleReminder(Message msg) {
@@ -210,7 +240,8 @@ public class MsgRecieverService extends Service {
 
 
 
-    @Deprecated
+
+            @Deprecated
     public void onStart(Intent intent, int startId) {
 
 
@@ -218,9 +249,11 @@ public class MsgRecieverService extends Service {
             Log.i("MsgRecieverService", "receive new Notification msg from server ");
             Bundle extras = intent.getExtras();
             String Receivedmsg = extras.getString("message");
+            String parsedMsg= Utils.ConvertHexToString(Receivedmsg);
+            Log.i("MsgRecieverService", "receive : "+parsedMsg);
             try {
-                JSONObject jObject = new JSONObject(Receivedmsg);
-                String txt = jObject.getString("txt");
+                JSONObject jObject = new JSONObject(parsedMsg);
+                String txt = jObject.getString("description");
                 int type = jObject.getInt("type");
                 String concept = jObject.getString("concept");
                 Message msg = Message.obtain(null, type, 0, 0, 0);
@@ -242,6 +275,21 @@ public class MsgRecieverService extends Service {
 
 
 
+    }
+    private class NotifyBe_DssTask extends AsyncTask<String, Void, String> {
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+
+            String url = params[0];
+            String PatientID = params[1];
+            String startTime = params[2];
+            String appID =params[3];
+            PicardCommunicationLayer.DataNotificationOnCallBack(PatientID, "5170", startTime, appID, url);
+            return "";
+        }
     }
 
 }
