@@ -193,6 +193,29 @@ public class OpenMrsApi {
         return arrayObs;
     }
 
+    /**
+     * get the last 50 measures(observations) without date.
+     * @return Last 50 measures of that patient.
+     */
+    public String[] getObsWithoutDate(){
+        String patientID = getPatientID();
+        String answer="problem";
+        HashMap<String, String> getHash = new HashMap<String, String>();
+        getHash.put("requestType", "Get");
+        getHash.put("URLPath", "obs?q="+patientID);
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
+        try {
+            answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        return jsonArray2(answer,"uuid","results");
+    }
+
+
 
     /**
      * get Patient unique id(uuid) by patient id(not uuid!!)
