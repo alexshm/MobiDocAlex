@@ -10,6 +10,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -117,7 +118,7 @@ public class MsgRecieverService extends Service {
         ans = msg.getData().getString("value");
         final String Concept = msg.getData().getString("concept");
         Log.i("MsgRecieverService", "get CallBack msg with the values (concept: " + Concept + " txt: " + ans + ")");
-
+        Toast.makeText(getApplicationContext()," A CallBack is happened. Send A CallBack mssg to the Server",Toast.LENGTH_SHORT).show();
         if(Concept.equals("5169")) {
             new Thread(new Runnable() {
                 @Override
