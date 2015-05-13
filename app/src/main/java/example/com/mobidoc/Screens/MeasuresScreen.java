@@ -1,11 +1,30 @@
 package example.com.mobidoc.Screens;
 
+
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+
+
+import android.support.v4.app.FragmentPagerAdapter;
+
+import android.util.Log;
+import android.view.Gravity;
+import android.widget.HorizontalScrollView;
+import android.widget.ScrollView;
+import android.widget.TableLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
@@ -14,47 +33,100 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+
 import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
+import example.com.mobidoc.CommunicationLayer.ServicesToBeDSS.PicardCommunicationLayer;
 import example.com.mobidoc.ConfigReader;
 import example.com.mobidoc.R;
+
 
 /**
  * Created by Alex on 22/04/2015.
  */
-public class MeasuresScreen extends Activity {
+public class MeasuresScreen extends FragmentActivity {
     private OpenMrsApi openMrsApi;
+    ViewPager viewpager;
+    ActionBar tabs;
+    FragmentPagerAdapter fragmentPager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        String[] obs = openMrsApi.getObs();
+
         setContentView(R.layout.measuresscreen);
-        String baseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
-        openMrsApi = new OpenMrsApi(baseUrl);
-        String[] obs=null;
-        try {
-             obs = openMrsApi.getObs();
-            //        String[] row = { "ROW1", "ROW2", "Row3", "Row4", "Row 5", "Row 6",
-//                "Row 7" };
-            String[] column = { "#Row","Observation"};
-            int rl=obs.length; int cl=column.length;
+        viewpager = (ViewPager) findViewById(R.id.view_pager);
 
-//        Log.d("--", "R-Lenght--"+rl+"   "+"C-Lenght--"+cl);
+        fragmentPager = new measureAdapter(getSupportFragmentManager());
 
-            ScrollView sv = new ScrollView(this);
-            TableLayout tableLayout = createTableLayout(obs, column,rl, cl);
-            HorizontalScrollView hsv = new HorizontalScrollView(this);
-            hsv.addView(tableLayout);
-            sv.addView(hsv);
-            setContentView(sv);
-        }
-        catch (Exception e){
-            Toast toast = Toast.makeText(this, "problem loading content",Toast.LENGTH_SHORT);
-            toast.show();
-        }
 
+        Bundle args = new Bundle();
+        args.putStringArrayList("measures", null);
+
+        viewpager.setOnPageChangeListener(
+                new ViewPager.SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+
+                        tabs = getActionBar();
+                        tabs.setSelectedNavigationItem(position);
+                    }
+                });
+        viewpager.setAdapter(fragmentPager);
+
+        tabs = getActionBar();
+        tabs.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+
+                viewpager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+
+            }
+        };
+        /////////////////////////////
+        tabs.addTab(tabs.newTab().setText("Blood Glucose").setTabListener(tabListener));
+        tabs.addTab(tabs.newTab().setText("Ketanuria").setTabListener(tabListener));
+        tabs.addTab(tabs.newTab().setText("Blood Pressure").setTabListener(tabListener));
 
     }
 
+
+
+
+
+    /* make original table
+    ===============================
+    private void ttmep()
+    {
+        String[] column = { "#Row","Observation"};
+        int rl=obs.length; int cl=column.length;
+
+//        Log.d("--", "R-Lenght--"+rl+"   "+"C-Lenght--"+cl);
+
+        ScrollView sv = new ScrollView(this);
+        TableLayout tableLayout = createTableLayout(obs, column,rl, cl);
+        HorizontalScrollView hsv = new HorizontalScrollView(this);
+        hsv.addView(tableLayout);
+        sv.addView(hsv);
+        setContentView(sv);
+    }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private TableLayout createTableLayout(String [] obs, String [] cv,int rowCount, int columnCount) {
@@ -102,6 +174,9 @@ public class MeasuresScreen extends Activity {
 
         return tableLayout;
     }
+
+    */
+
 }
 
 

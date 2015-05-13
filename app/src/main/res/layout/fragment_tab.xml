@@ -1,0 +1,25 @@
+ <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tabPager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/health_background1"
+
+     android:orientation="vertical">
+
+
+    <TableRow android:id="@+id/tabla_title" android:layout_width="match_parent" android:layout_height="79dp">
+        <TextView android:background="@drawable/rec_shape" android:padding="20dp" android:id="@+id/textView8" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?android:attr/textAppearanceMedium" android:text="                       Mesure Table"
+            android:layout_gravity="bottom|center"></TextView>
+
+    </TableRow>
+    <TableLayout android:id="@+id/measureTable" android:layout_height="match_parent" android:layout_width="match_parent">
+
+
+    </TableLayout>
+
+
+
+</LinearLayout >
