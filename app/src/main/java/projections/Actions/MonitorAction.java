@@ -224,6 +224,7 @@ public class MonitorAction extends  Action {
             boolean needToTrigger = isSatisfyAggregationConstraint(it);
             if (needToTrigger) {
                 ans = true;
+                data.getDataValues();
                 Log.i("Action", "the Conditions  is happend -> apply the triggering");
             }
         }

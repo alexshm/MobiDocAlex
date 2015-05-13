@@ -26,13 +26,13 @@
 
         <TextView
             android:id="@+id/questionMessage1"
-            android:layout_width="185dp"
-            android:layout_height="36dp"
-            android:textSize="22dp"
+            android:layout_width="match_parent"
+            android:layout_height="195dp"
+            android:textSize="18dp"
             android:textColor="#ff123733"
             android:text="Question"
-            android:layout_x="12dp"
-            android:layout_y="61dp" />
+            android:layout_x="19dp"
+            android:layout_y="23dp" />
 
         <!--</LinearLayout>-->
 

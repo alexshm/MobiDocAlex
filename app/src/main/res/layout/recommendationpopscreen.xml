@@ -34,7 +34,7 @@
                 android:id="@+id/reccomendationTitle"
                 android:layout_width="256dp"
                 android:layout_height="36dp"
-                android:textSize="25dp"
+                android:textSize="20dp"
                 android:textColor="#ff123733"
                 android:text="Recommendation"
                 android:layout_x="53dp"
@@ -55,7 +55,7 @@
             android:id="@+id/buttonAccept"
             android:layout_width="141dp"
             android:layout_height="wrap_content"
-            android:onClick="done"
+            android:onClick="AcceptPressed"
             android:background="#ffe9e9e9"
             android:text="@string/accept"
             android:layout_x="16dp"
@@ -63,19 +63,19 @@
             android:layout_y="190dp" />
 
         <TextView
-            android:layout_width="272dp"
-            android:layout_height="129dp"
+            android:layout_width="match_parent"
+            android:layout_height="161dp"
             android:text="new text"
             android:id="@+id/RecommandContent"
-            android:layout_x="32dp"
-            android:layout_y="49dp"
+            android:layout_x="6dp"
+            android:layout_y="37dp"
             android:textSize="15dp" />
 
         <Button
             android:id="@+id/buttonDecline"
             android:layout_width="141dp"
             android:layout_height="wrap_content"
-            android:onClick="done"
+            android:onClick="DeclinePressed"
             android:background="#ffe9e9e9"
             android:text="@string/decline"
             android:layout_x="175dp"

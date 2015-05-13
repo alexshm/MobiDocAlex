@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/tableLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/health_background1"
     android:shrinkColumns="*"
-    android:stretchColumns="*" >
+    android:stretchColumns="*"
+    android:rowCount="9"
+    android:columnCount="1">
 
     <!--<TableRow-->
         <!--android:id="@+id/tableRow1"-->
@@ -198,5 +200,5 @@
         <!--</ImageView>-->
     <!--</TableRow>-->
 
-</TableLayout>
+</GridLayout>
 

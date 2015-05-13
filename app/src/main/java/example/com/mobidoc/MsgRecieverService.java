@@ -8,33 +8,22 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.RemoteException;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Date;
 
+import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
 import example.com.mobidoc.CommunicationLayer.PushNotification;
 import example.com.mobidoc.CommunicationLayer.ServicesToBeDSS.PicardCommunicationLayer;
 import example.com.mobidoc.CommunicationLayer.pushNotificationServices.GcmBroadcastReceiver;
 import example.com.mobidoc.Screens.popUpScreens.MeasurePop;
 import example.com.mobidoc.Screens.popUpScreens.PopScreen;
-import example.com.mobidoc.Screens.popUpScreens.QuestionPopScreen;
+import example.com.mobidoc.Screens.popUpScreens.RecommendationPopScreen;
 import example.com.mobidoc.Screens.popUpScreens.YesNoQuestion;
 import projections.Utils;
 
@@ -46,6 +35,8 @@ public class MsgRecieverService extends Service {
     // Messenger Object that receives Messages from connected clients
     IncomingMsgHandler incomingMsgHandler = new IncomingMsgHandler();
     Messenger mMessenger = new Messenger(new IncomingMsgHandler());
+    String baseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
+    OpenMrsApi openMrsApi = new OpenMrsApi(baseUrl);
     private DB db;
 
     class IncomingMsgHandler extends Handler {
@@ -72,7 +63,7 @@ public class MsgRecieverService extends Service {
                     handleQuestion(msg);
                     break;
                 case (RECOMMENDATION_MSG):
-                    handleRecomendation(msg);
+                    handleRecommendation(msg);
 
                     break;
                 case (MEASURE_MSG):
@@ -86,30 +77,14 @@ public class MsgRecieverService extends Service {
                 case (CALLBACK_MSG):
                     handleCallBack(msg);
                     break;
-                case (START_PROJECTION_MSG):
-                    handleStartProjection(msg);
                 default:
                     super.handleMessage(msg);
             }
 
 
-//            Intent intent2 = new Intent(MsgRecieverService.this, QuestionPopScreen.class);
-//            intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            intent2.putExtra("question", "are you ok?");
-//            intent2.putExtra("yesAns", "yesAns!!!");
-//            intent2.putExtra("noAns", "noAns!!!");
-//            getApplicationContext().startActivity(intent2);
 
         }
 
-
-    }
-
-    private void handleStartProjection(Message msg) {
-        //starting the received projection
-        ///========================================
-        Log.i("MsgRecieverService", "handleStartProjection-recieve projnumber to start :" + msg.getData().getString("projNum"));
-        projectionsCollection.getInstance().startProjection(msg.getData().getString("projNum"));
 
     }
 
@@ -138,7 +113,7 @@ public class MsgRecieverService extends Service {
 
     private void handleReminder(Message msg) {
         String ans;
-        ans = "this is a reminder msg for : " + msg.getData().getString("value");
+        ans = "this is a reminder for : " + msg.getData().getString("value");
         Log.i("MsgRecieverService", "get reminder : " + ans);
         Intent intent = new Intent(this, PopScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -158,22 +133,21 @@ public class MsgRecieverService extends Service {
 
     }
 
-    private void handleRecomendation(Message msg) {
-        String ans;
-        ans = "reccomendation msg " + msg.getData().getString("value");
+    private void handleRecommendation(Message msg) {
+        String recommendation;
+        recommendation =  msg.getData().getString("value");
         String acceptConcept = msg.getData().getString("accept");
         String declineConcept = msg.getData().getString("decline");
-        Intent intent = new Intent(this, YesNoQuestion.class);
+        Intent intent = new Intent(this, RecommendationPopScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("acceptConcept", acceptConcept);
         intent.putExtra("declineConcept", declineConcept);
-        intent.putExtra("ADpopUp","somthing");
+        intent.putExtra("recommendation",recommendation);
         getApplicationContext().startActivity(intent);
 
     }
 
     private void handleNotification(Message msg) {
-        String ans;
         String txt = msg.getData().getString("value");
         Intent intent = new Intent(this, PopScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -182,32 +156,23 @@ public class MsgRecieverService extends Service {
     }
 
     private void handleQuestion(Message msg) {
-//        String qustion;
-//        qustion = "question msg " + msg.getData().getString("value");
-//        String yesAns = msg.getData().getString("yes");
-//        String noAns = msg.getData().getString("no");
-//        Intent intent2 = new Intent(this, QuestionPopScreen.class);
-//        intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent2.putExtra("question", qustion);
-//        intent2.putExtra("yesAns", noAns);
-//        intent2.putExtra("noAns", yesAns);
-//        getApplicationContext().startActivity(intent2);
+
         String qustion;
-        qustion = "reccomendation msg " + msg.getData().getString("value");
-        String acceptConcept = msg.getData().getString("yes");
-        String declineConcept = msg.getData().getString("no");
+        qustion = msg.getData().getString("value");
+        String yesConcept = msg.getData().getString("yes");
+        String noConcept = msg.getData().getString("no");
         Intent intent = new Intent(this, YesNoQuestion.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if(acceptConcept !=null && declineConcept !=null) {
-            intent.putExtra("acceptConcept", acceptConcept);
-            intent.putExtra("declineConcept", declineConcept);
+        if(yesConcept !=null && noConcept !=null) {
+            intent.putExtra("yesConcept", yesConcept);
+            intent.putExtra("noConcept", noConcept);
             intent.putExtra("question", qustion);
             try {
                 getApplicationContext().startActivity(intent);
             }
             catch (Exception e){
                 Log.i("MsgRecieverService",e.getMessage());
-                e.printStackTrace();
+
             }
         }
         else{

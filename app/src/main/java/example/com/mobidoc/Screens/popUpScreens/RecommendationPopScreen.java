@@ -7,10 +7,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
@@ -18,45 +18,45 @@ import example.com.mobidoc.ConfigReader;
 import example.com.mobidoc.R;
 
 /**
- * Created by Alex on 29/04/2015.
+ * Created by alex.shmaltsuev on 12/03/2015.
  */
-public class YesNoQuestion extends Activity {
+public class RecommendationPopScreen extends Activity {
 
     private OpenMrsApi openMrsApi;
-    private String noConcept;
-    private String yesConcept;
+    private String declineConcept;
+    private String acceptConcept;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.yesnoquestionpopscreen);
+        setContentView(R.layout.recommendationpopscreen);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        TextView t = (TextView) findViewById(R.id.questionMessage1);
+        TextView t = (TextView) findViewById(R.id.RecommandContent);
         Bundle extras = getIntent().getExtras();
         String baseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
         openMrsApi = new OpenMrsApi(baseUrl);
+        String recommendation = extras.getString("recommendation");
+        t.setText(recommendation);
+        Button buttonAccept = (Button) findViewById(R.id.buttonAccept);
+        buttonAccept.setText("Accept");
+        Button buttonDecline = (Button) findViewById(R.id.buttonDecline);
+        buttonDecline.setText("Decline");
 
-        String question = extras.getString("question");
-        t.setText(question);
-        Button yesButton = (Button) findViewById(R.id.yesButton);
-        yesButton.setText("Yes");
-        Button noButton = (Button) findViewById(R.id.noButton);
-        noButton.setText("No");
+        acceptConcept = extras.getString("acceptConcept");
+        declineConcept = extras.getString("declineConcept");
 
-       yesConcept = extras.getString("yesConcept");
-        noConcept = extras.getString("noConcept");
     }
 
-    public void noPressed(View view) {
+    public void DeclinePressed(View view) {
         String timeStamp = sdf.format(new Date());
-        insertingMeasure(noConcept,"no",timeStamp);
+        insertingMeasure(declineConcept,"no",timeStamp);
         finish();
     }
 
-    public void yesPressed(View view) {
+    public void AcceptPressed(View view) {
         String timeStamp = sdf.format(new Date());
-        insertingMeasure(yesConcept,"yes",timeStamp);
+        insertingMeasure(acceptConcept,"yes",timeStamp);
         finish();
     }
 
@@ -69,7 +69,4 @@ public class YesNoQuestion extends Activity {
         i.putExtra("value",value);
         sendBroadcast(i, android.Manifest.permission.VIBRATE);
     }
-
-
-
 }
