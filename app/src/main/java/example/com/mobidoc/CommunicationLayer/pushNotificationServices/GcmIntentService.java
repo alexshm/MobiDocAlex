@@ -35,6 +35,8 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import example.com.mobidoc.CommunicationLayer.OpenMrsApi;
+import example.com.mobidoc.ConfigReader;
 import example.com.mobidoc.Screens.MainScreen;
 import example.com.mobidoc.projectionsCollection;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -62,11 +64,12 @@ public class GcmIntentService extends IntentService {
     private static final int START_PROJECTION_MSG = 7;
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
-
+    private OpenMrsApi mrsApi;
 
     public GcmIntentService() {
        super("GcmIntentService");
-
+        String url = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
+        mrsApi=new  OpenMrsApi(url);
     }
 
     public static final String TAG = "GCM Demo";
@@ -113,6 +116,7 @@ public class GcmIntentService extends IntentService {
                   String parsedMsg= Utils.ConvertHexToString(Receivedmsg);
                 if(parsedMsg.contains("beginProjection"))
                 {
+                    String[] preferences=mrsApi.getPreferences();
                     String[] projectionScript=parsedMsg.split("beginProjection");
                     Log.i(TAG, "Received : "+(projectionScript.length-1)+" projections from server");
 
@@ -120,7 +124,7 @@ public class GcmIntentService extends IntentService {
                     {
                         final String script="beginProjection"+projectionScript[i];
 
-                         new ProjectionScriptExecuter().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,script);
+                         new ProjectionScriptExecuter(preferences).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,script);
 
 
                     }
@@ -165,10 +169,11 @@ public class GcmIntentService extends IntentService {
 
 
         JsScriptExecutor jsScript;
-         public ProjectionScriptExecuter()
+        String[] preferences;
+         public ProjectionScriptExecuter( String[] prefs)
          {
-
-            jsScript=new JsScriptExecutor(getApplicationContext());
+             preferences=prefs;
+            jsScript=new JsScriptExecutor(getApplicationContext(),preferences);
          }
 
             @Override

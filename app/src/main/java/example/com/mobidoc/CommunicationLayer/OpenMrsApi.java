@@ -137,6 +137,12 @@ public class OpenMrsApi {
     }
 
 
+    public String[] getPreferences(){
+       //TODO :
+        String[] arrayObs = new String[10];
+        return arrayObs;
+    }
+
     /**
      * Upload one measure(observation) of the person.
      * @param personUuid the person unique id(uuid).

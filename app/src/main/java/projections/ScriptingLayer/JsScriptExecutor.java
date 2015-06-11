@@ -1,6 +1,5 @@
 package projections.ScriptingLayer;
 
-import android.content.res.AssetManager;
 import android.util.Log;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
@@ -23,12 +22,13 @@ public class JsScriptExecutor {
 //
     private String basicScript;
     private String s;
+    private String[] preferences;
         android.content.Context c;
-    public JsScriptExecutor( android.content.Context cont)
+    public JsScriptExecutor( android.content.Context cont,String[]_preferences)
     {
         c=cont;
         basicScript=readbasicScript("projectionscript");
-
+        preferences=_preferences;
     }
 
     /*===========================================================
@@ -71,6 +71,7 @@ public class JsScriptExecutor {
 
     private String preProssesing(String script) {
         String temp = script;
+
         final Pattern pattern = Pattern.compile(".*?var\\s([a-z|A-Z|0-9|_]+=declareActionsequance\\('seq'\\)\\{(.*?))\\};.*?");
         final Pattern varsPattern = Pattern.compile(".*?setVar\\('([a-z|A-Z|0-9|_]+','(.*?)')\\);.*?");
         final Pattern startprojPattern = Pattern.compile(".*?start\\((.*?)\\);");
@@ -174,6 +175,18 @@ public class JsScriptExecutor {
             return declareCompositeAction+script+addScript+"\n";
     }
 
+    private String preferenceScript(String noPrefsScript)
+    {
+        String PrefsScript=noPrefsScript;
+
+        final Pattern pattern = Pattern.compile(".*?([a-z|A-Z|0-9|_]+)=new\\sAction\\(.*?\\);");
+        //TODO: add pattern for searching the preferences accordind to $$$mornimg$$ ....
+
+        final Matcher m = pattern.matcher("");
+        m.reset(PrefsScript);
+       return  PrefsScript;
+
+    }
 
 
     public   projection runScript(String scriptToRun) {
@@ -182,7 +195,8 @@ public class JsScriptExecutor {
         projection projToBuild=buildProj(scriptToRun);
         Log.i("JSSCRIPTING-runSctipt","initiazing projectoin ...with type : "+projToBuild.getType().name()+" with id : "+projToBuild.getProjectionId());
         String script=preProssesing(scriptToRun);
-        Log.i("JSSCRIPTING","the new script after preProssesing is :"+script);
+         script= preferenceScript(script);
+        Log.i("JSSCRIPTING","the new script after preProssesing and Pereferenced is :"+script);
 
         Context context = Context.enter();
         context.setOptimizationLevel(-1);
