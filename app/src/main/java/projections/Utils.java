@@ -27,6 +27,15 @@ public  final class Utils {
         Equal, GreaterThen, LessThen, GreatEqual, LessEqual
     }
 
+    public static enum UserPreferences {
+
+       BreakFastTime,LaunchTime,DinnerTime,
+        BreakFastAlarm,LaunchAlarm,DinnerAlarm,
+        OnceWeekPreferredDay,TwiceWeekPreferredDays,
+        DailyTime,DailyAlarm
+    }
+
+
     public static enum ActionType {
         Question, Recommendation, Notification, Measurement, General, Remainder, Trigger,CallBack
     }
@@ -89,7 +98,33 @@ public  final class Utils {
         }
         return null;
     }
+    public static UserPreferences getUserPreferenceByName(String preferenceName) {
 
+        switch(preferenceName) {
+            case "breakfastTime":
+                return UserPreferences.BreakFastTime;
+            case "launchTime":
+                return UserPreferences.LaunchTime;
+            case "dinnerTime":
+                return UserPreferences.DinnerTime;
+            case "breakfastReminder":
+                return UserPreferences.BreakFastAlarm;
+            case "launchReminder":
+                return UserPreferences.LaunchAlarm;
+            case "dinnerReminder":
+                return UserPreferences.DinnerAlarm;
+            case "OnceWeek":
+                return UserPreferences.OnceWeekPreferredDay;
+            case "TwiceWeek":
+                return UserPreferences.TwiceWeekPreferredDays;
+            case "dailyTime":
+                return UserPreferences.DailyTime;
+            case "dailyReminder" :
+                return UserPreferences.DailyAlarm;
+
+        }
+        return null;
+    }
     public static var.VarType getVarType(String  type){
 
         switch(type) {

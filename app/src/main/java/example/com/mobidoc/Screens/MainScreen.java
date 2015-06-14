@@ -135,7 +135,7 @@ public class MainScreen extends Activity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String patientID = mrs.getUserUuid();
+                String patientID = mrs.getPatintUuid().replaceAll("\\-","");
                 boolean result = PicardCommunicationLayer.StartGuideLine(patientID, startTime, glid,regid, url);
                 Log.i("Main Screen", "get the result from starting guide line " + result);
 

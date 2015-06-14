@@ -35,8 +35,8 @@ public class MsgRecieverService extends Service {
     // Messenger Object that receives Messages from connected clients
     IncomingMsgHandler incomingMsgHandler = new IncomingMsgHandler();
     Messenger mMessenger = new Messenger(new IncomingMsgHandler());
-    String baseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
-    OpenMrsApi openMrsApi = new OpenMrsApi(baseUrl);
+    String baseUrl;
+    OpenMrsApi openMrsApi ;
     private DB db;
 
     class IncomingMsgHandler extends Handler {
@@ -94,15 +94,17 @@ public class MsgRecieverService extends Service {
         final String Concept = msg.getData().getString("concept");
         Log.i("MsgRecieverService", "get CallBack msg with the values (concept: " + Concept + " txt: " + ans + ")");
         Toast.makeText(getApplicationContext()," A CallBack is happened. Send A CallBack mssg to the Server",Toast.LENGTH_SHORT).show();
+        baseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
+        openMrsApi = new OpenMrsApi(baseUrl);
         if(Concept.equals("5169")) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     String url = new ConfigReader(getApplicationContext()).getProperties().getProperty("Picard_WCF_URL");
-                    String PatientID = "patientTest696";
+                    String patientID = openMrsApi.getPatintUuid().replaceAll("\\-","");
                     String startTime = "2014-02-01T19:42:18+02:00";
                     String appID = PushNotification.getInstance(getApplicationContext()).getMobileID();
-                    new NotifyBe_DssTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url, PatientID, startTime, appID);
+                    new NotifyBe_DssTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url, patientID, startTime, appID);
 
                 }
             }).start();

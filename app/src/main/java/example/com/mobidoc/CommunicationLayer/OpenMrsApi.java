@@ -140,6 +140,14 @@ public class OpenMrsApi {
     public String[] getPreferences(){
        //TODO :
         String[] arrayObs = new String[10];
+        arrayObs[0]="08:00";
+        arrayObs[1]="12:00";
+        arrayObs[2]="20:00";
+        arrayObs[3]="6";
+        arrayObs[4]="10";
+        arrayObs[5]="20";
+        arrayObs[6]="3";
+        arrayObs[7]="1";
         return arrayObs;
     }
 

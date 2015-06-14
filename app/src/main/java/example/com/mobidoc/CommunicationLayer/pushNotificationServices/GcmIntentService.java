@@ -42,10 +42,14 @@ import example.com.mobidoc.projectionsCollection;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import java.io.IOException;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import example.com.mobidoc.R;
 import projections.ScriptingLayer.JsScriptExecutor;
@@ -65,13 +69,22 @@ public class GcmIntentService extends IntentService {
     private NotificationManager mNotificationManager;
     NotificationCompat.Builder builder;
     private OpenMrsApi mrsApi;
+    private Dictionary<Utils.UserPreferences,String> prefsDic;
 
     public GcmIntentService() {
-       super("GcmIntentService");
-        String url = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
-        mrsApi=new  OpenMrsApi(url);
+        super("GcmIntentService");
+
+        prefsDic = new Hashtable<Utils.UserPreferences, String>();
     }
 
+
+    private void updatePrefsDic(String[] prefs)
+    {
+        for(Utils.UserPreferences pref: Utils.UserPreferences.values())
+        {
+            prefsDic.put(pref,prefs[pref.ordinal()]);
+        }
+    }
     public static final String TAG = "GCM Demo";
 
 
@@ -86,7 +99,8 @@ public class GcmIntentService extends IntentService {
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
-
+        String url = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
+        mrsApi = new OpenMrsApi(url);
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
             /*
              * Filter messages based on message type. Since it is likely that GCM will be
@@ -117,14 +131,17 @@ public class GcmIntentService extends IntentService {
                 if(parsedMsg.contains("beginProjection"))
                 {
                     String[] preferences=mrsApi.getPreferences();
-                    String[] projectionScript=parsedMsg.split("beginProjection");
+                    updatePrefsDic(preferences);
+                    String projectionsWithPrefs=updatePreferenceProjection(parsedMsg);
+
+                    String[] projectionScript=projectionsWithPrefs.split("beginProjection");
                     Log.i(TAG, "Received : "+(projectionScript.length-1)+" projections from server");
 
                     for(int i=1;i<projectionScript.length;i++)
                     {
                         final String script="beginProjection"+projectionScript[i];
 
-                         new ProjectionScriptExecuter(preferences).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,script);
+                         new ProjectionScriptExecuter().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR,script);
 
 
                     }
@@ -164,16 +181,42 @@ public class GcmIntentService extends IntentService {
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
+    private String updatePreferenceProjection(String allProjections) {//"\\$[^$]*\\$
+        final Pattern preferencePatternReminder = Pattern.compile(".*?setReminder\\((<\\$([^$]*)\\$>)\\)");
+        final Pattern preferencePattern = Pattern.compile(".*?setStartTime\\((<\\$([^$]*)\\$>)\\)");
+        String parsedMsgWithPrefs = allProjections;
+        String answer="";
+        Matcher m = preferencePatternReminder.matcher("");
+        m.reset(parsedMsgWithPrefs);
+        while (m.find()) {
+            String preference = m.group(1);
+            String preferenceType = m.group(2);
+            Utils.UserPreferences prefKey = Utils.getUserPreferenceByName(preferenceType);
+            String preferencedValue = prefsDic.get(prefKey);
+            answer =parsedMsgWithPrefs.replace(preference, preferencedValue + ",'minute'").trim();
+        }
+
+        m = preferencePattern.matcher("");
+        m.reset(answer);
+        while (m.find()) {
+            String preference = m.group(1);
+            String preferenceType = m.group(2);
+            Utils.UserPreferences prefKey = Utils.getUserPreferenceByName(preferenceType);
+            String preferencedValue = prefsDic.get(prefKey);
+            answer = answer.replace(preference, "'" + preferencedValue + "'").trim();
+        }
+        return answer;
+    }
 
     private class ProjectionScriptExecuter extends AsyncTask<String, Void, projection> {
 
 
         JsScriptExecutor jsScript;
-        String[] preferences;
-         public ProjectionScriptExecuter( String[] prefs)
+
+         public ProjectionScriptExecuter()
          {
-             preferences=prefs;
-            jsScript=new JsScriptExecutor(getApplicationContext(),preferences);
+
+            jsScript=new JsScriptExecutor(getApplicationContext());
          }
 
             @Override
@@ -187,11 +230,12 @@ public class GcmIntentService extends IntentService {
 
             @Override
             protected void onPostExecute(projection proj) {
-
-                Log.i("GCM service", " finish building projection: "+proj.getProjectionName()+"("+proj.getProjectionId()+")");
-                projectionsCollection.getInstance().addProjection(proj);
-                Log.i("GCM service", "adding : "+proj.getProjectionName()+"("+proj.getProjectionId()+") to projectionCollection");
-                sendStartProjectionMsg(proj.getProjectionId());
+                if(proj!=null) {
+                    Log.i("GCM service", " finish building projection: " + proj.getProjectionName() + "(" + proj.getProjectionId() + ")");
+                    projectionsCollection.getInstance().addProjection(proj);
+                    Log.i("GCM service", "adding : " + proj.getProjectionName() + "(" + proj.getProjectionId() + ") to projectionCollection");
+                    sendStartProjectionMsg(proj.getProjectionId());
+                }
             }
 
             private void sendStartProjectionMsg(String projectionId)

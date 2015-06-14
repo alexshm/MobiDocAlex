@@ -10,9 +10,11 @@ import projections.CyclicProjectionAbstract;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import projections.Utils.UserPreferences;
 /**
  * Created by Moshe on 3/18/2015.
  */
@@ -24,11 +26,11 @@ public class JsScriptExecutor {
     private String s;
     private String[] preferences;
         android.content.Context c;
-    public JsScriptExecutor( android.content.Context cont,String[]_preferences)
+
+    public JsScriptExecutor( android.content.Context cont)
     {
         c=cont;
         basicScript=readbasicScript("projectionscript");
-        preferences=_preferences;
     }
 
     /*===========================================================
@@ -51,8 +53,12 @@ public class JsScriptExecutor {
             String type = projection[0];
             String name = projection[1];
             String id = projection[2];
-
             projection.ProjectionType projectionType = Utils.convertToProjectionType(type);
+
+            if (script.contains("<$")) {
+                Log.e("ProjectionParser", "ERROR in preference projection(" + id + ")");
+                return null;
+            }
 
             switch (projectionType) {
                 case Cyclic:
@@ -175,28 +181,17 @@ public class JsScriptExecutor {
             return declareCompositeAction+script+addScript+"\n";
     }
 
-    private String preferenceScript(String noPrefsScript)
-    {
-        String PrefsScript=noPrefsScript;
-
-        final Pattern pattern = Pattern.compile(".*?([a-z|A-Z|0-9|_]+)=new\\sAction\\(.*?\\);");
-        //TODO: add pattern for searching the preferences accordind to $$$mornimg$$ ....
-
-        final Matcher m = pattern.matcher("");
-        m.reset(PrefsScript);
-       return  PrefsScript;
-
-    }
 
 
     public   projection runScript(String scriptToRun) {
 
 
         projection projToBuild=buildProj(scriptToRun);
+        if(projToBuild==null)
+            return null;
         Log.i("JSSCRIPTING-runSctipt","initiazing projectoin ...with type : "+projToBuild.getType().name()+" with id : "+projToBuild.getProjectionId());
         String script=preProssesing(scriptToRun);
-         script= preferenceScript(script);
-        Log.i("JSSCRIPTING","the new script after preProssesing and Pereferenced is :"+script);
+        Log.i("JSSCRIPTING","the new script after preProssesing  is :"+script);
 
         Context context = Context.enter();
         context.setOptimizationLevel(-1);
