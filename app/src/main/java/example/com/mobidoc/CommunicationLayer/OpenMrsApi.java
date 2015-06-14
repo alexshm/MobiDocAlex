@@ -30,7 +30,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "session");
+        getHash.put("URLPath", "rest/v1/session");
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
@@ -60,7 +60,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "session");
+        getHash.put("URLPath", "rest/v1/session");
 
         HttpRecTask httpRecTask = new HttpRecTask(userName, pass, baseUrl );
         try {
@@ -103,7 +103,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "person?q="+name);
+        getHash.put("URLPath", "rest/v1/person?q="+name);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
@@ -124,7 +124,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "concept?q="+name);
+        getHash.put("URLPath", "rest/v1/concept?q="+name);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
@@ -138,16 +138,38 @@ public class OpenMrsApi {
 
 
     public String[] getPreferences(){
-       //TODO :
-        String[] arrayObs = new String[10];
-        arrayObs[0]="08:00";
-        arrayObs[1]="12:00";
-        arrayObs[2]="20:00";
-        arrayObs[3]="6";
-        arrayObs[4]="10";
-        arrayObs[5]="20";
-        arrayObs[6]="3";
-        arrayObs[7]="1";
+        String answer="problem";
+        HashMap<String, String> getHash = new HashMap<String, String>();
+        getHash.put("requestType", "Get");
+        getHash.put("URLPath", "module/personalization/manage2?id=2&uuid="+getPatintUuid());
+        HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
+        try {
+            answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        String[] arrayObs = new String[11];
+
+        try {
+            JSONObject jObject = new JSONObject(answer);
+            arrayObs[0] = jObject.getString("breakfast");
+            arrayObs[1] = jObject.getString("lunch");
+            arrayObs[2] = jObject.getString("evening");
+            arrayObs[3] = jObject.getString("breakfastAlarm");
+            arrayObs[4] = jObject.getString("lunchAlarm");
+            arrayObs[5] = jObject.getString("eveningAlarm");
+            arrayObs[6] = jObject.getString("day");
+            arrayObs[7] = jObject.getString("time");
+            arrayObs[8] = jObject.getString("day1");
+            arrayObs[9] = jObject.getString("day2");
+            arrayObs[10] = jObject.getString("time2");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return arrayObs;
     }
 
@@ -163,7 +185,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Post");
-        getHash.put("URLPath", "obs");
+        getHash.put("URLPath", "rest/v1/obs");
         String body = "{\"person\":\""+personUuid+"\",\"obsDatetime\":\""+dateTime+"\""+
                 ",\"concept\":\""+conceptUuid+"\",\"value\":\""+value+"\",\"location\":\"8d6c993e-c2cc-11de-8d13-0010c6dffd0f\"}";
         getHash.put("JSON", body);
@@ -187,7 +209,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "obs?q="+patientID);
+        getHash.put("URLPath", "rest/v1/obs?q="+patientID);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
@@ -216,7 +238,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "obs?q="+patientID);
+        getHash.put("URLPath", "rest/v1/obs?q="+patientID);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
@@ -240,7 +262,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "patient?q="+patientID);
+        getHash.put("URLPath", "rest/v1/patient?q="+patientID);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
@@ -261,7 +283,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "user/"+userUuid);
+        getHash.put("URLPath", "rest/v1/user/"+userUuid);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
@@ -292,7 +314,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "user?q="+username);
+        getHash.put("URLPath", "rest/v1/user?q="+username);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
@@ -313,7 +335,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "patient?q="+username);
+        getHash.put("URLPath", "rest/v1/patient?q="+username);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
@@ -343,7 +365,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Post");
-        getHash.put("URLPath", "obs");
+        getHash.put("URLPath", "rest/v1/obs");
         String body = "{\"person\":\""+personUuid+"\",\"obsDatetime\":\""+dateTime+"\""+
                 ",\"concept\":\""+conceptUuid+"\",\"value\":\""+value+"\",\"location\":\"8d6c993e-c2cc-11de-8d13-0010c6dffd0f\"}";
         getHash.put("JSON", body);
@@ -402,7 +424,7 @@ public class OpenMrsApi {
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
-        getHash.put("URLPath", "obs/"+obsUUID);
+        getHash.put("URLPath", "rest/v1/obs/"+obsUUID);
         HttpRecTask httpRecTask = new HttpRecTask(username, password, baseUrl );
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();

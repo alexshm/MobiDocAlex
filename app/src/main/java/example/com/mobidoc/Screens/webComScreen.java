@@ -39,7 +39,7 @@ public class webComScreen extends Activity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                baseUrl = "http://" + "mobidoc.ise.bgu.ac.il" + ":8081/openmrs-standalone/ws/rest/v1/";
+                baseUrl = "http://" + "mobidoc.ise.bgu.ac.il" + ":8081/openmrs-standalone/ws/";
                 openMrsApi = new OpenMrsApi(baseUrl);
                 Log.i("getFromUrl", "connecting to web.. " + baseUrl);
                 getRecTest();
@@ -54,8 +54,10 @@ public class webComScreen extends Activity {
         String concept =  "5085AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
         String personID = "7014135e-7575-41a8-8832-4fb0c3b2ca5f";
         String dateTime = "2010-03-23T00:00:00.000+0200";
-        String obsss = openMrsApi.getObs()[0];
+        String obsss = openMrsApi.getPatintUuid();
         ans.setText(obsss);
+        String[] obsss4 = openMrsApi.getPreferences();
+        ans.setText(obsss4[3]);
 //        ans.setText(openMrsApi.postObs(personID,88,dateTime,concept));
       //  ans.setText(openMrsApi.getPerson("israel"));
 
