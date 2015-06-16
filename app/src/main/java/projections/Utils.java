@@ -31,8 +31,8 @@ public  final class Utils {
 
        BreakFastTime,LaunchTime,DinnerTime,
         BreakFastAlarm,LaunchAlarm,DinnerAlarm,
-        OnceWeekPreferredDay,TwiceWeekPreferredDays,
-        DailyTime,DailyAlarm
+        OnceWeekPreferredDay,DailyTime,DailyAlarm,
+        TwiceWeekPreferredDays,TwiceWeekTime
     }
 
 
@@ -121,6 +121,9 @@ public  final class Utils {
                 return UserPreferences.DailyTime;
             case "dailyReminder" :
                 return UserPreferences.DailyAlarm;
+            case "TwiceWeekTime" :
+                return UserPreferences.TwiceWeekTime;
+
 
         }
         return null;

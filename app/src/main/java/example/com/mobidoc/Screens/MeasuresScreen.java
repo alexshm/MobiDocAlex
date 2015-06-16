@@ -162,6 +162,8 @@ public class MeasuresScreen extends Activity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("msg", txt);
                 intent.putExtra("concept", concept);
+                Log.i("testtt","sending concept : "+measureConcept);
+                Log.i("testtt","sending text : "+measureType);
                 getApplicationContext().startActivity(intent);
             }
         }).start();
@@ -179,7 +181,9 @@ public class MeasuresScreen extends Activity {
 
             Button bv=(Button)v;
             bv.getText();
-            String text= bv.getText().toString();
+
+            String text= bv.getText().toString().split(" ")[1];
+
             switch (text)
             {
                 case "BP":
@@ -189,7 +193,7 @@ public class MeasuresScreen extends Activity {
                     concept="4985";
                     break;
                 case "ketanuria":
-                    concept="5121";
+                    concept="5021";
                     break;
 
             }
@@ -198,8 +202,8 @@ public class MeasuresScreen extends Activity {
         }
         @Override
         public void onClick(View v) {
-            Log.i("ttt","executeee");
-            insertMeasureManually(name, concept);
+
+            insertMeasureManually(this.name, this.concept);
         }
     }
 

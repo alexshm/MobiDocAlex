@@ -115,7 +115,7 @@ public class MsgRecieverService extends Service {
 
     private void handleReminder(Message msg) {
         String ans;
-        ans = "this is a reminder for : " + msg.getData().getString("value");
+        ans =  msg.getData().getString("value");
         Log.i("MsgRecieverService", "get reminder : " + ans);
         Intent intent = new Intent(this, PopScreen.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

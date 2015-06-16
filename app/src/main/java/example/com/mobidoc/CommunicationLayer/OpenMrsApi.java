@@ -157,6 +157,8 @@ public class OpenMrsApi {
         String[] arrayObs = new String[11];
 
         try {
+            //please keep this order.
+
             JSONObject jObject = new JSONObject(answer);
             arrayObs[0] = jObject.getString("breakfast");
             arrayObs[1] = jObject.getString("lunch");
@@ -166,9 +168,11 @@ public class OpenMrsApi {
             arrayObs[5] = jObject.getString("eveningAlarm");
             arrayObs[6] = jObject.getString("day");
             arrayObs[7] = jObject.getString("time");
-            arrayObs[8] = jObject.getString("day1");
-            arrayObs[9] = jObject.getString("day2");
+            arrayObs[8] = "1"; //TODO : NEED TO ADD DAILY(katenuria) REMINDER IN THE OPENMRS- FOR NOW IS SET TO ONE MINUTE
+            arrayObs[9] = jObject.getString("day1")+","+jObject.getString("day2");
             arrayObs[10] = jObject.getString("time2");
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

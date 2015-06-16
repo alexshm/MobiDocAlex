@@ -25,6 +25,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -114,23 +115,17 @@ public class GcmIntentService extends IntentService {
             // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 
-                                     // This loop represents the service doing some work.
-                      for (int i = 0; i < 3; i++) {
-                          try{
 
-                              Thread.sleep(300);
 
-                          } catch (InterruptedException e) {
-
-                    }
-                }
                 Log.i(TAG, "Complete receiving projections in : " + SystemClock.elapsedRealtime());
                 //string contains all the received projections from the server
                 String Receivedmsg=extras.getString("message");
                   String parsedMsg= Utils.ConvertHexToString(Receivedmsg);
                 if(parsedMsg.contains("beginProjection"))
                 {
+
                     String[] preferences=mrsApi.getPreferences();
+
                     updatePrefsDic(preferences);
                     String projectionsWithPrefs=updatePreferenceProjection(parsedMsg);
 
@@ -193,9 +188,9 @@ public class GcmIntentService extends IntentService {
             String preferenceType = m.group(2);
             Utils.UserPreferences prefKey = Utils.getUserPreferenceByName(preferenceType);
             String preferencedValue = prefsDic.get(prefKey);
-            answer =parsedMsgWithPrefs.replace(preference, preferencedValue + ",'minute'").trim();
+            parsedMsgWithPrefs =parsedMsgWithPrefs.replace(preference, preferencedValue + ",'minute'").trim();
         }
-
+        answer=parsedMsgWithPrefs;
         m = preferencePattern.matcher("");
         m.reset(answer);
         while (m.find()) {

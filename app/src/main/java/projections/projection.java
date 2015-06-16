@@ -134,7 +134,7 @@ public abstract class projection extends BroadcastReceiver implements Runnable{
 
 
     protected void receiveData(Intent intent) {
-
+        Log.i("abstractProj","ASDSAD");
       //  SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:sszzz");
         String concept = intent.getStringExtra("concept");
         String val = String.valueOf(intent.getStringExtra("value"));

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
@@ -77,7 +78,7 @@ public class MeasurePop extends Activity {
     public void done(View view) {
         String time = displayTime.getText().toString();
         DatePicker datePcker = (DatePicker) findViewById(R.id.datePicker);
-        int intValue = Integer.parseInt(value.getText().toString());
+        String val = value.getText().toString();
         Date date = (Date) new Date
                 (datePcker.getYear() - 1900, datePcker.getMonth(), datePcker.getDayOfMonth());
         date.setHours(hour);
@@ -91,9 +92,10 @@ public class MeasurePop extends Activity {
             ;
         };
         String dateString = dateFormat.format(date);
-        String ans = openMrsApi.enterMeasure(""+intValue, dateString, this.conceptHash.get(concept));
-        String val = ""+intValue;
-        String timeStamp = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").format(Calendar.getInstance().getTime());
+       // String ans = openMrsApi.enterMeasure(val, dateString, this.conceptHash.get(concept));
+
+        //TODO: THIS IS THE OLD ONE   String timeStamp = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").format(Calendar.getInstance().getTime());
+        String timeStamp = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").format(new Date());
         insertingMeasure(concept,val,timeStamp);
         finish();
     }
@@ -161,6 +163,7 @@ public class MeasurePop extends Activity {
 
     private void insertingMeasure(String concept, String value,String timeStr) {
         //simulate insertion
+        Log.i("measurePop","sending measure to projection with concept : "+concept);
         Intent i = new Intent(concept);
         i.putExtra("concept", concept);
 
