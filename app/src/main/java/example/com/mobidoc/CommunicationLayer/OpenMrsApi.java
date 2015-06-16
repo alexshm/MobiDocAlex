@@ -5,6 +5,9 @@ import android.os.AsyncTask;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -204,7 +207,7 @@ public class OpenMrsApi {
      * get the last 50 measures(observations).
      * @return Last 50 measures of that patient.
      */
-    public String[] getObs(){
+    public String[][] getObs(){
         String patientID = getPatientID();
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
@@ -220,7 +223,7 @@ public class OpenMrsApi {
         }
 
         String[] UUidArray = jsonArray2(answer,"uuid","results");
-        String[] arrayObs = new String[UUidArray.length];
+        String[][] arrayObs = new String[UUidArray.length][];
         for (int i= 0;i<UUidArray.length;i++){
             arrayObs[i] = getOneObs(UUidArray[i]);
         }
@@ -420,7 +423,7 @@ public class OpenMrsApi {
         return obsUUIDs;
     }
 
-    public String getOneObs(String obsUUID){
+    public String[] getOneObs(String obsUUID){
         String answer="problem";
         HashMap<String, String> getHash = new HashMap<String, String>();
         getHash.put("requestType", "Get");
@@ -434,11 +437,23 @@ public class OpenMrsApi {
             e.printStackTrace();
         }
 
-        String obsData = "";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat output = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        String[] obsData = new  String[3];
         try {
             JSONObject jObject = new JSONObject(answer);
-            obsData += jObject.getString("display") + ": ";
-            obsData += jObject.getString("obsDatetime");
+            String[] displayval=jObject.getString("display").split(":");
+            if(displayval[0].contains("BLOOD"))
+                displayval[0]="Blood Pressure";
+            if(displayval[0].contains("Catanu"))
+                displayval[0]="Ketanuria";
+
+            obsData[0]=displayval[0];
+            Date d=sdf.parse(jObject.getString("obsDatetime"));
+            obsData[1]=output.format(d);
+            obsData[2]=displayval[1];
+
         } catch (Exception e) {
             e.printStackTrace();
         }

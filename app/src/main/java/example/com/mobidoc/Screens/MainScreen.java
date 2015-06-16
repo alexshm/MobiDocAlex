@@ -157,17 +157,14 @@ public class MainScreen extends Activity {
         return;
     }
 
-    public void goToWebTests(View view) {
-        Intent webScreen = new Intent(MainScreen.this, webComScreen.class);
-        startActivity(webScreen);
-    }
+
 
     public void measureClick(View view) {
         //String alertMsg="This option is not yet available.";
         //AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
         //d.show(getFragmentManager(), "Alert");
         //return;
-        //TODO: measures screen
+
         Intent measureScreen = new Intent(MainScreen.this, MeasuresScreen.class);
         startActivity(measureScreen);
     }
