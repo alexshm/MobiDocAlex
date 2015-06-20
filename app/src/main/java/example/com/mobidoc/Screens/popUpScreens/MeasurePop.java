@@ -72,7 +72,10 @@ public class MeasurePop extends Activity {
     }
 
     private void initHash() {
-        this.conceptHash.put("5021","systolic");
+
+        this.conceptHash.put("5178","systolic");
+        this.conceptHash.put("4985","BLOOD GLOUCISE");
+        this.conceptHash.put("5021","Catanuria");
     }
 
     public void done(View view) {
@@ -92,7 +95,7 @@ public class MeasurePop extends Activity {
             ;
         };
         String dateString = dateFormat.format(date);
-       // String ans = openMrsApi.enterMeasure(val, dateString, this.conceptHash.get(concept));
+       String ans = openMrsApi.enterMeasure(val, dateString, this.conceptHash.get(concept));
 
         //TODO: THIS IS THE OLD ONE   String timeStamp = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").format(Calendar.getInstance().getTime());
         String timeStamp = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss").format(new Date());
