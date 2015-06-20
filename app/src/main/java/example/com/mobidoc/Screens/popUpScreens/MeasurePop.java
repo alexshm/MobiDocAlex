@@ -74,7 +74,7 @@ public class MeasurePop extends Activity {
     private void initHash() {
 
         this.conceptHash.put("5178","systolic");
-        this.conceptHash.put("4985","BLOOD GLOUCISE");
+        this.conceptHash.put("4985","GLOUCISE");
         this.conceptHash.put("5021","Catanuria");
     }
 
