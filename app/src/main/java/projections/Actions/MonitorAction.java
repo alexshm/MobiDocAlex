@@ -14,6 +14,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Vector;
 
 import projections.monitoringObjects.DataCollection;
@@ -208,8 +209,15 @@ public class MonitorAction extends  Action {
                 return avg(data).intValue();
 
             case Count:
+                Iterator it = data.iterator();
+                int count=0;
+                while (it.hasNext())
+                {
+                    it.next();
+                    count++;
+                }
 
-                return count(data).size();
+                return count;
 
         }
         return -1;

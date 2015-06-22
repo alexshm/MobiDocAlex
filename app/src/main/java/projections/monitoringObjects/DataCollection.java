@@ -142,7 +142,7 @@ public class DataCollection {
             Calendar c = Calendar.getInstance();
 
             // convert the date to the correct format
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             c.setTime(nowTime);
             c.add(Calendar.DATE, -_daysToRemember);
 
@@ -182,7 +182,7 @@ public class DataCollection {
           meaning if the item date is between the time constraints (now , now-daysToRemembers)
          ================================================*/
         private boolean checkDate(Date itemDate, Date daysAgoDate) {
-            if ((itemDate.after(daysAgoDate)))
+            if (itemDate.after(daysAgoDate))
                 return true;
 
             return false;

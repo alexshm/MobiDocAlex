@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/health_background1"
+    android:background="@drawable/background1"
     android:gravity="top"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -14,37 +14,36 @@
 
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
         android:scaleType="fitStart"
-        android:src="@drawable/mobidoc"
+        android:src="@drawable/mobidoclogo1"
         android:textAlignment="center" />
 
 
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:orientation="vertical"
         android:layout_below="@+id/imageView1"
-        android:orientation="vertical">
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true">
 
         <ImageView
             android:id="@+id/action_bar"
-            android:layout_width="83dp"
-            android:layout_height="89dp"
+            android:layout_width="106dp"
+            android:layout_height="114dp"
             android:layout_alignLeft="@+id/settingseViewText"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/settingseViewText"
             android:layout_gravity="right|bottom"
             android:onClick="goToSettings"
             android:scaleType="fitStart"
-            android:src="@drawable/settings"
+            android:src="@drawable/setings2"
             android:textAlignment="center" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="97dp"
             android:layout_height="107dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Settings"
@@ -79,7 +78,7 @@
 
         <TextView
             android:layout_width="117dp"
-            android:layout_height="138dp"
+            android:layout_height="161dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Start Guide Line"
             android:id="@+id/textView4"
@@ -95,12 +94,12 @@
             android:layout_gravity="left|top"
             android:onClick="startGuideLine"
             android:scaleType="fitStart"
-            android:src="@drawable/stargl"
+            android:src="@drawable/play2"
             android:textAlignment="center" />
 
         <TextView
-            android:layout_width="91dp"
-            android:layout_height="139dp"
+            android:layout_width="116dp"
+            android:layout_height="158dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Log  Book"
             android:id="@+id/textView17"
@@ -113,7 +112,7 @@
             android:layout_height="124dp"
             android:id="@+id/measureIMG"
             android:onClick="measureClick"
-            android:src="@drawable/logbook"
+            android:src="@drawable/logbook2"
             android:layout_gravity="right|top" />
 
 
