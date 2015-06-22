@@ -22,17 +22,17 @@
 
 
     <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/imageView1"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageView1">
 
         <ImageView
             android:id="@+id/action_bar"
-            android:layout_width="106dp"
-            android:layout_height="114dp"
+            android:layout_width="124dp"
+            android:layout_height="134dp"
             android:layout_alignLeft="@+id/settingseViewText"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/settingseViewText"
@@ -43,8 +43,8 @@
             android:textAlignment="center" />
 
         <TextView
-            android:layout_width="97dp"
-            android:layout_height="107dp"
+            android:layout_width="121dp"
+            android:layout_height="139dp"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Settings"
             android:id="@+id/textView5"

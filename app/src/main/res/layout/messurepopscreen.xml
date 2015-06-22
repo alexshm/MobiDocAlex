@@ -7,7 +7,7 @@
     android:background="@android:color/transparent">
 
     <AbsoluteLayout
-        android:layout_width="343dp"
+        android:layout_width="371dp"
         android:layout_height="437dp"
         android:orientation="vertical"
         android:layout_margin="1dp"
