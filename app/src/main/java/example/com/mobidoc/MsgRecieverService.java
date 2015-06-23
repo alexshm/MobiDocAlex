@@ -217,8 +217,8 @@ public class MsgRecieverService extends Service {
             Log.i("MsgRecieverService", "receive new Notification msg from server ");
             Bundle extras = intent.getExtras();
             String Receivedmsg = extras.getString("message");
-            String parsedMsg= Utils.ConvertHexToString(Receivedmsg);
-            Log.i("MsgRecieverService", "receive : "+parsedMsg);
+           String parsedMsg= Utils.ConvertHexToString(Receivedmsg);
+            Log.i("MsgRecieverService", "receive : "+Receivedmsg);
             try {
                 JSONObject jObject = new JSONObject(parsedMsg);
                 String txt = jObject.getString("description");

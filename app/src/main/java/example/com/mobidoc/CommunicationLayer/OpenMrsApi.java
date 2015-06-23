@@ -168,7 +168,7 @@ public class OpenMrsApi {
             arrayObs[5] = jObject.getString("eveningAlarm");
             arrayObs[6] = jObject.getString("day");
             arrayObs[7] = jObject.getString("time");
-            arrayObs[8] = "1"; //TODO : NEED TO ADD DAILY(katenuria) REMINDER IN THE OPENMRS- FOR NOW IS SET TO ONE MINUTE
+            arrayObs[8] = "20"; //TODO : NEED TO ADD DAILY(katenuria) REMINDER IN THE OPENMRS- FOR NOW IS SET TO ONE MINUTE
             arrayObs[9] = jObject.getString("day1")+","+jObject.getString("day2");
             arrayObs[10] = jObject.getString("time2");
 
