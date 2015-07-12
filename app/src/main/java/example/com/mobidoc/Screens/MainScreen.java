@@ -154,6 +154,8 @@ public class MainScreen extends Activity {
         String alertMsg="This option is not yet available.";
         AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
         d.show(getFragmentManager(), "Alert");
+//        Intent SettingsScreen = new Intent(MainScreen.this, SettingsScreen.class);
+//        startActivity(SettingsScreen);
         return;
     }
 
