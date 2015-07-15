@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -39,11 +40,13 @@ public class MeasurePop extends Activity {
     private EditText value;
     private String concept;
     HashMap<String,String> conceptHash= new HashMap<String,String>();
-
+    private   ImageButton exit;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messurepopscreen);
+         exit=(ImageButton) findViewById(R.id.exitBtton);
+
         String baseUrl = new ConfigReader(getApplicationContext()).getProperties().getProperty("openMRS_URL");
         openMrsApi = new OpenMrsApi(baseUrl);
         initHash();
@@ -131,7 +134,10 @@ public class MeasurePop extends Activity {
             return "0" + String.valueOf(c);
     }
 
-
+    public void exit(View v)
+    {
+        finish();
+    }
     public void changeTime(View view) {
         showDialog(TIME_DIALOG_ID);
     }

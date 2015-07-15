@@ -77,9 +77,7 @@ public class LoginScreen extends Activity {
 
                 try {
 
-                   String user="israel";
-                    String pass="Israel123";
-                    Boolean result = loginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user, pass).get();
+                    Boolean result = loginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user, password).get();
                     mProgressDialog.dismiss();
                     continueLogin(result);
                 } catch (InterruptedException e) {
@@ -110,7 +108,6 @@ public class LoginScreen extends Activity {
                     error.setText("");
                     username.setText("");
                     pass.setText("");
-
                     error.setText("you typed wrong login deatails.\n please type again.");
                     error.setTextColor(Color.RED);
                 }

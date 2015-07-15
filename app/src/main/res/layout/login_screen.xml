@@ -74,8 +74,7 @@
        android:onClick="checkLogin"
        android:text="Login"
        android:layout_above="@+id/errorlable"
-       android:layout_alignRight="@+id/LoginTitle"
-       android:layout_alignEnd="@+id/LoginTitle" />
+       android:layout_centerHorizontal="true" />
 
    <TextView
        android:id="@+id/errorlable"
@@ -87,17 +86,5 @@
        android:layout_alignParentStart="true"
        android:layout_alignRight="@+id/passtext"
        android:layout_alignEnd="@+id/passtext" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Login"
-        android:textSize="@dimen/abc_text_size_headline_material"
-        android:id="@+id/LoginTitle"
-        style="@style/Base.TextAppearance.AppCompat.Title"
-        android:textColor="#ff9cffd4"
-        android:layout_below="@+id/imageView1"
-        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

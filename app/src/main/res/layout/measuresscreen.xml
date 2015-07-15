@@ -34,9 +34,9 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="121dp"
         android:layout_height="wrap_content"
-        android:text="insert ketanuria manually"
+        android:text="insert ketonuria manually"
         android:id="@+id/insertketanuria"
-        />
+        android:singleLine="false" />
 
     <Button
         style="?android:attr/buttonStyleSmall"

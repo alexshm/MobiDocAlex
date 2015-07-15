@@ -39,11 +39,10 @@
             android:layout_width="186dp"
             android:layout_height="wrap_content"
             android:background="#fffffbff"
-            android:inputType="number|numberSigned|numberDecimal"
+            android:inputType="number|text|numberSigned|numberDecimal"
             android:layout_x="120dp"
             android:layout_y="85dp"
             android:textSize="18dp"
-            android:text="measure val"
             android:textIsSelectable="True"
             android:autoText="false"
             android:singleLine="true" />
@@ -119,6 +118,15 @@
             android:layout_x="102dp"
             android:visibility="invisible"
             android:layout_y="150dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/exitBtton"
+            android:layout_x="320dp"
+            android:layout_y="1dp"
+            android:src="@drawable/Close"
+            android:onClick="exit" />
 
     </AbsoluteLayout>
 </FrameLayout>

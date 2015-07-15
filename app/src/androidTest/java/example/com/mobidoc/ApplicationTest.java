@@ -33,9 +33,9 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
 
     public void testGetMeasures() throws Exception {
         openMrsApi.logIn("israel","Israel123");
-        String[] array = openMrsApi.getObs();
+        String[][] array = openMrsApi.getObs();
         assertTrue(0 < array.length);
-        assertTrue(array[0] != null);
+        assertTrue(array[0][0] != null);
     }
 
     public void testGetPersonUUID() throws Exception {
