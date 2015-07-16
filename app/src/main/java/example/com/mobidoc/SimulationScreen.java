@@ -436,7 +436,7 @@ public class SimulationScreen extends Activity {
                simulationThread.interrupt();
                Log.i("Simulation screen ", "Simulation stopped");
            } catch (InterruptedException e) {
-               e.printStackTrace();
+
            }
        }else
 
@@ -482,7 +482,7 @@ public class SimulationScreen extends Activity {
         } catch (RemoteException e) {
             Log.e("SendActionToHandler", "error sending msg");
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("SendActionToHandler", "error sending msg :"+e.getMessage());
         }
 
 

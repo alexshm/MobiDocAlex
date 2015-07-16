@@ -28,6 +28,7 @@ import android.content.ServiceConnection;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -42,6 +43,9 @@ import example.com.mobidoc.Screens.MainScreen;
 import example.com.mobidoc.projectionsCollection;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -203,6 +207,9 @@ public class GcmIntentService extends IntentService {
         return answer;
     }
 
+
+
+
     private class ProjectionScriptExecuter extends AsyncTask<String, Void, projection> {
 
 
@@ -218,7 +225,11 @@ public class GcmIntentService extends IntentService {
             protected projection doInBackground(String... params) {
                 //Log.i("GCM service", " parsing the projection : "+params[0]);
                 String script = params[0];
+
                 projection proj=jsScript.runScript(script);
+                //save the projection script to a file
+              //TODO:  if(proj!=null)
+                   // writeProjectionToFile(script,proj.getProjectionId());
                 return proj;
 
             }
@@ -243,6 +254,41 @@ public class GcmIntentService extends IntentService {
 
             }
 
+        private boolean writeProjectionToFile(String parsedProjection,String projNum)
+
+        {
+
+            FileOutputStream outStream=null;;
+
+            File folder = new File(Environment.getExternalStorageDirectory() + "/MobiDoc");
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+            String path= folder.getAbsolutePath()+"/projection_"+projNum+".txt";
+            File destFile = new File(path);
+
+            try {
+                destFile.createNewFile();
+            } catch (IOException e) {
+                Log.e(TAG, "error while creating the new simulation file.error msg is : " + e.getMessage());
+                return false;
+            }
+
+            try {
+                outStream = new FileOutputStream(destFile);
+                outStream.write(parsedProjection.getBytes());
+                outStream.close();
+                return true;
+
+            } catch (FileNotFoundException e) {
+                Log.e(TAG, "error while copying file when trying to copy from local to new folder. error msg is : " + e.getMessage());
+                return false;
+            }
+            catch (IOException e) {
+                Log.e(TAG, "error while copying file when trying to copy from local to new folder. error msg is : " + e.getMessage());
+                return false;
+            }
+        }
     }
 
 

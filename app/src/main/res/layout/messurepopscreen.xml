@@ -125,7 +125,7 @@
             android:id="@+id/exitBtton"
             android:layout_x="320dp"
             android:layout_y="1dp"
-            android:src="@drawable/Close"
+            android:src="@drawable/close"
             android:onClick="exit" />
 
     </AbsoluteLayout>

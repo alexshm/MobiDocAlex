@@ -78,6 +78,7 @@ public class LoginScreen extends Activity {
                 try {
 
                     Boolean result = loginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, user, password).get();
+
                     mProgressDialog.dismiss();
                     continueLogin(result);
                 } catch (InterruptedException e) {
