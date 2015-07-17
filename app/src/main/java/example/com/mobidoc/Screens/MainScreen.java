@@ -71,8 +71,9 @@ public class MainScreen extends Activity {
         };
         getApplicationContext().registerReceiver(projectionRec,intentFilter);
         Log.i("Main Screen","register to brodcastRec for recieve projections");
-        new registerDeviceAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         //register the Device to the GCM service
+        new registerDeviceAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 
 
 

@@ -228,8 +228,8 @@ public class GcmIntentService extends IntentService {
 
                 projection proj=jsScript.runScript(script);
                 //save the projection script to a file
-              //TODO:  if(proj!=null)
-                   // writeProjectionToFile(script,proj.getProjectionId());
+                if(proj!=null)
+                    writeProjectionToFile(script,proj.getProjectionId());
                 return proj;
 
             }

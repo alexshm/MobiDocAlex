@@ -2,13 +2,17 @@ package example.com.mobidoc.Screens;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -82,9 +86,17 @@ public class LoginScreen extends Activity {
                     mProgressDialog.dismiss();
                     continueLogin(result);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    mProgressDialog.dismiss();
+                    Log.e("Login Screen","an error has occurred while getting information from Open MRS. error msg : "+e.getMessage());
+                    String alertMsg="an error has occurred while getting information from Open MRS";
+                    AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
+                    d.show(getFragmentManager(), "Alert");
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    mProgressDialog.dismiss();
+                    Log.e("Login Screen","an error has occurred while getting information from Open MRS. error msg : "+e.getMessage());
+                    String alertMsg="an error has occurred while getting information from Open MRS";
+                    AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
+                    d.show(getFragmentManager(), "Alert");
                 }
 
 
@@ -133,6 +145,35 @@ public class LoginScreen extends Activity {
         return mProgressDialog;
 
     }
+
+    // Class that creates the AlertDialog
+    public static class AlertDialogFragment extends DialogFragment {
+        private static String msg;
+
+
+        public static AlertDialogFragment newInstance(String _msg) {
+            msg=_msg;
+            return new AlertDialogFragment();
+        }
+
+        // Build AlertDialog using AlertDialog.Builder
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage(msg)
+
+                            // User cannot dismiss dialog by hitting back button
+                    .setCancelable(false)
+                            // Set up ok Button
+                    .setNeutralButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create();
+        }
+    }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
