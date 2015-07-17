@@ -88,6 +88,7 @@ public class MeasurePop extends Activity {
         Date date = (Date) new Date
                 (datePcker.getYear() - 1900, datePcker.getMonth(), datePcker.getDayOfMonth());
         date.setHours(hour);
+
         date.setMinutes(minute);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ") {
             public StringBuffer format(Date date, StringBuffer toAppendTo, java.text.FieldPosition pos) {
@@ -97,6 +98,7 @@ public class MeasurePop extends Activity {
 
             ;
         };
+
         String dateString = dateFormat.format(date);
        String ans = openMrsApi.enterMeasure(val, dateString, this.conceptHash.get(concept));
 

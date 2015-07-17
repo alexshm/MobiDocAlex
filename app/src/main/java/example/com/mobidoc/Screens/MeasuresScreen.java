@@ -2,9 +2,12 @@ package example.com.mobidoc.Screens;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -106,12 +109,22 @@ public class MeasuresScreen extends Activity {
 
 
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+
+                    Log.e("Measures Screen","an error has occurred while getting information from Open MRS. error msg : "+e.getMessage());
+                    String alertMsg="an error has occurred while getting information from Open MRS.try again later.";
+                    AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
+                    d.show(getFragmentManager(), "Alert");
                 } catch (ExecutionException e) {
-                    e.printStackTrace();
+                    Log.e("Measures Screen","an error has occurred while getting information from Open MRS. error msg : "+e.getMessage());
+                    String alertMsg="an error has occurred while getting information from Open MRS.try again later.";
+                    AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
+                    d.show(getFragmentManager(), "Alert");
                 }
                 catch (Exception e){
-                    Log.i("aaa", "error: " + e.getMessage());
+                    Log.e("Measures Screen","an error has occurred while getting information from Open MRS. error msg : "+e.getMessage());
+                    String alertMsg="an error has occurred while getting information from Open MRS.try again later.";
+                    AlertDialogFragment d=AlertDialogFragment.newInstance(alertMsg);
+                    d.show(getFragmentManager(), "Alert");
                 }
 
             }
@@ -123,6 +136,33 @@ public class MeasuresScreen extends Activity {
 
     }
 
+    // Class that creates the AlertDialog
+    public static class AlertDialogFragment extends DialogFragment {
+        private static String msg;
+
+
+        public static AlertDialogFragment newInstance(String _msg) {
+            msg=_msg;
+            return new AlertDialogFragment();
+        }
+
+        // Build AlertDialog using AlertDialog.Builder
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage(msg)
+
+                            // User cannot dismiss dialog by hitting back button
+                    .setCancelable(false)
+                            // Set up ok Button
+                    .setNeutralButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).create();
+        }
+    }
 
 
 
@@ -173,8 +213,8 @@ public class MeasuresScreen extends Activity {
 
     private class clickListener implements View.OnClickListener
     {
-        String name;
-        String concept;
+      private String name="";
+        private String concept="";
 
         public clickListener(View v)
         {
@@ -192,7 +232,7 @@ public class MeasuresScreen extends Activity {
                 case "BG":
                     concept="4985";
                     break;
-                case "ketanuria":
+                case "ketonuria":
                     concept="5021";
                     break;
 
