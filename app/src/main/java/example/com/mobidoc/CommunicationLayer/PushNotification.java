@@ -81,7 +81,7 @@ public  class   PushNotification extends Application{
     //retrieve the regID of the device
     public  String getMobileID()
     {
-        if(regid.isEmpty())
+        if(regid.isEmpty()|| regid=="")
             regid = db.getRegID();
         return regid;
     }

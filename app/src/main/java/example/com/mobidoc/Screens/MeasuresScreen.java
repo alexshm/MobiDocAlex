@@ -62,7 +62,7 @@ public class MeasuresScreen extends Activity {
                 try {
                    obs=new downloadObsAsync().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR ).get();
                     startGLDialog.dismiss();
-                    String[] column = { "#Num","Type","Date","Value"};
+                    String[] column = { "","Type","Date","Value"};
                     int rl=obs.length; int cl=column.length;
 
                     final TableLayout tableLayout = createTableLayout(obs, column,rl, cl);
@@ -289,12 +289,7 @@ private class downloadObsAsync extends AsyncTask<String, Void, String[][]> {
         TableLayout.LayoutParams tableLayoutParams = new TableLayout.LayoutParams();
         TableLayout tableLayout = new TableLayout(MeasuresScreen.this);
 
-        TextView messuresText = new TextView(MeasuresScreen.this);
 
-        messuresText.setText("measures");
-        messuresText.setTextSize(18);
-        messuresText.setTextColor(Color.parseColor("#ff9cffd4"));
-        tableLayout.addView(messuresText);
         // 2) create tableRow params
         TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams();
         tableRowParams.setMargins(0, 0,0, 0);

@@ -520,7 +520,7 @@ public class SimulationScreen extends Activity {
         i.putExtra("time", timeStr);
         i.putExtra("value",val);
         //String newDate=sdf.format(new Date());
-      mrs.enterMeasure(val,"2012-03-02T10:00:00.000+0200","Catanuria");
+      mrs.enterMeasure(val,"2012-03-02T10:00:00.000+0200","Ketonuria");
         Log.i("sim","enter to mrs");
         sendBroadcast(i, android.Manifest.permission.VIBRATE);
 

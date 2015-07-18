@@ -149,32 +149,34 @@ public class OpenMrsApi {
         try {
             answer = httpRecTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, getHash).get();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+
         } catch (ExecutionException e) {
-            e.printStackTrace();
+
         }
 
-        String[] arrayObs = new String[11];
+        String[] arrayObs = new String[13];
 
         try {
             //please keep this order.
 
             JSONObject jObject = new JSONObject(answer);
-            arrayObs[0] = jObject.getString("breakfast");
-            arrayObs[1] = jObject.getString("lunch");
-            arrayObs[2] = jObject.getString("evening");
-            arrayObs[3] = jObject.getString("breakfastAlarm");
-            arrayObs[4] = jObject.getString("lunchAlarm");
-            arrayObs[5] = jObject.getString("eveningAlarm");
-            arrayObs[6] = jObject.getString("day");
-            arrayObs[7] = jObject.getString("time");
-            arrayObs[8] = "20"; //TODO : NEED TO ADD DAILY(katenuria) REMINDER IN THE OPENMRS- FOR NOW IS SET TO ONE MINUTE
-            arrayObs[9] = jObject.getString("day1")+","+jObject.getString("day2");
-            arrayObs[10] = jObject.getString("time2");
+            arrayObs[0] = jObject.getString("fasting");
+            arrayObs[1] = jObject.getString("breakfast");
+            arrayObs[2] = jObject.getString("lunch");
+            arrayObs[3] = jObject.getString("evening");
+            arrayObs[4] = jObject.getString("fastingAlarm");
+            arrayObs[5] = jObject.getString("breakfastAlarm");
+            arrayObs[6] = jObject.getString("lunchAlarm");
+            arrayObs[7] = jObject.getString("eveningAlarm");
+            arrayObs[8] = jObject.getString("day");//once a week  day
+            arrayObs[9] = jObject.getString("time");//once a week  measure time
+            arrayObs[10] =  jObject.getString("dayAlarm"); //once  a week  reminder time
+            arrayObs[11] = jObject.getString("day1")+","+jObject.getString("day2");//twice a week  days
+            arrayObs[12] ="08:00"; //TODO: jObject.getString("time2"); //twice a week  measure time for now its simulated
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+
         }
 
         return arrayObs;

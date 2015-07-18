@@ -78,7 +78,7 @@ public class MeasurePop extends Activity {
 
         this.conceptHash.put("5178","systolic");
         this.conceptHash.put("4985","GLOUCISE");
-        this.conceptHash.put("5021","Catanuria");
+        this.conceptHash.put("5021","Ketonuria");
     }
 
     public void done(View view) {

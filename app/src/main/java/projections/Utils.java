@@ -28,9 +28,9 @@ public  final class Utils {
     }
 
     public static enum UserPreferences {
-
+        FastingTime,
        BreakFastTime,LaunchTime,DinnerTime,
-        BreakFastAlarm,LaunchAlarm,DinnerAlarm,
+        FastingAlarm,BreakFastAlarm,LaunchAlarm,DinnerAlarm,
         OnceWeekPreferredDay,DailyTime,DailyAlarm,
         TwiceWeekPreferredDays,TwiceWeekTime
     }

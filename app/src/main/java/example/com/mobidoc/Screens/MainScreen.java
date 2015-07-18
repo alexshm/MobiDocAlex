@@ -85,8 +85,10 @@ public class MainScreen extends Activity {
 
         protected String doInBackground(Void... params) {
 
-            PushNotification p = PushNotification.getInstance(getApplicationContext());
+            PushNotification p = PushNotification.getInstance(getBaseContext());
             p.registerDevice();
+
+
             Log.i("MainScreen", "app ID: " + p.getMobileID());
             return "";
         }

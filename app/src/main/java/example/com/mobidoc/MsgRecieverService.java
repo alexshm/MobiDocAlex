@@ -213,7 +213,7 @@ public class MsgRecieverService extends Service {
     public void onStart(Intent intent, int startId) {
 
 
-        if(intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
+        if(intent!=null && intent.getAction().equals("com.google.android.c2dm.intent.RECEIVE")) {
             Log.i("MsgRecieverService", "receive new Notification msg from server ");
             Bundle extras = intent.getExtras();
             String Receivedmsg = extras.getString("message");
